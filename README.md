@@ -71,6 +71,8 @@ The thesis presents the Schrödinger equation as an alternative to the Euler-Poi
 - Thesis text and review notes: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Code (when added): MIT License
 
+The original thesis was deposited with the University of Glasgow under their standard thesis deposit terms ([http://theses.gla.ac.uk/2976/](http://theses.gla.ac.uk/2976/)), which permit downloading for personal non-commercial research or study. As the copyright holder, the author has chosen to release this work here under the more permissive CC BY 4.0 license.
+
 ## Author
 
 Edward A. Thomson
