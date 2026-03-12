@@ -1,0 +1,9 @@
+# Compiled binaries
+fpa_1d/fpa_1d
+fpa_3d/fpa_3d
+
+# Output data files
+*.dat
+
+# Generated plots
+*.png
