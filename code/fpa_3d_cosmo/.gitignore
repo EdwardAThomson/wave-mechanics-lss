@@ -1,0 +1,6 @@
+# Compiled binaries
+fpa_3d_cosmo
+fpa_test_nu
+
+# Large binary density files (regenerable with make run / fpa_test_nu)
+output/**/*.bin

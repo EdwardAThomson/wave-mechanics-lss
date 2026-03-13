@@ -1,0 +1,15 @@
+# FPA nu sweep results
+# nu = 0.0001
+# N = 128, L_phys = 32 Mpc/h
+# k_Nyquist = 402.124
+# s_max = 0.0122179
+# max|grad(theta)|/k_Nyq = 0.303834
+# Phase resolvable: YES
+# psi_hat low-k power = 99.7831%
+#
+# D   FPA_rms   ZA_rms   FPA_ZA_corr   mass_FPA   mass_ZA
+1  0.137438  0  -nan  1  1
+5  0.400156  0.497433  0.645323  1  1
+15  1.21252  1.889  0.600592  1  1
+25  1.89842  2.00988  0.711014  1  1
+34  2.12967  1.84517  0.700889  1  1
