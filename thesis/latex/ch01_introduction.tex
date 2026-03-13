@@ -1,0 +1,423 @@
+%
+% Introduction
+\chapter{Introduction} % and Review of Cosmology
+\label{ch_1}
+%Key motivation: To study Large Scale Structure formation using numerical simulations. Previous numerical methods have known deficiencies. Here we explore a lesser known method that should improve on many of the current deficiencies.
+
+Large Scale Structure (LSS) is the study of the very largest scales in cosmology, essentially it is the study of the distribution of galaxies in 
+the Universe. The distribution, or pattern, of galaxies is thought of as ``structure''. A triumph of modern cosmology has been to construct a model that plausibly describes how this distribution was created. All models of structure formation are guided by observation but the lack of data has often meant that cosmology was a `playground' for theoreticians. We had to make assumptions from the data that we had and then extrapolate where such assumptions would lead to. This is an inherently tricky problem for researchers in structure formation as the distribution of galaxies is a many body problem; it lacks an analytical solution. \citep{bib_pea, bib_bert}
+
+In the past when there was a lack of observational data and no analytic solution, researchers heavily relied upon the aid of computers to perform the necessary calculations of how many bodies move under the force of gravity. Computer simulations have proven to be a robust platform for testing our assumptions about structure formation. The key paradigm of computational structure formation has been to use an $N$-body code to study the evolution of Cold Dark Matter (CDM) particles. This paradigm arguably took off in the 1980s with some of the first $N$-body CDM simulations. Such simulations allow us to follow the evolution as it might have happened since the start of the Universe. However, observations have been unable to provide all the evidence needed to determine how structure has evolved.
+
+While simulations have driven the research of structure formation, it is observations that are illustrations of the true Universe. While observations may be lacking for some epochs of structure evolution, they are wholly necessary to test assumptions and calibrate our simulations.
+
+For a simulation to faithfully represent the Universe we must be sure of our initial assumptions and to be clear on what physical processes are involved. A faithful representation is one where the end result of the simulation is statistically equivalent to our observations of the real Universe. The assumptions are often simplifications: for example, a computer simulation might assume that the Universe is flat and that structure formation is dominated by gravity. While our Universe is observed to be flat and dominated by gravity at the large scales (in a comoving sense, otherwise it is dominated by so called Dark Energy), these assumptions will breakdown at small scales.
+
+The current paradigm is known as the ``Standard Model of Cosmology", or Concordance Model, and comprises a list of generally accepted assumptions and predictions \citep{bib_lah}. The assumptions and supporting evidence of the standard model, with particular highlight on structure formation, are presented later in this chapter.
+
+The most common way to simulate structure formation is to use an $N$-body code; however, such simulations are not without limitation or error. An $N$-body code is one that integrates the equations of motion of many bodies (particles), in a cosmological simulation the only force present is gravity. More is said on this in Chapter \ref{ch_2}.
+
+In this thesis an alternative and newer method is presented: wave-mechanics. The main aims of this new method are to overcome some of the $N$-body limitations. This method involves coupling the Schr\"odinger wave equation to the Poisson equation of gravity. The less obvious part of these equations is what the Schr\"odinger equation actually does: it is the governing equation of motion. The equation uses a free particle Hamiltonian  plus a gravitational potential. Hence, it describes the movement of matter subjected to a self-consistent gravitational field (from the Poisson equation). %These equations were first considered by ...?
+
+This provides two possible interpretations, one where matter is treated as a classical ``fluid'' obeying the Schr\"odinger equation. The other interpretation is where the matter has a large de Broglie wavelength which behaves classically at the scales of interest. Both interpretations are assuming a classical gravitational field, that is to say the gravitational field is not quantized. We assume a flat background metric which incorporates expansion and assumes a simply connected topological space-time manifold. A fuller understanding of our system of equations is presented in Chapter \ref{ch_3}.
+
+Whether these equations can be applied to the study of quantum nature of gravity is less clear. A yet-unsolved problem in quantum physics is the cause of wavefunction collapse: ``why one version of reality over another?''. Penrose \citep{bib_pen} has suggests a way that gravity might cause the collapse of a wavefunction (Penrose Interpretation of quantum mechanics). He used the Schr\"odinger-Newton (same as: Schr\"odinger-Poisson) equations to describe the basis states of his theory. This theory incorporates ideas of quantum mechanics and gravity but does not appear to be a typical theory of quantum gravity. The latter is based upon the notion that space, as well as time, is quantized into discrete amounts.
+
+However, the notion of a discretized space-time seems to be superfluous to this theory. Penrose is merely stating that wavefunction collapse (in general) may be caused by gravity. From this, it seems that he does not make any stronger statement about the truly quantum nature of gravity itself, although he has pursued alternate theories that do look at quantum gravity specifically (for example, Twistors) \citep{bib_pen2}. To read more specifically about quantum gravity, the reader is referred to, for example, the easy to read history of quantum gravity by Carlo Rovelli \citep{bib_rov}.
+
+
+The goals of this PhD are:
+\begin{itemize}
+\item To recapitulate previous work in the paradigm of wave-mechanics as applied to LSS. A literature review of the relevant publications appears in Chapter \ref{ch_3}. As a part of the review process I will reconstruct the main code used in Short's PhD \citep{bib_short} to verify his methodology and results. This seemed like an appropriate and easy way of introducing myself to the wave-mechanical approach to LSS.
+\item To develop a full 3D wave-mechanical code for cosmic LSS simulations. This will include $3D$ coordinates, periodic boundary conditions, self-consistent gravity and cosmological expansion.
+\end{itemize}
+
+The outline of this thesis is as follows:
+
+\begin{itemize}
+\item In the remainder of Chapter \ref{ch_1} I present a review of Concordance Model of Cosmology and the appropriate mathematical framework that is relevant to all Cosmological models. We also highlight the most important features of the Concordance model in relation to the current paradigm of Large Scale Structure formation.
+\item Chapter \ref{ch_2}: reviews the necessity of using numerical simulations to understand how LSS evolves. Particular focus is placed upon the $N$-body method which is seen as an `industry' standard for structure formation simulations. I provide an overview of how an $N$-body code works and point out where it can be improved upon. This chapter concludes with us considering why the wave-mechanical approach was first suggested and how it can improve upon the current methods of simulation.
+\item Chapter \ref{ch_3}: presents an overview of wave-mechanics, I believe that this chapter is unique in the context of wave-mechanics as applied to LSS and hence constitutes new work. I discuss how to interpret the relevant equations and I aim to clear up previous confusions about how to interpret the equations of wave-mechanics as applied to LSS. To do this I provide a brief review of where the Schr\"odinger equation came from and why a wave-mechanical system is different to a quantum mechanical system. I also provide a review of the interpretations of Madelung and Bohm and discuss their relevance to the topic of this thesis. This chapter also provides a brief review of previous work in the area of astrophysical wave-mechanics.
+\item Chapter \ref{ch_4}: presents my initial work in the wave-mechanical method which was to investigate and hence confirm the results of Short and the Free Particle Method.
+\item Chapter \ref{ch_5}: presents my work on the full Schr\"odinger-Poisson system and shows explicitly how to solve the equations numerically. I highlight the ways in which this method is different to the FPA and from the other previous methods of wave-mechanics. Mathematical derivations are provided where necessary, while longer derivations appear in the appendices. Results and analysis are also included. This chapter provides a clear extension to the work of Widrow \& Kaiser and hence constitutes an incremental but important advancement in the field of LSS-Wave-mechanics.
+\item Chapter \ref{ch_6}: Concludes this thesis with a review of the main concepts that were introduced and a review of the main results from Chapters 4 and 5. In the future work section of this chapter I suggest new ways in which the Schr\"odinger-Poisson system can be used to probe beyond standard simulation techniques. I suggest possible ways in which the final wave-mechanics code of thesis could potentially improved by a neater implementation of the boundary conditions using Watanabe's adhesive operators. I also sketch details about how to use these same adhesive operators to include Adaptive Mesh Resolution and parallelization.
+\item Chapter \ref{ch_7}:
+The final chapter presents more speculative ideas about how to include intrinsic and extrinsic angular momentum (spin and vorticity) into a wave-mechanics simulation. I suggest how to achieve this and why such concerns may be relevant for astrophysical simulations.
+\end{itemize}
+
+%
+% Background
+\section{Large Scale Structure}
+\label{lss}
+% what is LSS? how does it arise? Grav instability model
+At the heart of the current paradigm in cosmological structure formation is the Gravitational instability model. In the early Universe, observations (for example, from WMAP \citep{bib_wmap}) show that the distribution of matter was almost perfectly smooth; however, the small ripples (perturbations) that do exist means that some regions are slightly more dense than others. These regions of higher density will gravitationally attract matter from less dense regions to begin the long-term process of structure formation. The perturbations in the initial density field are assumed to be small deviations ($\sim10^{-5}$) from the mean density. Without such perturbations there is no gravitational instability, the forces on all the matter in the Universe would be equal and hence cancel out (assuming an infinite or periodic Universe). With no instability then there is no evolution of structure. Hence, the small deviations provide the instability necessary to seed large scale structure. The theory also hypothesizes that the initial density perturbations arose from anisotropies in the quantum Inflaton field moments after the Big Bang \citep{bib_peebles, bib_peeb, bib_pea}.
+
+The gravitational instability model is simply the notion that small initial perturbations in density (seeds of structure) attract more and more matter to create larger and larger structures hierarchically. Eventually, these regions will allow stars, galaxies and clusters of galaxies to form, all of which are gravitationally bound structures, where matter has come together in their formation. A collection of galaxies is known as a cluster. These clusters attract other clusters and so on to form larger structures known as superclusters. At the largest scale we observe a spider-web-like pattern where the self-attraction of galaxy clusters has created a filamentary structure (the web). The spaces between the spider-web are called voids and denote a deficit of matter, and hence galaxies, as compared to the mean density. This is shown in Figure \ref{fig.2df}.
+
+\begin{figure}[htb]
+   \begin{center}
+     \leavevmode
+                \epsfxsize=80mm
+                \epsffile{./bkg_pix/pie_millennium_walls2}
+
+%\epsfig{file = combined/dcdm.eps, height = 90mm} \nolinebreak  
+%\epsfig{file = combined/dcdm.eps, height = 90mm}
+%\epsfig{file = combined/dcdm.eps, height = 90mm} \nolinebreak  
+%\epsfig{file = combined/dcdm.eps, height = 90mm}
+
+   \end{center}
+\caption{This figure shows slices from observational data (2dF, Sloan) and from the Millennium Simulation. Qualitatively, all slices look similar; however statistically there are small but notable differences which indicates that current simulations are not yet advanced enough to reproduce a complete picture of our Universe. \citep{bib_2df}}
+\label{fig.2df}
+\end{figure}
+
+The LSS patterns that are seen from observations are the same patterns researchers in structure formation hope to reproduce with their simulations. Figure \ref{fig.2df} shows the observational results two galaxy surveys: 2dF and Sloan. These slices are compared with data from the Millennium Simulation \citep{bib_mil}. Qualitatively, we can see similarities between the observations and the simulation. Filamentary structure is clearly seen in both. The simulation is an implementation of the gravitational instability model, hence simulations are currently the strongest evidence for this paradigm.
+
+As mentioned earlier in this chapter, when one constructs a code for simulation one needs to consider the appropriate physical laws to use and what initial conditions are needed in order to reproduce the spider-web pattern as seen in observation. In the case of an $N$-body code the initial particle positions and velocities are determined from the power spectrum of density fluctuations \citep{bib_yep}. As an input to the process of creating initial conditions is a list of cosmological parameters that are taken from observational results (for example, from the Cosmic Microwave Background and Supernovae surveys). These parameters are determined empirically and known to a good level of precision; for example, the age of the Universe is now known to better than 1\% \citep{bib_wmap} (if the assumptions of the Standard Model of Cosmology are true).
+
+The evolution of structure is not always directly observable so understanding the physical laws involved requires more educated guesswork. In the simplest scenario, we assume that gravity is the only relevant force and hence describe the evolution of the Universe as non-interacting but self-gravitating (dark) matter.
+
+From a computational perspective there is inherent difficulty associated with the fact that the equations are non-linear and that the problem has a large dynamic range of interest (kilo-parsecs to giga-parsecs) \citep{bib_hmpc}. Bertschinger \citep{bib_bert} notes that there are three types of dynamic range important ``for a faithful simulation: mass resolution (number of particles), initial power spectra sampling (range of wavenumbers present in the initial conditions), and spatial resolution (force-softening length compared with box size).'' In wave-mechanics there is no `number of particles' so mass resolution is limited by machine precision, while the spatial resolution is limited by the number of gridpoints (array size -- which is limited by the amount of memory in the computer). The power spectra limitation is a problem for the generation of initial conditions and is independent of the simulation method used.
+
+As a simplification of the full problem of structure formation, LSS simulations assume that gravity is the dominant force and in the simplest scenario the only force. This reduces structure formation to become an initial value problem (most physics problem are of such a nature but it need not be necessarily true of all problems or models in physics). That is to say that the simulations only require a list of inputs at the beginning of the code's run-time and that it requires no further input from the user or from parameter lists. Naturally, this allows the code to be fast as it doesn't rely upon slow processes such as reading in files or waiting for a human input.
+
+Despite the simplifications, the latest simulations are getting better at reproducing the structure formation in the Universe with mild discrepancies. One of the most recent developments is the Millennium Simulation \citep{bib_spr, bib_mil} and the Aquarius project \citep{bib_aqu} by the Virgo Consortium which is a collaboration mainly of Durham University and MPIA. Both projects are undertaken using $N$-body codes, the former used GADGET-2 while the latter used GADGET-3. On a technical point, these codes are not pure $N$-body codes but are sometimes referred to smoothed $N$-body codes. Gadget also features Smoothed Particle Hydrodynamics which is not technically $N$-body either but for simplicity we will lump all such techniques together and refer to all such codes as $N$-body.
+
+Another recent simulation project is Via Lacta \citep{bib_via}, which has been used to study the dark matter halo of the Milky way. Part of the investigation has been looking at the number of dwarf galaxies that surround a Milky Way -mass galaxy; for many years, the number of dwarf galaxies seen in observations was factor of 10 - 100 times smaller than predicted from $N$-body simulations (see also \citep{bib_toll} for the comparison).
+
+The Millennium Simulation was one of the first billion body gravity simulations and focussed upon the formation of large scale structure (similar in spirit to this thesis) while the Aquarius project is looking at understanding the evolution of galactic halos and subhalos \citep{bib_aqu2}.
+
+
+\section{$\Lambda$ - CDM : Concordance model}
+The simplest theory which is most consistent with observations is the $\Lambda$ - CDM model of Cosmology, sometimes alternatively called the Concordance model or the Standard Model of Cosmology \citep{bib_lah}. The latter name not only shares an etymological link with the Standard Model of Particle Physics but cosmologists assume that the particle physics model is a subset of the Standard Model of Cosmology. The model attempts to explain the whole Universe in terms of the notions of `why the Universe exists' to `how it evolves'. It brings together all the key observations and theories into the simplest framework that is still consistent with observations. That is to say that it includes the major concepts and observations, mainly: the Big Bang, Inflation, the Cosmic Microwave Background, Large Scale Structure, abundances of the content of the Universe (baryons, dark matter etc), and the titular role of the cosmological constant $\Lambda$ (a source of the accelerating expansion as first detected in the light of distant supernovae).
+
+The focus of this thesis is to investigate a simulation technique based in wave-mechanics that reproduces the observed patterns of Large Scale Structure. The key concepts of the Standard Model (listed above) feed into the generation of initial conditions and the evolution of the background space-time model; these ideas and parameters instruct us on how to write a code that faithfully reproduces the patterns of LSS.  It is not be obvious that the Schr\"odinger formalism can be applied to Large Scale Structure, so part of our work was to perform numerical experiments that investigates how the Schr\"odinger equation behaves (such as reflection and tunnelling, although these results are omitted for brevity). Consequently, the LSS simulations in this thesis were constructed in a way that is consistent with this Standard Model (see Chapter \ref{ch_5}). Some ideas for using wave-mechanics to probe beyond the Standard Model are presented as speculative ideas in Chapter \ref{ch_7}.
+
+\subsection{A briefer history of time}
+To bring all of these ideas together it makes sense to present them in chronological order. In this section I provide a non-technical overview of the main events in the Universe, the concepts are expanded in the following section with the necessary mathematical and technical detail. In doing so I will give an idea of where the simulations of LSS fit into the overall picture of understanding the Universe.
+
+The first event is either the Big Bang (a spacetime singularity) or Inflation, the former might not have happened as inflation is an exponential expansion which means that the scale factor can exponentially decrease towards zero as we go back in time \citep{bib_pea}. The scale factor is the ratio of the size of the Universe, as seen today, versus the size of the universe at any other moment in time. This relation is made clearer below (see equation \ref{eqn_scalefact}).
+
+For simplicity let's assume the Big Bang happened and that it was followed by a period of Inflation. The small perturbations at the time of Inflation eventually grow into perturbations in the distribution of matter (dark matter and ordinary baryonic matter). As the Universe `cools' and expands then matter eventually forms and, at this time, the dominant component of the Universe is radiation in the form of light. This is known as the radiation dominated era of the Universe. Around fifty thousand years after the Big Bang the Universe transitions from radiation dominated to matter dominated (the so-called era of matter-radiation equality).
+
+Around 400,000 years after the Big Bang, the photons become `free' from the baryons. This is the time when photons last scatter from the baryons and then free-stream, travelling unhindered, through the Universe. This surface of last scattering is what we observe today as the CMB. From observation of the CMB we can see fluctuations in the wavelength of light (`temperature') which implies that there are fluctuations in the distribution of matter. From a simulation point of view, this is the start of structure formation. The Universe expands and cools as the light free-streams, this allows the unhindered matter to self-attract gravitationally and hence form structures. Large clouds of gas, aided by dark matter, collapse to form stars and galaxies. Most recently, the Universe is becoming dominated by dark energy: a repulsive force that is accelerating the expansion of the Universe.
+
+The evolution of the Universe post-Last Scattering is the domain of interest for researchers in field of Large Scale Structure. As previously mentioned, the parameters that are determined from the CMB are used as inputs to seed the simulations. The $\Lambda$-CDM model is used to determine the rate of expansion of the Universe. In cosmological simulations the concept of space-time is a background upon which cosmic structure unfolds; the expansion of the coordinate system in the simulations is also part of this `background' of space-time. The particles of an $N$-body code evolve under the relevant equations of motion but do not directly influence how the background space-time evolves. That is to say that the dynamics of structure formation are in a co-moving frame of reference. The evolution of the space-time background is explored next.
+
+\subsection{On space and time}
+\label{on_spacetime}
+If we can accept that space and time are united as a single entity denoted as space-time then we encapsulate these 4 dimensions in an appropriate coordinate system with world-points (space-time events) as $x_1, x_2, x_3, t$. By extension we can also write this world-point using a different frame of reference as $x'_1, x'_2, x'_3, t'$. The two frames of reference describe the same point but can be moving arbitrarily with respect to each other; however, the physical states and laws of the world-point must be the same in both frames of reference. This is a statement of Einstein's principle of equivalence. Despite this, there are types of forces known as inertial forces that are coordinate dependent. The result is that the notion of absolute objectivity (measurement of invariant quantities) is applied, not to translations but, to rotations. That is to say that rotational transforms are invariant (such as under Lorentz transformations) while translational transforms are boosted (not invariant).
+
+Hermann Weyl explains, in his book Space-Time-Matter \citep{bib_weyl}, that special relativity comes to the same conclusion that Newton did: the source of inertial forces comes from the metric structure of the world; and hence, must be a real force. To solve this dilemma, Einstein took the ideas of Riemann and applied them to the four-dimensional world of Minkowski (the world of a united space-time). This does not require one to specify the form of a metric. One assumes that there exists a measure on the four-dimensional manifold that has a non-degenerate quadratic differentiable form. Just as in \citep{bib_weyl}, we can give an example of this measure as:
+
+\begin{equation}
+\label{eqn_metricform}
+Q = \sum_{\mu \nu} g_{\mu \nu} dx_{\mu} dx_{\nu}
+\end{equation}
+
+\noindent here the summation is given explicitly (not by convention) and the indices run $0, 1, 2, 3$. The quantity $x^{\mu}$ and $x^{\nu}$ are world-points of space-time, as Weyl called it, or simply 4-vectors of space-time. $dx_{\mu}$ and $dx_{\nu}$ are the corresponding infinitesimal intervals that correspond to these 4-vectors. The metric tensor $g_{\mu \nu}$ performs a similar function to the dot-product of 3-space: it is used to define length and angles between two vectors.
+
+Essentially, this is a reformulation of Pythagoras's theorem to a four-dimensional manifold. Now it is possible to formulate physical laws that are invariant under any arbitrary (including non-linear) continuous transformation of the coordinates $x_{\mu}$. This quantity $Q$ is readily recognisable as the invariant length $ds^2$ as seen in special relativity:
+
+\begin{equation}
+\label{eqn_metric1}
+ds^2 = g_{\mu \nu} dx_{\mu} dx_{\nu}
+\end{equation}
+
+\noindent What is unique to General Relativity is the idea that geometry and physics are inseparable, and that the origin of the gravitational force is actually the same as that for the inertial forces: the metric structure of space-time. Under this realization Einstein has shown an isomorphism between geometry and gravity; another way to see this is that the quantities $g_{\mu\nu}$ are the potentials of the gravitational field.
+
+\paragraph{Field equations.} In Newtonian gravity, there is a field equation that expresses the curvature of the gravitational potential field $\phi$ in relation to the density of matter $\rho$ in the field. This equation is the familiar Poisson equation of gravity which features prominently in this thesis: $\nabla^2 \phi = 4\pi G \rho$. Here $G$ is Newton's gravitational constant. Using this as inspiration along with the newly discovered idea of using the metrics $g$ as potentials, Einstein was able to formulate a field equation for General Relativity. In a more general formulation the curvature in the Newtonian expression becomes a second order covariant derivative of the metrics, the appropriate tensor to describe this is the fourth rank Riemann tensor $R_{\mu\nu\alpha\beta}$ (definition omitted for brevity). However, due to the symmetries of the equations this tensor can be simplified to one of rank-two (the Einstein tensor $G_{\rho\lambda}$). The symmetry appears on the right hand side of the equation where the density, $\rho$, in the Newtonian equation is replaced by the symmetric Energy-Momentum tensor. This yields the following equation:
+
+\begin{equation}
+\label{eqn_efe}
+G_{\nu\mu} + \Lambda \; g_{\nu\mu} = \frac{8\pi G}{c^4}T_{\nu\mu}
+\end{equation}
+
+\noindent The field equations are a set of tensor relations that describe the relativistic movement of matter due to gravity in some arbitrary space-time. The field equations allow a way of determining the appropriate metric to use given some distribution of matter and energy. Matter and energy cause space-time to curve and consequently the curvature of space-time will influence the trajectory of the matter and energy. The above formulation includes the cosmological constant $\Lambda$, it was originally included as a way of making the solutions to the field equations describe a static Universe but is now used to describe what we call Dark Energy.
+
+Einstein unveiled his General Theory of Relativity in 1915 and then in 1917 he found a solution to his field equations that assumed rotational and translational symmetry (this set of symmetries is called the Cosmological Principle and is an essential part of the Standard Model of Cosmology). This modelled a Universe that is spatially finite with no boundary but unstable -- gravity forces collapse. As Universe was thought to be static, he chose to add the cosmological constant in order to make his model Universe static. However, the addition of a cosmological constant provided solutions that were still `unstable': it would still expand or contract as more matter or cosmological constant is added. An important breakthrough came in 1922 from Friedmann, he used the same symmetries as Einstein and found an equation that governed the evolution of a relativistic Universe. The appropriate metric for these symmetries has the following form:
+
+\begin{equation}
+\label{eqn_metric}
+ds^2 = c ^2 dt^2 - a(t)^2 d\mathbf{\xi}^2
+\end{equation}
+
+\noindent As above, $ds$ is the invariant 4-length, while $t$ is the coordinate time. The metric for 3-space, $\mathbf{\xi}^2$, is independent of time. The dependence for time comes from the multiplication by the scale-factor $a(t)$. The scale factor can be interpreted in two ways, one as a scale factor is the ratio of a physical distance ($\underline {r}$) to a comoving distance ($\underline {x}$):
+
+\begin{equation}
+\label{eqn_scalefact}
+\underline {r} = a \; \underline {x}
+\end{equation}
+
+\noindent or two, as the ratio between any measurement of the Universe at two different times. Typically, the scale factor is used in reference to the size of the Universe. We set the scale factor to be $ a = a_0 = 1$ as the value of the Universe today, hence the size of the Universe at some previous (or later) time is some multiple of today's size. Values of $0 > a > 1$ correspond to moment in the past, while $a > 1$ is any time in the future.
+
+To describe rotational symmetry we can re-write the 3-metric part of equation \ref{eqn_metric} in polar coordinates $ \xi(r,\theta,\varphi)$:
+
+\begin{equation}
+d\mathbf{\xi}^2 = \frac{\mathrm{d}r^2}{1-k r^2} + r^2 [\mathrm{d}\theta^2 + \sin^2 \theta \mathrm{d}\varphi^2)]
+\end{equation}
+
+\noindent the only unfamiliar term here is $k$ the spatial curvature which is generally taken as a constant in most models. For the various cases of curvature (negative curvature, flat, positive curvature) the corresponding values of the constant are: $k= -1, 0, 1$. 
+
+\paragraph{Friedmann equation.} The above metric for space-time is often called the Robertson-Walker (R-W) metric, named after the two American physicists that discovered it independently of Friedmann. However, it was from this metric that Friedmann went on to find his famous solution to the field equations \ref{eqn_efe} and hence derive equations of motion for the Universe. In addition to using the RW metric, he also assumed the energy-momentum tensor of a perfect fluid which ensures energy and momentum conservation ($T_{\mu\nu;\nu} = 0$) \citep{bib_schutz}. His equation is given as:
+
+\begin{equation}
+\label{eqn_fre}
+\dot a^2 = \frac{8\pi G\rho}{3} a^2 - kc^2
+\end{equation}
+
+\noindent This equation can be derived from classical arguments using Birkhoff's theorem and Newtonian gravity, but the full treatment from General Relativity is needed to get the curvature term $kc^2$ which is essentially a constant of integration \citep{bib_pea}. Birkhoff proved that for a spherically symmetric distribution of matter Einstein's field equations have a unique solution. A corollary to this is that a the force (or acceleration) upon a spherical mass is determined solely by the matter lying within the sphere (when external forces cancel, that is to say that the distribution of matter outside the sphere is uniform).
+
+A more useful form of Friedmann's equation is a rescaled version using the the density parameters $\Omega$, defined as the ratio of density to the critical density:
+
+\begin{equation}
+\Omega \equiv \frac{\rho}{\rho_c} = \frac{8\pi G\rho}{3H^2}
+\end{equation}
+
+\noindent The density, $\rho$, here is left without a subscript as it can denote any density component of the Universe. It can also be used to denote the total density of the Universe, which we can write $\rho_{\rm tot}$ with the corresponding density parameter: $\Omega_{\rm total}$.
+
+The critical density is the density required to ensure that the Universe is flat. Using this rescaled parameter we can now rewrite the Friedmann equation:
+
+\begin{equation}
+\label{eqn_fdmn}
+H^2 = H_0^2 \left[\Omega_{r_0} (1 + z)^4 + \Omega_{m_0} (1 + z)^3 + \Omega_{k_0}(1 + z)^2 + \Omega_{\Lambda_0} \right]
+\end{equation}
+
+\noindent $H = \dot a/a$ is Hubble's parameter. Also by convention the scale factor (call it $R$) is rescaled such that $a = R/R_0$. All symbols with the subscript zero are taken as today's values. The $\Omega$'s are the density parameters for the following components (in order of appearance above): radiation, matter, spatial curvature, cosmological constant (dark energy, for example, contributes to this final density parameter). The summation of these components is $\Omega_{\rm total} = \Omega_{r} + \Omega_{m} + \Omega_{k} + \Omega_{\Lambda}$.
+
+The various powers of the redshift (which is related to the scale factor via: $1 + z = 1/a$) show how each component scales with the age of the Universe. First the Universe was radiation-dominated, then matter- and finally dark energy-dominated. The value of $\Omega_{k} = 1 - \Omega_{\rm total}$ is assumed to be close to zero, hence a flat Universe. The assumption of flatness is confirmed by the observations of WMAP \citep{bib_wmap}.
+
+\paragraph{Cosmic expansion.}Friedmann's equation essentially tells us how the scale factor changes over time, hence it tells us the rate of the Universe's expansion given that we know the appropriate Cosmological parameters (one such of these parameters is from the WMAP data as mentioned in section \ref{lss}). It plays a key role in simulations for determining how the background space-time expands. It is also used to rescale the equations of wave-mechanics as will be shown in Chapter \ref{ch_5}.
+
+While Einstein claims his biggest blunder was not to realise that he could have discovered the concept of a dynamical Universe, it turns out that his Cosmological constant would become part of the modern paradigm of Cosmology. Part of the reason that he disregarded his constant was that it was assumed that the Universe was in a steady state; somehow the gravitational self-attraction of matter was balanced against a repulsive force. It was the combination of Friedmann's solution plus the discovery of galaxy redshifts by Slipher \citep{bib_sli} that lead to the notion of a dynamical Universe. Einstein is famously remembered as being dismayed by the fact that he essentially discovered this idea before them but initially discarded it as incorrect. This result was also known to Newton, in as much as he realised that there was a problem with gravity's self-attraction for a static and `perfect' Universe.
+
+Slipher found that most galaxies are moving away from the Earth. However, it was Hubble \citep{bib_hub} that realised that galaxies that were twice as far away were receding twice as fast. These culminated in what is now known as Hubble's law:
+
+\begin{equation}
+ v = H_0 d 
+\end{equation}
+
+\noindent This states that the recession velocity $v$ is linearly proportional to the distance $d$, where the constant of proportionality $H_0$ is today's value of the Hubble parameter as seen in the Friedmann equation \ref{eqn_fdmn}. This requires knowing the distance to the galaxies which Hubble did by measuring the variability of Cepheids. Since Hubble's publication it has been found that many were not Cepheids but the principle of using Cepheids to measure distances is still correct.
+
+Due to the principle of General Covariance then General Relativity has no preferred observers, physics should be the same everywhere. This in combination with the previous assumed symmetries (R-W metric plus the symmetric tensor $T_{\mu\nu}$) come together neatly with Slipher's and Hubble's observations to show that all points (and observationally, all galaxies) are mutually moving away from each other hence the Universe appears to be expanding. However, this requires a caveat: while General Relativity admits a smooth and continuous density field across the whole Universe but it is assumed that space is empty. General Relativity says that empty space is truly empty hence talking about the expansion of space itself is contentious as there is nothing to stretch. The Cosmological constant provides little help here as it is a coordinate relationship and does not provide a mechanism that induces expansion.
+
+The observation Hubble made is that of redshifted electromagnetic radiation: this is not a proof or observation of space itself expanding, at least not locally. The redshift observations are not enough to determine whether a force, internal or external to the Universe, exists to cause this expansion. It is unlikely that anything can exist 'external' to the universe, if this were the case then a re-definition of the term `Universe' would then include this external region. I mention this as it may not be entirely obvious that everything we see should constitute the whole Universe.
+
+At the largest scale (non-locally) then the Universe could be expanding but this does not necessitate an expansion of space-time in a local frame of reference \citep{bib_pea2}. This may sound paradoxical but Peacock notes that the evidence is seen from the looking at the equations of motion (see reference for details). At least this is the case in General Relativity. If in some theory of Quantum Gravity it turns out that empty space is not actually empty but has some structure to it then the conclusion here may need to be modified.
+
+\paragraph{The Big Bang.} If all galaxies are moving away from each other then if we extrapolate backwards in time then all galaxies must have met at some singular point when $a \rightarrow 0$. There is a formal singularity in both space and time, consequently the density becomes singular too: $\rho\rightarrow \infty$. This singularity is called the Big Bang.
+
+Friedmann's solution to Einstein's field equations implies a finite space-time. This corroborates with Olber's paradox: the Universe is not infinitely bright hence it must not contain an infinite number stars or be of an infinite age. The original version of the paradox suggests that if the Universe is infinite then it should be infinitely bright, as the latter is not true then the Universe cannot be infinite in extent. It has been since shown, using General Relativity, that a similar paradox can arise in a finite universe where the brightness is that of stellar surface brightness (not infinite).
+
+The idea of the Big Bang originated from Georges Lema\^itre, while the name was condescendingly given by the theory's most vocal critic Fred Hoyle. The idea of a finite expanding Universe combined with the Cosmological Principle (isotropic, homogeneous Universe) are the fundamental building blocks of the standard model. The Cosmological Principle is an assumption that matches observations well at the largest scales. Such a Universe evolves according to the Friedmann equation (See equation \ref{eqn_fdmn}).
+
+At the world-point of the Big Bang there are many singularities in our physical laws, it is fair to say that our current laws of physics are no longer valid at this point. As scale factor tends to zero we can also notice that density and temperature also tend to infinity. Curvature will also be singular, infinite density will give infinite curvature unless there is uniform infinite density across the entire Universe in which case the curvature is zero.
+
+The concept of temperature is not valid in this regime as temperature is only defined for a system under Maxwell-Boltzmann statistics. In such a highly relativistic and quantum dominated regime such as (shortly after) the Big Bang then talking of temperature is misleading. However, it is possible to calculate the energy of elementary particles at this time (as order of magnitude estimates) and hence establish a pseudo-temperature. From the Cosmological Principle it is possible to extrapolate that the Universe by necessity should be isotropic and homogeneous at this time too. By implication then the Universe will have a near constant energy density.
+
+From the Friedmann equation \ref{eqn_fdmn} we can see the Universe is dominated by radiation in the very early Universe, that is to say that the expansion of the Universe scales with the radiation energy density ($a^{-4}$). Of interest is the timescale of expansion versus the timescale of thermal interaction. If we can assume a thermal background then it turns out that the Universe is also in a state of ``thermal equilibrium''. The dynamical timescale of expansion is $ t \sim (G\rho)^{-1/2} \sim a^2$ (radiation dominated) while thermal rates scale as $n_1 n_2$ (for a two-body interaction) where this scales like $n_i \propto a^{-3}$ ($n_i$ is one species of particle in the afore mentioned two-body interaction).
+
+Despite the success of the Big Bang model (the forerunner to the current Standard Model), it has some problems too. The initial singularities are only a part of it, they are a problem with our understanding of the physical laws but the more pressing issues are the currently observed features that the Big Bang model doesn't explain \citep{bib_pea, bib_baum}. These unexplained features are:
+
+\begin{itemize}
+\item the horizon problem;
+\item the flatness problem;
+\item the structure problem;
+\item the monopole problem;
+\item matter-antimatter asymmetry;
+\item the cosmological constant problem.
+\end{itemize}
+
+\noindent They are outlined in the following paragraphs about Inflation.
+
+\paragraph{Inflation.}
+It is not necessarily the case that the Universe started as a singularity (the Big Bang) as suggested above. In the 1980s the concept of Inflation was invented: it posits that the Universe underwent accelerated (superluminal) expansion \citep{bib_baum}. There are now several different variations of the original inflation idea however all theories of Inflation require that expansion is exponential; therefore, it is possible for expansion to start slowly (when the expansion factor, $a$, is exponentially close 0) and then finish after a period rapid expansion (the end of the exponential). \citep{bib_pea}
+
+The general idea behind inflation is that a scalar quantum field, dubbed the Inflaton field, drives the expansion of the Universe. The behaviour of this Inflaton is like a negative pressure, that is to say that a positive energy density gives negative pressure rather than positive pressure. This is built on the idea of the vacuum energy causing a de Sitter like expansion, in the case of the Friedmann equation where $k=0$ then we have a solution for the scale factor: $a \propto \exp(Ht)$. Consequently, Inflation requires the Universe to be incredibly flat (1 part in $10^{60}$). Which ties in well with observations: previously there was no known mechanism for why the Universe should be as flat as it is. This was known as the flatness problem. The Friedmann equation and the Cosmological Principle hold equally well in a flat, open or closed Universe ($k = -1, 0, 1 $). For the Universe to be closed would require enough matter density to make it positively curved. If there is not enough matter then the Universe would be open (negatively curved).
+
+Inflation occupies a time period believed to be from $10^{-35}$ to $10^{-34}$ seconds after the Big Bang \citep{bib_pea}. Little is known about this period but many speculative theories have been developed. Fortunately, there are some key observations that help to confine what a theory must produce. Such a quantum field may also be responsible for the symmetry breaking required to produced the matter-antimatter asymmetry.
+
+The rapid expansion also causes any particles present at that time to be diluted in density. This dilution would also be true of monopoles; such `particles' are hypothetical point-like topological defects that predicted to arise in any GUT phase-transition ($t\sim 10^{-35}$ after the Big Bang). GUT is an acronym for Grand Unification Theory, this theory has proposes that three of fundamental forces (electromagnetic, weak and strong interactions) in the Universe are in fact a single force but this would only be observable at high energies. As the energy density decreases when the Universe expands the period before where the fundamental forces are no longer a single force is known as the GUT phase-transition.
+
+This argument of dilution is also true of smoothing out anisotropies or perturbations of any density field that exists. This is part of the explanation of why we believe the Cosmological Principle is valid today: the Universe was isotropic and homogeneous at the end of inflation and has remained so (at large scales) until today.
+
+Observations show that the Universe at the time of Last Scattering is larger than the causal horizon, this means that we shouldn't necessarily see a Universe in thermal equilibrium (isotropic and homogeneous in energy density). This problem of causality is solved if inflation is the correct. For the Universe to appear to be in thermal equilibrium across the entire sky, even though the horizon size is far smaller than the real size of the Universe, then the Universe must have undergone a period of superluminal expansion where the property of thermal equilibrium is preserved from an early time.
+
+That is to say that the the Universe would be in causal contact before inflation and because of the superluminal expansion the Universe will still appear to be in thermal equilibrium even though the actual horizon size is much smaller than the size of the Universe. This is why the Universe can appear to be in thermal equilibrium at the time of Last Scattering.
+
+The small perturbations that survive from Inflation will eventually grow into perturbations of the latter-time energy and matter densities. Immediately after inflation is the radiation dominated era of the Universe (consistent with the scaling relations from Friedmann's equation) and then eventually this becomes a matter dominated Universe. Through out all epochs the initial perturbations in the Inflaton field will carry through to the next. This is suggested to be the mechanism for seeding structure in the Universe and hence solve the structure problem. \citep{bib_baum}
+
+\paragraph{Cosmic Microwave Background.}
+Further evidence of the Big Bang is the Cosmic Microwave Background (CMB). It is often described as relic radiation left over from the Big Bang. The information contained in the CMB gives hints, not only of the Big Bang but, of Inflation and also the nature of dark matter. The observations from the CMB are perhaps the most crucial evidence for supporting the Standard Model of Cosmology, it allows accurate measurements of key cosmological parameters.
+
+These parameters are fed into LSS simulations which help our understanding of how the Universe has evolved. So it is important for LSS researchers to obtain the most accurate parameters from the CMB (used as initial conditions) in order to accurately reproduce the evolved density field of the Universe. Soon the new satellite, Planck (launched in May 2009), will provide improved parameter estimates by measuring the CMB more accurately than has been done before. The current parameters were provided by the WMAP satellite which launched in 2001. How to obtain these parameters is briefly later in this section.
+
+The CMB radiation created during the time of Last Scattering, or time of Recombination, so called because it is the last time that photons are scattered with the matter of the Universe and are allowed to free-stream. The light emitted from this last scattering surface is what we call the CMB relic; this relic radiation gives us an insight to the physical processes that occurred at Last Scattering.. Also at this time, all free electrons are thought to have been captured by the protons and Helium nuclei, the key physics at this time is that of a recombining plasma. \citep{bib_pea, bib_lah, bib_baum}
+
+Observations of the CMB temperature fluctuations show a deviation from the mean at about $10^{-5}$, this number is subsequently used as the deviation from the mean of the matter density. These measurements are further evidence of an (almost) isotropic and homogeneous Universe. A key problem of physical Cosmology is to understand where these fluctuations come from: we need to reconcile the concept of a flat, isotropic and homogeneous Universe as demanded by the Cosmological Principle versus the small fluctuations that we observe the wavelength of light of the CMB.
+
+The brightness temperature (intensity) of the CMB is almost a perfect black-body, in fact the fluctuations in brightness (otherwise seen as the deviation from a perfect black-body) were not detected until 1992, which was 25 years after they were first proposed \citep{bib_pea}.
+
+The fluctuations can be put into two broad categories: primary and secondary anisotropies. The former are effects that happen at the time of recombination, while the latter are generated by scattering (along the line of sight) while the photons are in transit (from the surface of last scattering to the detector). The secondary effects are mostly ignored for dark matter simulations of Large Scale Structure, so I will forgo explaining them in this thesis.
+
+The primary temperature fluctuations are caused by:
+
+\begin{enumerate}
+\item Gravitational perturbations (Sachs-Wolfe effect) 
+\item Intrinsic perturbations (adiabatic)
+\item Velocity perturbations (Doppler effect)
+\end{enumerate}
+
+The first effect is caused when photons from a high-density region have to climb out of a potential well and are hence red-shifted. The second effect is also from high-density regions, where the coupling of matter and radiation compresses the radiation to give a higher temperature. The third effect is due to the plasma having a non-zero velocity which gives Doppler shits in frequency and hence brightness.
+
+The fact that any perturbations exist in the first place is a problem, it suggests that there must be fluctuations that existed before Last Scattering. Such inhomogeneities are thought to be relics of inflation, as discussed previously. These relics of inflation are the seeds of all futures perturbations and hence evolve into Large Scale Structure.
+
+Therefore the fluctuations in the temperature of the CMB light can tell us something about the fluctuations from inflation (primordial density perturbations). The theories of the two epochs should be consistent with one another. The correlation between inhomogeneities, at either epoch, is characterized by a power spectrum. More precisely, the Fourier transform of the power spectrum is the correlation function and tells us about the typical scales at which we should see fluctuations. That is to say that the power spectrum from the primordial density perturbations at the end of inflation should be consistent with that of the power spectrum given by the temperature of the CMB fluctuations (the latter will, of course, show that the Universe has evolved in the interim period).
+
+For inflation we should start from a minimal set of assumptions about the power spectrum of the density variations: that is to say, that they should follow a featureless power law. If there was a preferred length then we'd need an explanation as to why this feature exists. Given the Cosmological Principle there should be no preferred length. We can express the power spectrum as:
+
+\begin{equation}
+P_k = < \delta_k \delta_{k'}^* > = A k^{n}
+\end{equation}
+
+\noindent here power, in Fourier space $P_k$, is assumed to be linearly proportional to the wavenumbers $k$ (length scales in real space). The parameter $A$ sets the overall normalization of each mode. The power spectrum tells us about the correlations in the density (here, over-density $\delta$) field.
+
+The spectral index $n$ is close to 1 for a scale-invariant power spectrum, this is known as the Harrison-Zel'dovich spectrum \citep{bib_harrison, bib_zeld} and states that the curvature of fluctuations have constant amplitude on all scales. Such an idea has a good match to the observed spectra from the CMB. \citep{bib_baum}
+
+The amplitude of the fluctuations in the Inflaton field are a free parameter of the theory of Inflation. This freedom is part of the problem known as cosmic variance and is hard to measure in observation as it is only apparent at the largest scales of the Universe. I will return to the idea of cosmic variance below.
+
+In figure \ref{fig.cdmpower} I show the evolved non-linear power spectrum (thick black line) on top of the input power spectrum (dashed black line). At the end of inflation we expect this dashed line to be straight as mentioned above. This figure shows that is the case, however, it does show some evolution at the larger scales (left side of the graph) however at inflation the power spectrum is simply just a straight a line. As the universe evolves then the power drops for large scales. Power eventually evolves on the small scales too as the density perturbations become non-linear; the dashed line therefore bends outwards as the power increases on small scales (right side of the graph). I give thanks to Teodoro for providing this figure \citep{bib_teodoro}.
+
+\begin{figure}[htb]
+   \begin{center}
+     \leavevmode
+                \epsfxsize=145mm
+                \epsffile{./bkg_pix/cdm_power}
+
+   \end{center}
+\caption{This figure shows the evolved non-linear CDM power spectrum (think black line) as generated by Smith et al, this power spectrum was calculated from the $\Lambda$-CDM theory. The input power spectrum is the initial power spectrum at the start of the simulation, which is post Last Scattering. The straight part of the dash line shown is what we expect the inflation power spectrum to look like. The coloured lines and datapoints are from power spectra generated from various runs of a Large Scale Structure code used by Teodoro \citep{bib_teodoro}. $L0$ is the length of the simulation box (in $h^-1$ Mpc) and $N$ is the number of particles in the simulation.}
+\label{fig.cdmpower}
+\end{figure}
+
+
+There are two main contributions to primordial density perturbations: an adiabatic component and and isocurvature component. In general, the perturbations will be a mixture of both. The abundance of each type is a feature of power spectrum of the CMB, therefore it is clearly possible to say something about the nature of inflation given the CMB power spectrum (see below).
+
+For primordial density perturbations, adiabatic means that the over-density in each component of the energy density is the same. That is the over-density of baryons in a given region will be the same as the over-density of photons in the same region. For isocurvature perturbations, however, the sum of the over-density components is zero. As the name implies, this ensures that curvature is the same everywhere. The theory of structure formation from cosmic strings relies upon the isocurvature model.
+
+In figure \ref{fig.ang_power} I show the angular power spectrum of the CMB. From the data used to construct this power spectrum it is possible to determine whether the CMB favours the existence of adiabatic of isocurvature primordial density perturbations. The two types will produce peaks in the power at different locations (different angular scales, or different multipole number $l$). Adiabatic perturbations favour a series of ratios $1:2:3: \ldots$ in $k$ (wave-number) or $l$ (multipole number); while isocurvature perturbations favour the ratio $1:3:5: \ldots$ \citep{bib_huw2}.
+
+The angular power spectrum of the CMB tells us that the primordial density perturbations are entirely adiabatic. This supports our model of inflation and rules out the model of structure formation from cosmic strings.
+
+It is also possible to link the two power spectra of the temperature fluctuations in the CMB light to the density perturbations at the time of the CMB (and not just to the primordial density perturbations). As mentioned above there are three main types of sources of anisotropies in the CMB light. I will focus upon the adiabatic perturbations (item 2 in the list) which originate from the time of Last Scattering.
+
+The first peak in the angular power spectrum (figure \ref{fig.ang_power}) is known as the acoustic peak (at $l = 220$), this is the sound horizon at Last Scattering. If the Universe was significantly more open (in terms of curvature) then this peak would be further to the right. The position of this peak therefore tells us the Universe is flat (see \citet{bib_pea} for more details).
+
+The heights of the peaks in the power spectrum are determined by the driving force of feedback and the baryon drag.
+The recombining plasma is a coupling of the photons and baryons, the positive energy density naturally tends to make dense regions self-gravitate; however, the photons tend to resist this compression and so act to erase these anisotropies while the baryons, essentially tracers of the CDM potentials, tend to form dense haloes. The competition between the photons and baryons creates an oscillatory structure that is present in the power spectrum.
+
+A larger abundance of neutrinos would decrease the amplitudes of the peaks and the driving force would not be present if the gravitational potentials are dominated by Cold Dark Matter \citep{bib_huw2}.
+
+It is expected that hot and cold spots should thermalize and hence appear as a uniform temperature (that of Hydrogen ionization); however, denser spots actually recombine later and so they are less red-shifted and therefore hotter. Crudely, we can state the fractional density difference $\delta \rho / \rho$ in terms of the fractional temperature difference $\delta T / T$:
+
+\begin{equation}
+\frac{\delta T}{T} = - \frac{\delta z}{1+ z} = \frac{\delta \rho}{\rho}
+\end{equation}
+
+\noindent here we assume that the growth of density perturbations is linear, $\delta \propto (1 +z)^{-1}$. So to linear order we expect the fluctuations in temperature to be the same as the fluctuations in density. Therefore the size of density perturbations at this time will also be about $10^{-5}$.
+
+The tail of the power spectrum on the right hand side shows damping which is caused by diffusion damping (or collisionless damping). The fluid approximation of the plasma breaks down as the mean free path of the photons increases due to the Universe expanding and the finite depth of the last scattering surface. Therefore the acoustic peaks are exponentially damped at smaller angular scales.
+
+Lastly, the large angular scales (left of the main peak in figure \ref{fig.ang_power}) are dominated by gravitational effects, such as the Sachs-Wolfe effect (item 1 above). As previously mentioned, this is an effect where photons are red-shifted as they climb out of gravitational potential wells.
+
+
+With all of this information combined it is possible to generate an analytic power spectrum and fit it to data from (say) the WMAP satellite. This process is one of the reasons that we can be confident in the Concordance (or $\Lambda$-CDM) model of Cosmology: it provides the most concise fit to the data. The data yields the following cosmological parameters \citep{bib_wmap7}:
+
+\vspace*{1cm}
+\begin{center}
+\begin{tabular}{|c|c|}
+  \hline
+  $H$ &  $70.4 \pm 1.3 {\rm km/s / Mpc}$    \\
+  $\Omega_{\rm b} $ & $ 4.56\%  \pm  0.16\%$ \\
+  $\Omega_{\rm CDM} $ & $ 22.7\%  \pm  1.4\%$     \\
+  $\Omega_{\rm \Lambda} $ & $ 72.6\%  \pm  1.5\%$  \\ 
+  $\Omega_{\rm \nu} $ & $ < 1\%$ \\
+  $\Omega_k$ & $ 0.0179 < \Omega_k < 0.0081$  \\
+  \hline
+\end{tabular}
+\end{center}
+\vspace*{1cm}
+
+The age of the universe is $13.75 \pm 0.11$ billion years (better than 1\% precision), $H$ is the Hubble parameter, $\Omega_{\rm b}$ is the abundance of baryonic matter, $\Omega_{\rm CDM}$ is the abundance of cold dark matter, and $\Omega_{\rm \Lambda}$ is the abundance of dark energy in the form of a cosmological constant. $\Omega_{\rm \nu} < 1\%$ is the abundance of neutrinos. The data also shows that the Universe has flat Euclidean geometry (shown by $\Omega_k$ near zero).
+
+
+\begin{figure}[htb]
+   \begin{center}
+     \leavevmode
+                \epsfxsize=150mm
+                \epsffile{./bkg_pix/CMB_angular_power}
+
+   \end{center}
+\caption{This figure shows the angular power spectrum of the temperature fluctuation of the CMB. The (lower) $x$-axis is the effective multipole number ($l$) while at the top of the picture is the angular scale (degrees) \citep{bib_wright}.}
+\label{fig.ang_power}
+\end{figure}
+
+
+\paragraph{Cosmic Variance.}
+This is an expression about the lack of statistical reliability at extreme distance scales. At large distances the number of independent data points is low, so it is difficult to make statistical statement about the Universe at these scales. As we can only see one Universe, our own, then it is more difficult to use the notion of ensemble averages. There is only one observed realisation of the Universe: the one we see. This provides an inherent inaccuracy of using the CMB to constrain the amplitude of fluctuations from Inflation.
+
+\paragraph{Dark Matter.}
+The idea of Dark Matter was postulated as a method which accounts the missing matter in galaxy rotation curves and clusters of galaxies. Fritz Zwicky \citep{bib_zwi} is credited with being the first researcher to encounter a problem of ``missing matter". He estimated the total mass of the Coma cluster based on the motions of galaxies near its edge and compared that to the total mass based upon total brightness and number of galaxies in the cluster. His calculations yielded a result that suggested the cluster was 400 times more massive (implied by the motion) than expected (implied by visible light). This lead Zwicky to believe that there must be an abundance of non-luminous matter in the cluster.
+
+The confirmation of Zwicky's proposed non-luminous matter came 40 years later with the work of Rubin and Ford \citep{bib_rub}. They noticed that the edges of galaxies appeared to be rotating faster than he expected from using simple mass-to-light ratios with the Virial theorem. The total amount of light from the edges of galaxies suggested that the total mass of the galaxy should be lower than the mass inferred from the speed of rotation. This implies that some mass was missing, on top of that it must be dark in the sense that it emits no light.
+
+As mentioned in the section about the CMB, the angular power spectrum indicates the abundance of dark matter in the Universe. From this power spectrum it is clear that the CDM enhances the gravitational potential of the baryons and so increases the height of the acoustic peaks (larger than without CDM). It is thought that this dark matter is produced in the early Universe along with ordinary matter; however, there is no interaction signature in the observable light (such as from scattering) therefore the two types of matter must be weakly coupled; perhaps only coupled via gravity, this flavour of dark matter is called Cold Dark Matter (CDM). Currently, CDM is believed to exist and is a key component of the Standard Model (the $\Lambda-CDM$ model) and makes up around 22\% of the total energy budget. \citep{bib_wmap}
+
+The height of the peaks provides a parameter for the fluctuation amplitude that seeds the initial conditions in LSS simulations. The superparticles in $N$-body simulations are assumed to be similar to CDM in nature. A superparticle is a particle in a computer simulation that represents many real particles (more details are given in \ref{ch_2}. In a highly idealised way, these particles only interact via gravity. In the simplest simulations baryons are ignored. CDM and the superparticles of $N$-body simulations has the following features collisionless (non-interacting, no scattering), dissipationless (don't cool by photon radiation), non-relativistic (speed is much less than that of light).
+
+Despite no direct detection of CDM it is seen indirectly in weak lensing surveys of the Universe which are able to accurately map out where the dark matter is distributed. Notably, CDM is thought to be present in galaxy clusters as well as in galaxies themselves (so called galaxy halos). Due to the weak coupling with ordinary matter, and currently no observable interaction signature (such as, from scattering), then CDM only contributes to the total mass and not the total light observed in a galaxy. This explains why galaxies are observed to be moving faster in clusters than would otherwise be expected without CDM. \citep{bib_pea, bib_nfw}
+
+Around each galaxy (and filling the distances between galaxies in clusters) is the presence of a dark matter ``halo'', it is expected to extend beyond the edge of the visible edge of galaxies and is the principal component of a galaxy's gravitational potential (as the dark matter dominates the total mass of the galaxy). This idea is a consequence from the results of \citet{bib_rub}. The shape of the density profile is known as the Navarro-Frenk-White (NFW) profile, see \citet{bib_nfw} for more details.
+
+\paragraph{Dark Energy.} The last piece of the puzzle that needs to be mentioned is that of the ambiguously named Dark Energy, which bares no resemblance to Dark Matter. The two are not equivalent or interchangeable as one might naively guess from Einstein's relation of mass to energy. Unfortunately, the name has stuck despite the misleading nature of its meaning.
+
+Dark Energy is thought to behave like the Cosmological Constant \citep{bib_lah} that appears in Einstein's Field equations, in fluid terms it acts like a negative pressure. That is to say that the pressure is negative (unlike ordinary pressure) but results from a positive energy density: $P_{DE} = - \rho_{DE}$ \citep{bib_pad}. However, it is hypothesized to be an effect from the vacuum of space. At a simplistic level it acts in the opposite direction to gravity and, hence, is a repulsive force. Padmanabhan indicates that the source of geodesic acceleration is $\rho +3p$ and not just $\rho$; gravity is attractive because this quantity is greater than zero, however, if this quantity was less than zero (due to say a negative pressure contribution from Dark Energy) then it would lead to `repulsive' gravitational effects.
+
+In the current epoch, $a \rightarrow 1$, the Cosmological constant is the dominant term of the Friedmann equation for governing the dynamics of expansion (see the Friedmann equation \ref{eqn_fdmn}). As Dark Energy is synonymous with the Cosmological constant, it is believed that Dark Energy is causing the Universe to expand at an accelerated rate, similar to the suggested vacuum driven expansion of Inflation.
+
+Observations in the mid-70s strongly suggested that the dominant matter component of the Universe was non-baryonic \citep{bib_pad}. This is the Dark Matter. However, these observations show that this component is 20\% - 30\% of the Universe's energy density ($\Omega_m = 0.2 - 0.3$). At the same time, as \citet{bib_pad} notes, there was a ``theoretical prejudice" for $\Omega_{\rm tot} = 1$. That is to say that there is another missing component (beyond Dark Matter) in the total energy of the Universe. This component is `unclustered' (in Padmanabhan's words; that is to say that it appears to be an isotropic effect across the whole observable Universe (at high-redshifts).
+
+The observational evidence for the existence of Dark Energy came in the late-90s. The original paper \citep{bib_riess} published observations of type Ia supernovae, these observations were used to place constraints on key cosmological parameters (such as Hubble's parameter ($H_0$), the mass density ($\Omega_m$), the cosmological constant ($\Omega_{\Lambda}$), the deceleration parameter ($q_0$), and the dynamical age of the Universe ($t_0$)).
+
+The key result from this publication was that ``the distances of the high-redshift SNe Ia are, on average, 10\% to 15\% farther than expected in a low mass density ($\Omega_m = 0.2$) Universe without a cosmological constant. Different light curve fitting methods, SN Ia subsamples, and prior constraints unanimously favour eternally expanding models with positive cosmological constant (i.e., $\Omega_\Lambda > 0$) and a current acceleration of the expansion (i.e., $q_0 < 0$)."
+
+The team measured the redshift and apparent brightness of the supernovae and found that they were dimmer than expected for the redshift they gave. Type Ia supernova are thought to explode at a known absolute brightness which is thought to be a standard, or fixed, value. One can determine the distance to these supernova, accurately, by measuring its apparent brightness. This is why Type Ia are known for their reliability of measuring distances in the Universe, and are also called `standard candles'.
+
+As the supernovae have a known brightness, and therefore a known distance, then it should be easy to match this distance to that given by the redshift. This is where the contention arises: \citet{bib_riess} show that the supernovae are dimmer than expected for their measured redshift. This suggests the Universe is expanding at an accelerated rate.
+
+The latest data from WMAP \citep{bib_wmap7} gave an estimate of the Dark Energy to be around 73\% ($\Omega_{\rm \Lambda} 72.6\%  \pm  1.5\%$) of the total energy budget of the Universe.
+
+
+\paragraph{Large Scale Structure.} A lot has been said already about LSS, most of the relevant science is in the earlier section \ref{lss} devoted to LSS which is one of the central topics of this thesis. The clustering of galaxies is a perturbation to an otherwise isotropic and homogeneous system and hence they can be treated as an extension of the isotropic, homogeneous metric. Here I make a note of how to describe the evolution of LSS as a fluid. This line of thinking ties in well with the wave-mechanical approach as will be highlighted in Chapter \ref{ch_3}.
+
+The Friedmann equation assumes and requires the expansion of the Universe to be adiabatic. This necessitates that the Universe is described as a perfect fluid, an example is a CDM dominated Universe. This suggests describing structure formation using the fluid equations. For a general fluid description, the Universe will behave according to Boltzmann statistics. The Boltzmann equation describes the statistical distribution of one particle in a fluid using a 7 dimensional function $f(x,y,z,v_x,v_y,v_z,t)$. The positions are denoted by $(x,y,z)$ and the components of velocity are denoted by $(v_x,v_y,v_z)$. As usual, time is denoted by $t$.
+
+\begin{equation}
+\frac{\partial f}{\partial t} + \frac{\partial f}{\partial \mathbf{x}} \cdot \frac{\mathbf{p}}{m} + \frac{\partial f}{\partial \mathbf{p}} \cdot \mathbf{F} = \left. \frac{\partial f}{\partial t} \right|_{\mathrm{coll}}
+\end{equation}
+
+
+\noindent $F$ is the force acting upon the particle, $m$ and $p$ are the mass and the particle's momentum (respectively). It is worth noting that the Boltzmann equation is more general than a fluid description; however, the two concepts are often stated as being synonymous with each other \citep{bib_pea}. Under the simplification of no collisions ($\left. \frac{\partial f}{\partial t} \right|_{\mathrm{coll}} =0 $) the Boltzmann equation reduces to the Vlasov version and leads to the collisionless fluid equations (in comoving coordinates with additional Hubble term):
+
+\begin{equation}
+\label{eqn_fluid}
+\frac{\partial \rho}{\partial t} + \frac{1}{a} \nabla \cdot (\rho v) = 0
+\end{equation}
+
+\begin{equation}
+\frac{\partial v}{\partial t} + \frac{1}{a} v \cdot \nabla v + H v = - \frac{1}{a} \nabla \Phi
+\end{equation}
+
+\noindent Here $v$ is the velocity and $\rho$ is the density, $H$ and $a$ are the Hubble parameter and expansion factor (respectively), and $\Phi$ is the gravitational potential. The extra Hubble term accounts for the dynamics of an expanding Universe, even in comoving coordinates the dynamics are modified. A derivation of these equations in a cosmological context is given in Chapter 15 of \citet{bib_pea}.
+
+It is possible to directly code these equations on a computer and generate simple results for LSS. Using the Boltzmann equation is only one such approach, as already stated the main technique is the $N$-body method. The next chapter (\ref{ch_2}) provides a review of the standard simulation techniques in LSS.
+
+

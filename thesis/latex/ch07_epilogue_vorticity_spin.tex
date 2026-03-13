@@ -1,0 +1,485 @@
+%
+%%
+%%%
+%%%%
+\chapter{Epilogue: Vorticity and spin}
+\label{ch_7}
+This chapter is not part of the work of this thesis. The aim of this chapter is to demonstrate that wave-mechanics is a method of simulation that may be naturally suited to including vorticity and spin. In section \ref{vort} I pointed out that singularities in the wavefunction ($\psi = (0,0), \;\psi\in\mathbb{C}$) may indicate the centrepoint of a vortex. In a standard $N$-body or wave-mechanical simulation we do not expect to see any vorticity, as previously mentioned, due to Kelvin's circulation theorem. This rules out vortical motion at small distance scales. We expect the circulation theorem to hold as gravity is a conservative force and can be expressed as the derivative of a scalar potential, hence the curl of the force is identically zero: $\nabla\times F_g = \nabla\times\nabla\phi_g \equiv 0$.
+
+When the wavefunction is singular ($\psi = (0,0), \;\psi\in\mathbb{C}$) then the velocity at such a point is undefined (see equation \ref{eqn_svel}). It could be possible that such a region is not a vortex at all but is rather a region of numerical unreliability; however, there is an interesting similarity between this type of singularity in the wavefunction and a vortex: the velocity vector at the centre of a vortex is also undefined.
+
+In Short's thesis he provided the caveat that the circulation theorem only holds before shell crossing \citep{bib_short}; therefore, the existence of small scale vorticity does not contradict Kelvin's theorem as their existence would only occur after or in regions of shell crossing. Kelvin's theorem does not forbid large scale rotation either, for example such phenomena are clearly visible in the published video of the Millennium Simulation \citep{bib_mil}. Given that singularities and possible sources of vorticity exist in our wave-mechanics data (for example, see \ref{fig.psi_psi} \& \ref{fig.vort}), then to what extent do we expect vorticity to be relevant in the dynamics of an arbitrary astrophysical system?
+
+We know that vorticity occurs naturally in electromagnetism and that regions with a strong magnetic field should display vortical or helical motion, such as charged particles following the magnetic field in a solar flare. However, we don't expect to see vorticity at cosmological scales. In cosmological simulations the initial angular momentum is set to zero which is observationally motivated as suggested in Chapter \ref{ch_1}; furthermore, we expect the vorticity to be zero in the Universe now as it is related to the decaying mode of density perturbations (as mentioned in section \ref{lingrow}). Despite the fact that this thesis has focussed upon applying wave-mechanics to large scale structure it should be possible to simulate systems of smaller scales such as individual galaxies or proto-planetary disks where vorticity may be more relevant.
+
+In the conclusion to Short's thesis \citep{bib_short} he suggests that the wave-mechanical method might be able to model the rotation of CDM haloes, he suggests that this could potentially be done by incorporating spin in a similar way that the Pauli equation does. In this chapter we present two bold ideas that can (1) be used to probe regions of vorticity and (2) investigate the spin of self-gravitating masses. The latter deals with the intrinsic spinning motion of a single object (which could be infinitesimal in size), while the former deals with circular or spinning motion at the scale of a few particles.
+
+In this chapter I will show, particularly in section \ref{spinobj}, that adding spin is not necessarily the same as adding vorticity. It should be possible to include spin effects in a system that has a Newtonian gravitational potential. If we combine both spin and vorticity then we could account for spin-orbit coupling; admittedly, this is likely to be a more profound effect in simulations of highly dense or high spinning systems such as AGN or neutron star / black hole binaries but it could have interesting and unforeseen consequences in a cosmological simulation.
+
+\section{Vorticity}
+In order to properly handle vorticity we will need to modify our equation for the force of gravity in such a way that the curl of the force is no longer forbidden. We could we propose a phenomenological fix to the problem of vorticity by invoking a gravitational vector-potential, let's call it $V_c$ and note that the curl of the gravitational force is now: $\nabla\times F_g = \nabla\times(\nabla\phi_g + V_c) \not\equiv 0$. This expression is no longer identically equal to zero; it is possible that the new potential is negligible and hence the curl of force is very close to zero anyway.
+
+We wish to add this extra complication as an extra degree of freedom such that it may yield additional physical effects. We are primarily interested in setting this vector potential to zero initially but then watching the evolution of our system to see if the potential is non-zero by the end of the simulation. As noted we have seen rotation on large scales in the Millennium Simulation \citep{bib_mil} but by providing this additional freedom we might see rotation, and hence vorticity, on smaller scales than we currently do without radically increasing the resolution of the simulation. This could provide a more reliable way of simulating how gravity can `torque up' an extended body such as a galaxy or a group of bodies like our Local Group.
+
+It is not obvious if such torque effects would be significant for LSS simulations, torques should be present without the existence of vortices. It is possible to study torque and angular momentum in current $N$-body simulations without the inclusion of a vector potential; however the existence of a vector potential would naturally allow for torquing force (one that acts tangentially to the ordinary force of gravity).
+
+The effects of torque upon galaxies have been considered in a publication by Gonz\'alez-S\'anchez \& Teodoro \citep{bib_gonz}. These authors considered the torque upon galaxies in clusters that is generated from the gravitational force and a dynamical force of friction. They used this to study the possible origin of small-scale alignment effects of galaxies within clusters. Their motivation for torque is more like the second idea proposed in this chapter, where the galaxies are dipole-like masses (that is to say that they are not point particles). The suggestion for this section is to study the inclusion of a gravitational vector-potential but the particles (in an $N$-body code) are still point particles.
+
+If a region of vorticity is identified in an LSS simulation then finding the centre of the vortex could be a possible method of identifying spiral galaxies or a small group of galaxies. Such a method is probably unable to identify elliptical galaxies. Researchers in the field of $N$-body simulations use the Halo Model \citep{bib_halo} to populate their density field (actually a CDM density field) with galaxies. This model is only appropriate to particle simulations and could not be translated into a wave-mechanical perspective as easily. Hence, wave-mechanics requires an alternative method of populating the density field with galaxies; therefore, identifying vortical regions with non-zero mass is one possibility.
+
+I provide the caveat that a singular region where the wavefunction is zero requires the density to be zero as well. The original suggestion for finding vorticity was to look at gridpoints where the wavefunction is zero; however, for the velocity to be undefined it requires only the imaginary part of the wavefunction to zero. It should be possible to identify regions where the density $\rho = \psi^*\psi$ is non-zero but the velocity is undefined; the wavefunction would take a form $\psi = (a,b)$ where $\; a \neq 0,\; b = 0;\; a, b\in\mathbb{R}; \;\psi\in\mathbb{C}$.
+
+\subsection{Gravitoelectromagnetism}
+\label{GEM}
+In the previous few paragraphs we suggested that including vorticity could be done using a vector-potential. Clearly, this potential does not need to be gravity but could be some other force. It could perhaps be the magnetic field from electromagnetism; a wave-mechanics simulation that includes Newtonian gravity and a magnetic field might be useful in simulating, for example, neutron star binaries where the magnetic field is non-negligible. Otherwise the stipulation of a gravitational vector-potential will seem like a phenomenological proposition.
+
+From searching into previous literature on vector-potentials in gravity we discovered that the idea called Gravitoelectromagnetism (GEM)  \citep{bib_gravito} provides such a potential (it provides a gravitational vector potential). GEM is attractive on two counts: (1) it already provides a gravitational vector-potential and (2) the idea is well established and relies upon equations that are analogous to Maxwell's equations. On the latter point, the Maxwell equations have already been shown to fit into the Schr\"odinger equation and Watanabe \citep{bib_wat2} has also a suggested a way for handing the vector potential using the Cayley method.
+
+GEM is formally analogous to the Maxwell equations, the vector-potential $A$ is no longer associated with electromagnetism but is instead a gravitational vector-potential (denoted $A_g$). This potential can be called the gravitomagnetic potential but has nothing to do with classical magnetism. Under certain conditions it can be shown that GEM is a valid approximation to Einstein's field equations  \citep{bib_gravito}.
+
+\vspace*{1cm}
+\begin{center}
+\begin{tabular}{|r|l|}
+  \hline
+  GEM equations & Maxwell's equations \\ \hline
+$\nabla \cdot \mathbf{E}_\text{g} = -4 \pi G \rho_\text{g}$  & $\nabla \cdot \mathbf{E} =  \frac{\rho}{\epsilon_0}$ \\
+$\nabla \cdot \mathbf{B}_\text{g} = 0$ & $\nabla \cdot \mathbf{B} = 0$ \\
+$\nabla\times\mathbf{E}_\text{g}= -\frac{\partial\mathbf{B}_\text{g}}{\partial t}$& $\nabla\times\mathbf{E} = -\frac{\partial\mathbf{B}}{\partial t}$\\
+$\nabla \times \mathbf{B}_\text{g} = -\frac{4 \pi G}{c^2} \mathbf{J}_\text{g} + \frac{1}{c^2} \frac{\partial \mathbf{E}_\text{g}} {\partial t}$ & $\nabla \times \mathbf{B} = \frac{1}{\epsilon_0 c^2} \mathbf{J} + \frac{1}{c^2} \frac{\partial \mathbf{E}} {\partial t}$ \\
+  \hline
+\end{tabular}
+\end{center}
+\vspace*{1cm}
+
+\noindent On the right hand side are the standard Maxwell equations with the usual meanings from electromagnetism. On the left we have new quantities. Here, $E_g$ is the gravitoelectric field, or the field from static gravity. It is directly comparable to Poisson's equation: $\nabla^2 \Phi_g = -4 \pi G \rho_\text{g}$. Likewise the new field $B_g$ is the gravitomagnetic field; $\rho_g$ is simply the mass density as it appeared earlier in this thesis and has a corresponding mass-current density which is denoted by $J_g$. This latter quantity, $J_g$, is essentially the same one found earlier in this thesis although it will account for some relativistic effects given the context.
+
+\paragraph{Vorticity}
+From a theoretical point of view it is easy to imagine vorticity being generated by a force analogous to the magnetic field. The magnetic field in electromagnetism merely bends trajectories of particles rather than increasing their speed. Therefore it is natural to construct a Lorentz force for GEM:
+
+\begin{equation}
+\mathbf{F}_\text{g} = m \left( \mathbf{E}_\text{g} + \mathbf{v} \times 2 \mathbf{B}_\text{g} \right) 
+\end{equation}
+
+\noindent The gravitoelectric field $E_g = \nabla\phi_g$ will provide the usual curl-free Newtonian force of gravity, whenever the gravitomagnetic field $B_g$ is zero then the usual Newtonian force of gravity is recovered. The gravitomagnetic force will act perpendicular to the direction of velocity, which would act to bend the trajectory of the mass it acts upon. It is clear that this field is not necessarily curl free, hence the generation of vorticity is not formally forbidden.
+
+Any system that obeys the GEM equations can be described using a Schr\"odinger-like equation, as has been shown for the dynamics of an electron in a magnetic field \citep{bib_wat2}.
+
+\paragraph{Schr\"odinger equation}
+Watanabe's publication \citep{bib_wat2} that describes electrons in a magnetic field presents the following Schr\"odinger equation:
+
+\begin{equation}
+i\hbar\frac{\partial}{\partial t}\psi(\underline{x},t) =-\frac{\hbar^2}{2m}\left(\nabla^2-\frac{ie}{\hbar}\mathbf{A}\right)^2 \psi(\underline{x},t)
+\end{equation}
+
+\noindent For simplicity, this equation omits the usual scalar potential $V$. In the GEM case then the electric charge $e$ would be replaced by the gravitational ``charge'' (mass) $m$. As for electromagnetism, there is the expected relation that $B_g = \nabla \times A_g$. The EM version of this equation is consistent with the EM Maxwell equations; therefore, by construction, the gravitational Maxwell equations will be consistent with the GEM Schr\"odinger equation by making the appropriate replacements (such as $A \rightarrow A_g$).
+
+Watanabe only presented a 1D magnetic force but it is straight forward to generalize this to a 3D (gravito-)magnetic force. As expected he decomposes the evolution of this Schr\"odinger equation using splitting operators. He notes ``the magnetic field just changes the phase of the wavefunction, so it is very easy to compute.''
+
+\subsubsection{Test of Gravitomagnetism}
+We expect the gravitomagnetic force to provide a torque, or twisting force, to the masses in our simulations. In the previous section we mentioned that simulations of Large Scale Structure already display regions under going rotational motion, hence they have non-zero angular momentum. We therefore expect the gravitomagnetic field to be non-zero in existing simulations; naturally, the effect is not included in the equations of motion but the field $B_g$ is proportional to the angular momentum, $L$, of the system ($L\neq 0 \Rightarrow B_g \neq 0$).
+
+In an LSS simulation we expect the the effect would be small even if the field was included in the equations of motion; therefore, the effect is likely to be smaller in a simulation that does not have the field $B_g$ in its equations of motion. We performed a test of the latter to see if we could find a non-zero $B_g$ field from the data of our Hydra simulations (as seen in Chapter \ref{ch_4}. We constructed a code that would take an output from Hydra (position and velocities of all particles) and then calculate the field $B_g$ which is defined as follows:
+
+\begin{equation}
+\mathbf{B}_\text{g} = \frac{G }{2 c^2} \frac{\mathbf{L} - 3(\mathbf{L} \cdot \mathbf{r}/r) \mathbf{r}/r}{r^3}
+\end{equation}
+
+\noindent here $\mathbf{L}$ is the angular momentum of a particle in the simulation and $\mathbf{r}$ is the position of the particle (relative to the centre of mass). The angular momentum is defined as:
+
+\begin{equation}
+\mathbf{L} = \int \rho (\mathbf{v} \times \mathbf{r}) dV = \sum m (\mathbf{v} \times \mathbf{r})
+\end{equation}
+
+\noindent here $\mathbf{v}$ is the velocity of a particle relative to the centre of mass, $\rho$ is the density and forms the definition of a continuous angular momentum field however it is sufficient to work with discrete masses using the version of $\mathbf{L}$ on the right-hand side above. As suggested, we transform the particle positions and velocities from the Hydra outputs into the centre of mass frame for the system. The centre of mass is very close to being the centre of box for the simulation outputs. The mass of each particle and the other units such as $G$ $c$ have been set equal to 1 for simplicity.
+
+We refer the reader back to Chapter \ref{ch_4}, where we compared the Hydra $N$-body code to the 3D FPA code. From the same results we computed the angular momentum and the gravitomagnetic field with some interesting results in the following table. The outputs are the same as they were before, the timestep is denoted by $t$ and the corresponding expansion factor is given by $a$. Our calculations of the angular momentum, the gravitoelectric and gravitomagnetic fields are comoving rather than physical quantities.
+
+The key result from this test is characterized by the ratio of the two gravito-forces, that is the ratio of the gravitomagnetic field to the gravitoelectric field (Newtonian gravity): $F_{Bg}/F_{Eg}$.
+
+\vspace*{1cm}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  t = & 0 & 162 & 531 & 739 & 936 \\
+  a = & 0.25 & 0.33 & 0.62 & 0.78 & 0.93 \\  \hline
+  L (x) & $1.6\times 10^{-5}$&-10.42 & -12.17&-12.57& -11.97 \\
+  L (y) & $1.2\times 10^{-5}$& 5.57  &  2.18 & 0.88 & 1.423  \\
+  L (z) & $2.0\times 10^{-5}$  & 5.45  &  4.61 & 4.35 & 4.08 \\ \hline
+  max($B_g$) & 795 & 1096 & 106.68 & 55.9 & 53.27 \\
+  max($F_{Bg}/F_{Eg}$) & 0.55 & 0.18 & 0.11 & 0.065 & 0.055 \\
+  \hline
+\end{tabular}
+\end{center}
+\vspace*{1cm}
+
+\noindent here $L(x,y,z)$ is the angular momentum for the respective components. max$(B_g)$ is the maximum value of the gravitomagnetic field for the corresponding output time. max$(F_{Bg}/F_{Eg})$ is maximum value of the ratio of the two gravito-force fields. The minimum value of this ratio is close to zero in all outputs ($\sim 10^{-7}$). 
+
+It is clear the strength of the gravitomagnetic field is decreasing over time as is expected from the standard model of cosmology. The ratios in the above table may seem higher than expected but I will re-iterate by we ``omitted'' a large divisor of the $F_{Bg}$ calculation: $1/c^2 = 1$. The purpose of these calculations was to show the angular momentum is present in $N$-body cosmological simulations and hence show that the gravitomagnetic field can be finite and non-zero.
+
+We do not expect a large value for the strength of the $B_g$ as it is omitted from the equations of motion, if such an effect was fully considered then it might have a more significant role; however, we don't expect that the field will be significant in a cosmological simulation but rather in the simulation of a system that has stronger gravity field than is provided by the simple Newtonian force of gravity. We admit that in the case of very strong gravity, such as merging neutron stars, then the GEM equations will only provide a rough approximation as a full general relativistic treatment is needed.
+
+The same calculations above could be performed for our wave-mechanics outputs but we expect the same results to be the same. The result is likely to be independent of the simulation method used. The GEM equations could be used to modify the equations of motion whether that is in an $N$-body code or a wave-mechanics code. Naturally, we also strongly advocate extending the GEM equations into a wave-mechanics context and believe that it is naturally suited to adding in these effects.
+
+\section{Spinning objects}
+\label{spinobj}
+The idea of spinning objects in cosmological simulations is under-developed in current literature and to the best of our knowledge, no code currently exists to do as we suggest. The Pauli-like equation that we eventually derive for a wave-mechanics implementation of spinning objects is entirely new, as far as we are aware.
+
+To include a spinning object in a simulation one does not necessarily have to include gravity from a vector-potential (as seen in the previous section). In this section we show that it could be possible to include spinning objects under ordinary Newtonian gravity. In order to generate rotation from gravitating objects one needs a differential (a non-constant) gravitational field across the object. This is not the inclusion of vorticity as the gravitational field is still generated by scalar potential (Newtonian). The vector-potential field will allow for the inclusion of vorticity but the fluid elements do not have intrinsic spin (the centre of the vortex has undefined velocity in the usual fluid description).
+
+Hence, with this idea I propose a `minimal' extension to the current paradigm of cosmological simulations. All simulations have Newtonian gravity: scalar potential, non-relativistic. While we aim to incorporate this idea into wave-mechanics, it should also be possible create an extension for an $N$-body code.
+
+In this model, spin is introduced naturally as an extra degree of freedom, the particles will spin if the physical conditions permit it. We expect this to occur in regions of high density where large torques can be created by large differentials in the gravitational field. We do not have to necessarily assume that the particles have an initial spin.
+
+The key idea that we wish to explore is if gravity can torque up our computational super-particles causing them to spin. Hence, this is a separate approach to the same question of determining whether a simulation of the Universe that displays no initial spin may exhibit non-zero local spin at some later time. We believe the total spin of the Universe should be conserved. This would allow theory to be checked by the results of a simulation, naively we expect there to be a measurable difference in the results of a universe with zero net-spin from that with non-zero net-spin.
+
+Modelling spinning objects is naturally suited to a wave-mechanical formulation as Pauli has already shown how to include spin into the Schr\"odinger equation; consequently, we expect that it will be easier to include spin in wave-mechanics than in an $N$-body code.
+
+The standard model of cosmology requires that the Universe initially has zero vorticity (extrinsic angular momentum) but I am uncertain on the requirements of spin; however, our proposal is to add an additional degree of freedom but not to necessarily include non-zero initial spin. I provide the caveat that this suggestion is not based in quantum mechanics, it is a purely classical system and we are interested in the macroscopic spin of extended objects (non-zero multipole moments).
+
+Here we construct the model from first principles and derive a Pauli-like equation suitable for a wave-mechanical simulation. We start by finding an equation for the gravitational potential of extended objects, we do this by adopting the same procedure as Jackson \citep{bib_jack} does for an extended charged object in an electromagnetic field. Applying the derivative operator, $\nabla$, to the potential yields an equation for the force of gravity. The potential is still a scalar quantity hence we suspect that vorticity will be identically zero. Given an equation for force, we note that it should be straight forward to implement this in an $N$-body formulation.
+
+In order to induce spin in a set of particles we need a gradient in the gravitational field. As shown in figure \ref{fig.jackson}, we see an amorphous distribution of mass placed in an external gravitational field. This mass is infinitesimal in size, hence the internal potential and forces are zero, but we use a Taylor expansion to generate the higher order moments of the distribution. By including higher order moments we will see that this provides enough freedom for the existence of spin.
+
+\begin{figure}[htb]
+   \begin{center}
+     \leavevmode
+                \epsfxsize=80mm
+                \epsffile{./future/spins_2}
+
+   \end{center}
+\caption{This figure shows a particle with some arbitrary distribution of mass. The vector R is the centre of mass vector.}
+\label{fig.jackson}
+\end{figure} 
+
+\noindent The Taylor expansion for the potential energy $U$ generated by such a `particle' (external to the particle) is the following:
+
+\begin{equation}
+\label{taylor}
+U (\mathbf{R} + \mathbf{r}) = \phi_0 \int \rho\;dV + \partial_i \phi \int \rho \mathbf{r_i}\;dV + \partial_{ij} \phi \int \rho \mathbf{r_i} \mathbf{r_j}\;dV + \ldots
+\end{equation}
+
+\noindent here $R$ is the centre of mass, $\phi$ is the gravitational potential and the quantities $\partial \phi$ are tensors that take the form of a product between the differential matrix and the gravitational potential. The vector $\mathbf{r}$ is the position of the sub-particle mass with respect to the centre of mass. Caveat: the potential is always a scalar quantity despite the existence of vector and tensors in the expansion.
+
+It is a well known result that for a gravitational field, the dipole moment of the potential (first order in the expansion) is the centre of mass 
+of the distribution. Hence, in the centre of mass frame this quantity is zero. This is true for all gravitational systems due to the symmetry inherent in the equations of gravity; despite the centre of mass moment being zero there is no loss of generality. Electromagnetism is different for the dipole moment as it cannot be easily set to zero without loss of generality: the dipole moment is not intrinsically zero (even in the centre of mass reference frame).
+
+In the gravitational case the dipole term disappears as mass `charges' have the same polarity. In electromagnetism, the two charges have opposite polarity and hence non-zero dipole moment (but zero quadrupole moment).
+
+We can illustrate this by considering a simple example where the distribution is that of two masses displaced along the x-axis such that $\mathbf{r}^{(1)} = (+x,0,0)$ and $\mathbf{r}^{(2)} = (-x,0,0)$ (figure \ref{fig.dipole} shows our suggested configuration of the masses). The dipole moment is:
+
+\begin{eqnarray}
+\mathbf{D_i} = \int \rho \mathbf{r_i} \;dV &=& m\left(\begin{array}{ccc}
+x & 0 & 0 \\
+\end{array}\right)
++ m\left(\begin{array}{ccc}
+-x & 0 & 0 \\
+\end{array}\right) \\
+&=& m \left(\begin{array}{ccc}
+0 & 0 & 0 \\
+\end{array}\right)
+\end{eqnarray}
+
+From a simple calculation we can show that the dipole moment $D$ is zero in the centre of mass frame. As already stated, from symmetry arguments the dipole moment is always zero for any distribution of matter.
+
+\begin{figure}[htb]
+   \begin{center}
+     \leavevmode
+                \epsfxsize=80mm
+                \epsffile{./future/dipole_2}
+
+   \end{center}
+\caption{This figure shows the `dipole' arrangement of mass.}
+\label{fig.dipole}
+\end{figure} 
+
+\noindent The first non-zero moment from the Taylor expansion (\ref{taylor}) is the quadrupole moment (second order in the expansion). In general, it cannot be set to zero. Continuing with this simple model of two masses (as in figure \ref{fig.dipole}), we can show that the quadrupole $Q$ for this exact configuration is non-zero:
+
+\begin{eqnarray}
+Q_{ij} = \int \rho \mathbf{r_i} \mathbf{r_j}\;dV &=& m\left(\begin{array}{ccc}
+x^2 & 0 & 0 \\
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{array}\right)
++ m\left(\begin{array}{ccc}
+x^2 & 0 & 0 \\
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{array}\right) \\
+&=&  2m x^2\left(\begin{array}{ccc}
+1 & 0 & 0 \\
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{array}\right)
+\end{eqnarray}
+
+\noindent As the particles rotate their positions will change with respect to the centre of mass but the quadrupole is always non-zero. This is the simplest example of a system with non-zero quadrupole.
+
+To calculate the potential energy from the relevant moments requires us to reduce the moments a scalar quantity. This is done by tracing over the appropriate indices. At dipole order we trace the derivative of the potential with the dipole moment:
+
+\begin{eqnarray}
+U^{(d)} &=& (\partial_i \phi) \mathbf{d_i} = \vec{(\partial \phi)}\cdot\vec{d} \\
+&=& (\partial_x \phi, \partial_y \phi, \partial_z \phi)\cdot(d_x, d_y, d_z) \\
+&=& \partial_x \phi \; d_x + \partial_y \phi\; d_y + \partial_z \phi\; d_z
+\end{eqnarray}
+
+\noindent The quadrupole is slightly more complicated and involves, essentially, a double trace (a trace over two pairs of indices). The summation convention is implied for a repeated index of $i$ or $j$, it is not implied for indices $x, y, z$ which are labels for the specific position of the relevant quantity in a vector or a matrix.
+
+\begin{eqnarray}
+U^{(q)} &=& (\partial_{ij} \phi) Q_{ij} = (\partial\partial \phi)\cdot\cdot Q \\
+&=& (\partial_{xx} \phi) Q_{xx} + (\partial_{xy} \phi) Q_{xy} + (\partial_{xz} \phi) Q_{xz} \\
+&+& (\partial_{yx} \phi) Q_{yx} + (\partial_{yy} \phi) Q_{yy} + (\partial_{yz} \phi) Q_{yz} \\
+&+& (\partial_{zx} \phi) Q_{zx} + (\partial_{zy} \phi) Q_{zy} + (\partial_{zz} \phi) Q_{zz}
+\end{eqnarray}
+
+\subsection{$N$-body considerations}
+In order to implement this model into an $N$-body code we have to express the previous potential equation as a force equation. Each term in the expansion must be pre-multiplied by the differential matrix of appropriate order. Thus, it follows that the force equation is:
+
+\begin{equation}
+\mathbf{F} (\mathbf{R} +\mathbf{r}) = \nabla \otimes U (\mathbf{R }+ \mathbf{r}) = \partial_i(\phi_0) \int \rho\;dV + \partial_i(\partial_j \phi) \int \rho \mathbf{r_j}\;dV + \partial_i(\partial_{jk} \phi) \int \rho \mathbf{r_j} \mathbf{r_k}\;dV + \ldots
+\end{equation}
+
+\noindent The first term (the monopole) is the Newtonian force of gravity $F = m(\nabla\phi)$. The quadrupole term in the force equation gives the following complicated relation that involves a three indices but eventually reduces to a vector (as expected):
+\begin{eqnarray}
+\label{quadforce}
+\mathbf{F}^{(q)} &=& \partial_i(\partial_{jk} \phi) \int \rho \mathbf{r_j} \mathbf{r_k}\;dV \\
+&=& \partial_i(\partial_{jk} \phi) Q_{jk} \\
+&=& \partial_i \left(\begin{array}{ccc}
+\partial_x^2 \phi & \partial_x \partial_y\phi & \partial_x \partial_z\phi  \\
+\partial_y \partial_x\phi & \partial_y^2\phi & \partial_y\partial_z\phi \\
+\partial_z \partial_x\phi & \partial_z \partial_y\phi & \partial_z^2\phi
+\end{array}\right) \int \rho
+\left(\begin{array}{ccc}
+r_x^2 & r_x r_y & r_x r_z  \\
+r_y r_x & r_y^2 & r_y r_z \\
+r_z r_x & r_z r_y & r_z^2
+\end{array}\right) \; dV
+\end{eqnarray}
+
+\noindent The first matrix is simply the third-order derivative of the potential, this can in principle be calculated without too much difficulty. It will need to be discretized in an appropriate manner. The second matrix will also be discretized in order to deal with a pseudo-discrete distribution of matter. For simplicity, one would adopt a model as we suggest where the super-particle's distribution of matter is similar to a dipole. Therefore, the integral reduces to a sum of mass multiplied by the position vector $\mathbf{r}$.
+
+This is likely to be computationally expensive; however, we find that there may be a simpler way to test this idea of spin without calculating the quadrupole moment. If we truncate to first order (dipole moment) in the force equation and then try the model suggested above (a mass `dipole') then we find the usual result that the potential and force produced by such a super-particle at this order is zero. This means that such a configuration does not create any new additional force or potential. To dipole order of the Taylor series, such an object would not produce gravitational radiation. However, such an object can still spin due to an external force (a gravitational field generated by other particles). The proof of that last statement comes from considering the following equations of `force':
+
+\begin{eqnarray}
+\mathbf{F} (R +r^{(1)}) = \partial_i(\phi_0) \int \rho\;dV + \partial_i(\partial_j \phi) \int \rho \mathbf{r}^{(1)}_i\;dV \\
+\mathbf{F} (R +r^{(2)}) = \partial_i(\phi_0) \int \rho\;dV + \partial_i(\partial_j \phi) \int \rho \mathbf{r}^{(2)}_j\;dV 
+\end{eqnarray}
+
+\noindent here we expand about the centre of mass, $\mathbf{R}$, with respect to $\mathbf{r}$ using the assumption that $|\mathbf{r}|<<1$. These equations are the force upon each of the sub-particles (see figure \ref{fig.dipole} ). These equations can be written as the addition and subtraction of each other as follows:
+\begin{eqnarray}
+m \frac{\partial^2}{\partial t^2} (\mathbf{r}^{(1)} + \mathbf{r}^{(2)}) = 2m \left(\partial_i(\phi_0) + \partial_i(\partial_j \phi) (\mathbf{r}^{(1)}_j + \mathbf{r}^{(2)}_j) \right) \\
+m \frac{\partial^2}{\partial t^2} (\mathbf{r}^{(1)} - \mathbf{r}^{(2)}) = 2m  \left(\partial_i(\partial_j \phi)  (\mathbf{r}^{(1)}_j - \mathbf{r}^{(2)}_j)\right)
+\end{eqnarray}
+
+\noindent The first equation is really the dipole term from the Taylor expansion. It is recognisable as the force on the centre of mass (already shown to be zero), while the second equation provides a difference vector that is confusingly similar to the dipole moment vector found in electromagnetism. As before, $\partial_i\partial_j$ is the Hessian matrix which is a three-by-three symmetric matrix with five degrees of freedom. The second equation that looks like the `dipole moment' vector of electromagnetism is non-zero. The first equation cancels due to symmetry but in the second case the same symmetry will cause the sub-particles to `add' together (we return to our example system as shown in figure \ref{fig.dipole}):
+
+\begin{equation}
+2m \left(\mathbf{r}^{(1)}_j - \mathbf{r}^{(2)}_j)\right) = 2m [(x,0,0) - (-x,0,0)] = 4m (x,0,0)
+\end{equation}
+
+The gravitational potential $\phi$ (not the potential energy) is a single value at the gridpoint of the super-particle as a whole. This vector is the difference of the forces acting on the sub-particles and should change over time, hence the vector will change orientation over time.
+
+\paragraph{$N$-body implementation.}
+This grants us an extension to simple Newtonian gravity. We have point masses (the super-particles) that move under Newtonian gravity (radial force, no vorticity) and will give the same results as a normal $N$-body simulation would. This extension could be calculated post-processing of the simulation; this model produces no new force at the dipole level but we expect the particles to spin due to external forces. All the information needed to check whether the particles could spin is already in the results of the simulation. One can calculate the potential field from the density (from solving the Poisson equation). The particles merely need a gradient across the potential field in order to spin.
+
+A code would be written to take the evolution of the difference vector: ${\bf d} = ({\bf r}^{(1)}_j - {\bf r}^{(2)}_j)$. Given that we have it as a force equation then we know its equation of motion and could attempt to implement this idea using a simple Leapfrog integrator.
+
+In order to run a fully consistent code with gravitational radiation from spinning bodies would require the inclusion of the force from the quadrupole moment. This would change the overall force in the $N$-body simulations and, hence, could not be done post-processing. If this is the case then we expect the energy of the objects to be split evenly into translational and spin kinetic energy (principle of equipartition). This presumably gives a different result to structure formation than simple Newtonian gravity which ignores gravitational radiation. It isn't entirely clear relativity will work, or `appear', given that the form of the equation is purely Newtonian. So the concept of gravitational radiation is likely to be a misnomer. Actual gravitational radiation requires relativity; however, the force is no longer the simple form that is has from Newton's theory. That said, the force is still a vector. We are not suggesting a tensor equation of force in this model. Relativity and hence gravitational radiation may appear in the Gravitomagnetism model suggested before (section \ref{GEM}).
+
+
+\subsection{Pauli equation}
+\label{pauli_d}
+Given the equations above for $U$, we wish to convert those into an appropriate form for a Pauli-like equation. To begin with, I will try to find a Pauli equation at dipole order. In the last section we established that the force generated by the dipole order is zero; however, we have concluded that such a model could still be acted upon by external forces and hence should still be able to rotate. This would provide a simple approach to the problem, it won't be fully consistent but would allow a simple test of our idea.
+
+It is worth noting that the quadrupole order potential relies upon a $3 \times 3$ matrix, therefore we suggest testing our spinning object idea using a simplified version although not one that is fully consistent.
+
+We will consider the difference vector, ${\bf d}$, between the two ends of a spinning object that could resemble a dumbbell (again, see figure \ref{fig.dipole}):
+
+\begin{equation}
+{\bf d} = ({\bf r}^{(1)}_j - {\bf r}^{(2)}_j)
+\end{equation}
+
+\noindent At each gridpoint the potential $U$ is expanded (as shown before) and this vector $d$ will characterize the difference in the potential of the two sub-particles. Again, we expect that this would allow for measurable spin of the super-particle due to external gradients in the gravitational potential. However, the spin should not be able to feed back into the surroundings (feedback requires the quadrupole term).
+
+In the actual Pauli equation the term that deals with spin is the term $\mathbf{\mu}.\mathbf{B}$ (alternatively, $\mu \mathbf{B}.\mathbf{S}$), where ${\bf B}$ is the magnetic field and ${\bf S}$ is the spin vector. The trace over the indices of the two vectors in the Pauli equation is very similar to what we have above for $U$. Hence, I suggest the following analogies at dipole order:
+
+\begin{equation}
+U = \partial_i(\phi) \int \rho {\bf r_i}\;dV \simeq {\bf B\cdot S} = B_x\mathbf{\sigma_x} + B_y\mathbf{\sigma_y} + B_z\mathbf{\sigma_z}
+\end{equation}
+
+\noindent Here I will make the association clearer, and also use the vector $\mathbf{d}$ instead of $\mathbf{r}$:
+
+\begin{eqnarray}
+B = \partial_i(\phi) \\
+S = \int \rho \;\mathbf{d}\;dV
+\end{eqnarray}
+
+\noindent This definition of $B$ is not the same as $B_g$ from GEM, in the above equation the term $B$ is actually $E_g$ from the GEM equations. The vector $\mathbf{d}$ can be expressed in terms of basis vectors as $\mathbf{d} = d_i \mathbf{e_i}$. However, from Lounesto \citep{bib_lou} we can see that there is an isomorphism between the real algebras $\mathcal{C}l_3 \simeq {\rm Mat}(2, {\mathbb C})$. This isomorphism can be stated as $\mathbf{e_i} \simeq \mathbf{\sigma_i}$ and is (importantly) length preserving. The sigma matrices are the familiar Pauli matrices. In Clifford algebra we single out the subspace of vectors ${\mathbb R}^3$ which is basically the traceless version of the matrix algebra ${\rm Mat}(2, {\mathbb C})$.
+
+Hence we can write $\mathbf{d}= d_i\mathbf{e}_i \simeq d_i {\bf \sigma_i}$ (the quantity $d_i$ is a scalar) and then construct analogies of the terms $B$ and $S$:
+
+\begin{equation}
+{\bf S} \sim \int \rho \;{\bf d}\;dV \simeq \int \rho\; d_i {\bf \sigma_i} \;dV 
+\end{equation}
+
+\noindent This leads to:
+\begin{equation}
+{\bf B}.{\bf S} \sim \partial_i(\phi) \int \rho (d \; {\bf e})_i \;dV \simeq \int \rho \partial_i(\phi) (d \; \sigma)_i \;dV 
+\end{equation}
+
+\noindent In the above equations I've used the same convention as adopted previously where a repeat $i, j$ index implies a trace (summation convention), while repeated $x,y,z$ indices does not. I've taken the partial derivative of the potential inside the bracket as it is independent of $dV$. The integral will change to a summation when we assume a discrete distribution of matter within the super-particle (``fluid'' element in wave-mechanics). Writing out the Pauli-like form of the potential energy, we have:
+
+\begin{eqnarray}
+\label{pdipole}
+U = {\bf B}\cdot{\bf S} = \int \rho\; {\bf B}_i (d \; \sigma)_i \;dV &=& \int \rho\; (B_x d_x\sigma_x + B_y d_y\sigma_y + B_z d_z\sigma_z) \;dV \\
+ &=& \sum_j m_j\; (B_x d_x\sigma_x + B_y d_y\sigma_y + B_z d_z\sigma_z) \\
+ &=& \sum_j m_j\;\begin{pmatrix}
+B_z d_z & B_x d_x - i B_y d_y\\
+B_x d_x - i B_y d_y & - B_z d_z
+\end{pmatrix}
+\end{eqnarray}
+
+\noindent The last step in this equation is a $2\times 2$ matrix and is a result describing a vector via the Pauli matrices \citep{bib_lou}. This matrix is also Hermitian as required for the Schr\"odinger equation; this is due to the nature of the construction of spinor spaces. For some details of spinors as applied to a 3-vector space I encourage the reader to review chapter 41 of Gravitation by Misner, Thorne \& Wheeler \citep{bib_grav}. The $d_i$ are the components of the vector $\mathbf{d}$, the basis vectors $\mathbf{e_i}$ are omitted for brevity and clarity (extra indices can quickly become confusing). To clarify where the final matrix comes I will recapitulate the definition of the Pauli matrices \citep{bib_lou}:
+
+% \begin{eqnarray}
+% \sigma_1 = \sigma_x &=&
+% \begin{pmatrix}
+% 0&1\\
+% 1&0
+% \end{pmatrix} \\ \nonumber
+% \sigma_2 = \sigma_y &=&
+% \begin{pmatrix}
+% 0&-i\\
+% i&0
+% \end{pmatrix} \\ \nonumber
+% \sigma_3 = \sigma_z &=&
+% \begin{pmatrix}
+% 1&0\\
+% 0&-1
+% \end{pmatrix} \nonumber
+% \end{eqnarray}
+
+\begin{equation}
+\sigma_1 = \sigma_x =
+\begin{pmatrix}
+0&1\\
+1&0
+\end{pmatrix};
+\sigma_2 = \sigma_y =
+\begin{pmatrix}
+0&-i\\
+i&0
+\end{pmatrix};
+\sigma_3 = \sigma_z =
+\begin{pmatrix}
+1&0\\
+0&-1
+\end{pmatrix}
+\end{equation}
+
+\vspace*{0.5cm}
+
+\noindent The $B$ field is obviously not a magnetic field but the vector quantity: $\nabla \phi$. The $d$ values are the scalar amplitudes of the position vector ${\bf d}$. This gives the Pauli-like equation for this model as:
+
+\begin{equation}
+i\hbar\frac{\partial}{\partial t}\psi_\pm = \left( -\frac{\hbar^2}{2m} \nabla^2 + mV \right) {\bf I} \psi_\pm -\mu {\bf B}  \cdot {\bf S} \psi_\pm
+\end{equation}
+
+\noindent In the actual Pauli equation $\mu = \frac{q \hbar}{2m}$, in this formulation I expect the multiplier of $U$ to be the same as it is for $V$: hence, $\mu = m$. We can reach this conclusion by noting that both quantities are the gravitational potential and so multiplying by the mass will give potential energy as required by the Schr\"odinger equation. ${\bf I}$ is the two-dimensional identity matrix. The wavefunction is now a 2 component spinor, or 2-spinor, where each component is a complex number. If the new term, $U = {\bf B} \cdot {\bf S}$, is zero then the above equation would reduce to two Schr\"odinger equations, which are essentially independent except for the mutual gravitational interaction. This would simply be two `fluids' under going Schr\"odinger evolution as seen in Johnston \citep{bib_rj}.
+
+\begin{equation}
+\psi_\pm = 
+\begin{pmatrix}
+\psi_+\\
+\psi_-
+\end{pmatrix}
+\end{equation}
+
+\noindent This model is limited in what it can achieve as it employed a trick using the difference in potential rather than the actual potential. The centre of mass always yields no extra force so we can't simply add in a third particle. However, it might be possible to add another pair of particles and keep on doing so to build up a more complicated structure of the `super-particle'. Ultimately, to do this properly one should include the quadrupole term and higher.
+
+\subsection{Quadrupole term and higher}
+The inclusion of the quadrupole and higher terms does not require any trick but the equations are more complicated and hence more laborious to calculate. Here we will employ the same isomorphism between Clifford and matrix algebras: $\mathcal{C}l_3 \simeq {\rm Mat}(2, {\mathbb C})$. The strength of the wave-mechanical approach for studying structured objects is about to become apparent as we derive a Pauli equation that looks almost identical to the Pauli equation derived in the last section. It would seem that under the isomorphism used, that each successive term in the Taylor series will reduce to a 2-spinor Pauli equation. The higher orders will merely invoke the multiplication of more sigma matrices.
+
+At quadrupole order I suggest that we should use the previously established isomorphism and write the exterior product of the two position vectors $r {\bf e_i}$ and $r {\bf e_j}$ as $ r_i r_j {\bf e_i e_j} = r_i r_j {\bf e_{ij}} \simeq r_i r_j {\bf \sigma_i \sigma_j} =  r_i r_j{\bf \sigma_{ij}}$. The position vector $r$ is the vector from the centre of mass of the `super-particle' to the sub-particle (see figure \ref{fig.jackson}). Each sub-particle provides an individual contribution to the quadrupole. The total quadrupole of each super-particle is therefore the summation of all individual sub-particle contributions.
+%Each quadrupole matrix has 9 components ($3 \times 3$) but only 5 terms are independent.
+
+As before, we identify $B$ and $S$ in the quadrupole case as we did in the dipole case (equation \ref{pdipole}):
+\begin{eqnarray}
+B &=& \partial_{ij}(\phi) \\
+S &=& \int \rho (r \;{\bf e_i})(r  \;{\bf e_j})\;dV
+\end{eqnarray}
+
+\noindent This gives the quadrupole potential as:
+\begin{eqnarray}
+U^q = B\cdot\cdot S &=& \int \rho\; B_{ij} (r \sigma)_{ij} \;dV = \int \rho\; (B_{xx} r_{xx}\sigma_{xx} + B_{xy} r_{xy}\sigma_{xy} + B_{xz} r_{xz}\sigma_{xz} + \ldots) \;dV \nonumber \\
+&=& \sum_j m_j \; ( (B_{xx})_j (r_{xx}\sigma_{xx})_j + (B_{xy})_j (r_{xy}\sigma_{xy})_j + \ldots)
+\end{eqnarray}
+
+\noindent This last equation states that to find the total potential at a gridpoint we must sum over all sub-particle masses $m_j$. Each mass will have a separate contribution to overall quadruple matrix. For clarity, each mass has a quadrupole matrix of the following form:
+\begin{equation}
+Q_{ij} =
+\left(\begin{array}{ccc}
+r_{xx}\sigma_{xx} & r_{xy}\sigma_{xy} & r_{xz}\sigma_{xz} \\
+r_{yx}\sigma_{yx} & r_{yy}\sigma_{yy} & r_{yz}\sigma_{yz} \\
+r_{zx}\sigma_{zx} & r_{zy}\sigma_{zy} & r_{zz}\sigma_{zz}
+\end{array}\right)
+\end{equation}
+
+\noindent $r_{xy}$ is the multiplication of the $x$ and $y$ components of the position vector ${\bf r}$. The sigma matrices are the corresponding basis `vectors' (after the isomorphism is applied). Taking the double trace with the $3 \times 3$ matrix $B$ will yield a $2 \times 2$ matrix just as it did in the previous example for the pseudo-dipole. This is why we get another Pauli-like equation where the wavefunction is a simply a 2-spinor.
+
+The rules for multiplying the Pauli matrices \citep{bib_lou} are:
+\begin{eqnarray}
+\sigma_1^2 &=& {\bf I} \\
+\sigma_1\sigma_2 &=& i\sigma_3 = -\sigma_2\sigma_1 \\
+\sigma_2\sigma_3 &=& i\sigma_1 = -\sigma_3\sigma_2 \\
+\sigma_3\sigma_1 &=& i\sigma_2 = -\sigma_1\sigma_3
+\end{eqnarray}
+
+\noindent Hence:
+\begin{equation}
+Q_{ij} = 
+\left(\begin{array}{ccc}
+r_{xx} {\bf I} & i r_{xy}\sigma_{z} & -i r_{xz}\sigma_{y} \\
+-i r_{yx}\sigma_{z} & r_{yy} {\bf I} & i r_{yz}\sigma_{x} \\
+i r_{zx}\sigma_{y} & -i r_{zy}\sigma_{x} & r_{zz} {\bf I}
+\end{array}\right)
+\end{equation}
+
+\noindent Which leads to a $2\times 2$ matrix, or 2,2-spinor:
+\begin{eqnarray}
+(B_{ij} Q_{ij})^{A\dot{U}} &=& 
+\left(\begin{array}{cc}
+X^{1\dot{1}} & X^{1\dot{2}} \\
+X^{2\dot{1}} & X^{2\dot{2}}
+\end{array}\right) \\
+X^{1\dot{1}} &=& (B r)_{xx} +(B r)_{yy} + (B r)_{zz} + i (B r)_{xy} -i (B r)_{yx} \\
+X^{1\dot{2}} &=& -(B r)_{xz} + (B r)_{zx}{zx} + i (B r)_{yz} - i (B r)_{zy} \\
+X^{2\dot{1}} &=& (B r)_{xz} -(B r)_{zx} +i (B r)_{yz} - i (B r)_{zy} \\
+X^{2\dot{2}} &=& (B r)_{xx} + (B r)_{yy} + (B r)_{zz} - i (B r)_{xy} +i (B r)_{yx}
+% \left(\begin{array}{cc}
+% (B r)_{xx} +(B r)_{yy} + (B r)_{zz} + i (B r)_{xy} -i (B r)_{yx}  & -(B r)_{xz} + (B r)_{zx}{zx} + i (B r)_{yz} - i (B r)_{zy} \\
+% (B r)_{xz} -(B r)_{zx} +i (B r)_{yz} - i (B r)_{zy} & (B r)_{xx} + (B r)_{yy} + (B r)_{zz} - i (B r)_{xy} +i (B r)_{yx}
+% \end{array}\right)
+\end{eqnarray}
+
+\noindent Here I follow the same notation as in {\it Gravitation} \citep{bib_grav}: the capital letter indices $A, \dot{U}$ run over the values $1,2$ and indicate the position in the 2,2-spinor above. In the convention of these authors a capital letter near the end of the alphabet is used to denote a transform according to the complex conjugate of the Lorentz spin matrix. The exact details are not necessary for our work but we've tried to be consistent with our use of bold lettering for vectors, particularly with basis vectors. Spinors inherently introduce extra indices which pushes the usual index conventions of tensor algebra to the limits.
+
+Given this matrix, we end up with almost the same Pauli equation as before (in section \ref{pauli_d}) except that the expression for $B.S$ is more complicated:
+
+\begin{equation}
+i\hbar\frac{\partial}{\partial t}\psi_\pm = \left( -\frac{\hbar^2}{2m} \nabla^2 + mV \right) {\bf I} \psi_\pm -\mu B\cdot S \psi_\pm
+\end{equation}
+
+\noindent I suggest that the solution to this equation is decomposed using the splitting operators as suggested in section \ref{addphys}. Despite the extra complication of using spinors to find the final Pauli equation, it has a simple form that is familiar. The old terms are exactly as they appear in the Schr\"odinger equation of this thesis while the new term is constructed to look the same as the usual Pauli equation of quantum mechanics.
+
+It is our belief that wave-mechanics can naturally include the consideration of spinning objects. Achieving the same physical system in an $N$-body code could be harder; the force at quadrupole order (equation \ref{quadforce}) requires a third derivative to be applied to the gravitational potential $\phi$.
+
+
+
+
+
+
+
+
+
+
+

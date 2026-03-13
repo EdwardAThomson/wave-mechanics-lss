@@ -1,0 +1,506 @@
+\chapter{Wave-mechanics}
+\label{ch_3}
+In this chapter the general ideas of wave-mechanics and the Schr\"odinger equation are explored. I introduce the equations of interest and provide an interpretation of what the equations represent. I briefly mention the general principle behind solving the Schr\"odinger equation (with details to follow in later chapters: \ref{ch_4} \& \ref{ch_5}), I outline the basic procedure of generating cosmic initial conditions and also investigate various methods of computing velocity. All of these ideas can be used in the FPA and in the full Schr\"odinger-Poisson system. Hence, this chapter provides information that pertains equally well to both the FPA and the full S-P system. Information that relates only to one particular method is found in the relevant chapters, \ref{ch_4} for the FPA and \ref{ch_5} for the full S-P system.
+
+\section{Introduction to wave-mechanics of LSS}
+%Widrow/ Kaiser introduced idea, based on Madelung Ansaetze
+%- work in correspondence limit of QM - fluid approach
+%work with a continuous distribution of particles
+%or think as exotic particle wavefunction + ergodic theorem
+%
+%
+% can derive a static metric from a static action, from this we get the Relativistic Schroe. Then subsequently get 
+% the non-rel schro + poisson equation (weak field). Rel schro does not conserve current/prob density
+
+The wave-mechanical approach to large scale structure models the density and velocity field of collisionless matter as a complex scalar field that obeys the coupled Schr\"odinger and Poisson equations:
+
+\begin{equation}
+\label{eqn_schroedinger}
+ i\hbar\frac{\partial}{\partial t}\psi(\underline{x},t) = \left( -\frac{\hbar^2}{2m} \nabla^2 + mV \right) \psi(\underline{x},t)
+\end{equation}
+
+\begin{equation}
+\label{eqn_poi}
+\nabla^2 V(\underline{x},t) = 4\pi G \psi\psi^*
+\end{equation}
+
+\noindent Here $V(\underline{x},t)$ is the potential, $m V(\underline{x},t)$ is potential energy. $\hbar$ sets the limit of spatial resolution, it can be considered  as the unit size of a grid cell in phase space ($\Delta x \Delta p \sim \hbar$) or as the classical diffusion coefficient. The wavefunction, $\psi$, is a complex function where the norm of the function, $|\psi| = \psi \psi^*$, provides the amplitude of the wave which we interpret as density.
+
+\subsection{Interpretation of the Schr\"odinger equation}
+A frequently asked question is ``why use the Schr\"odinger equation and not just a wave equation?" The main reason is that the Schr\"odinger equation is an energy equation with an obvious Hamiltonian form. This is not so obvious when using a wave equation. The link between operators and observables is also very clear, the $p^2$ operator appears directly in the Hamiltonian and is interpreted as the momentum. Furthermore, the wavefunction encapsulates the density and velocity fields as a single continuous function. For a wave equation (say, the Klein-Gordon equation) $\psi \psi^*$ could not be interpreted as a (probability) density, unitarity is not necessarily preserved and the relation of operators and observables is less clear. Hence the Schr\"odinger equation provides a useful description with easy to interpret functionality.
+
+In 1928 Arnold Sommerfeld wrote in his book Wavemechanics \citep{bib_som} that there is a fundamental difference between the wave-mechanics of Schr\"odinger and the quantum mechanics of Heisenberg. While the Schr\"odinger equation appears in this thesis, the system is classical. Hence, this is a wave-mechanical approach to LSS and not a quantum mechanical approach. It is best to ignore the original context and purpose of the Schr\"odinger equation and just consider it as an energy equation. The role of $\hbar$ can be interpreted as a classical diffusion coefficient as explained later in section \ref{hydro}.
+
+Sommerfeld explains that the Schr\"odinger equation describes a single point-mass in a conservative field. It was derived from Hamilton's partial differential equation of mechanics which was constructed from a method of describing waves via an ``action function". Schr\"odinger modified this equation in an attempt to describe microscopic mechanics, it was derived from Hamilton's equation under a set of approximations (such as a ``slowly" varying wavefunction).
+
+The Schr\"odinger equation originally described a single particle; however, it is possible to `multiply' it up to describe $N$ particles. In this limit, one assumes a high occupation number (which is the number of particles in each quantum state). The actual number of particles is not known (quantized) as this would require the usual step of second quantization (a process for explicitly quantizing the number of particles per state); however, this suggestion is attractive as a field theory as there are no divergences (unlike in the relativistic version, the Klein-Gordon equation) \citep{bib_val}. The divergences were observed as infinities arising in the calculation of simple quantities such as the self-energy of an electron. The divergences of the Klein-Gordon and Dirac equation can also be seen from the energy eigenvalues extending to $-\infty$.
+
+A many particle Schr\"odinger equation is a step towards developing a full field theoretical description of quantum processes. This description is known as Quantum field theory (QFT) \citep{bib_qft}. It relies upon the second quantization where quantum states are expressed in terms of occupation numbers. That is to say, the quantum states list the number of particles occupying each of the single-particle states. So a high occupation number is where all of the low energy states are full. In QFT, the system's degrees of freedom are the occupation numbers and it is typical for a system to have many (in fact, infinite) degrees of freedom: as is the case for macroscopic systems such as a fluid or a solid.
+
+The interaction potential of the second quantized Schr\"odinger equation is non-linear and involves creation and annihilation operators. This would be more difficult to solve and is more advanced than is currently needed. The application of the basic Schr\"odinger equation to LSS (without such an interaction potential) is an idea in its infancy, so until the basic system has been better tested and shown to be reliable then this extra complication is less justified. However, this thesis aims to provide those reliable tests and hence establish whether or not such a method is robust. The main feature of second quantization is to provide an enumeration of the- particle number and subsequently allow particle number to fluctuate. This would also deal with particle-particle interactions, possibly allowing for collisions (scattering) and hence the inclusion of a temperature parameter. In the context of cold dark matter such an extension is not part of the standard model.
+
+In the application of wave-mechanics to LSS we are saying that the Schr\"odinger equation describes many point-like particles as a continuous field. The model includes no spin or charge. The approach is purely classical. Similar to $N$-body codes, it could be seen as describing a field of many collisionless Cold Dark Matter particles. If dark matter is collisional with an appropriately measurable cross-section, velocity dispersion and hence finite temperature, then the method presented in this thesis would serve as an approximation to that field. To fully account for such modifications would require a second quantization of the Schr\"odinger equation for a non-relativistic variety of dark matter, or the Klein-Gordon equation for fully relativistic dark matter. That would be an interesting future direction (however, Widrow has worked on the Klein-Gordon equation for describing CDM \citep{bib_wid}).
+
+The potential term $V$ in this thesis provides the force of gravity but is not an interaction term as is used in quantum mechanics literature \citep{bib_val}. The potential is calculated as a continuous field that is similar to a two-point function of force (Newton's law of gravity). This means that two dense regions of matter will attract towards each other and then pass through each other. There is no internal interaction or scattering.
+
+If the gravitational potential is expanded as a Taylor series about a point then it becomes apparent that a particle in an $N$-body simulation or a single element of wave-mechanics code is equivalent to the zeroth order of the Taylor expansion (monopole moment). This moment (the lowest order) can be interpreted as the mass contained within the particle / element. It is a well known result that the dipole moment of a gravitational field is zero (due to symmetry) but a quadrupole moment would allow for a gravitational differential and hence a torque upon the particles. While still point-like in nature, the inclusion of higher order terms of the Taylor expansion would provide the particles with an internal structure. The particles would have additional spin-like degrees of freedom, at long range the force would be like the ordinary Newton force; however, at short scales the interactions between particles would become important. I refer the reader to read more of the details of this extension in Chapter \ref{ch_7}.
+
+\subsection{Hydrodynamic form of wave-mechanics}
+\label{hydro}
+In 1927 Erwin Madelung suggested a transform which demonstrated that the Schr\"odinger equation \ref{eqn_schroedinger} resembles the hydrodynamic equations: the continuity equation and the Euler equation of fluid dynamics \citep{bib_mad}. This is now known as a Madelung transform. A translation of the paper appears in appendix \ref{app_m}. The transformation is performed by replacing $\psi$ with the following (ans\"atze) form:
+
+\begin{equation}
+\label{eqn_mad}
+\psi = \alpha e^{(\i \varphi/\nu)}
+\end{equation}
+
+\noindent $\alpha = \sqrt{\rho}$, $\nu = \hbar/m$ and the phase $\phi$ will be identified as giving $v = \nabla \varphi$. A full derivation of the fluid equations from the Schr\"odinger equation using modern notation appears in appendix \ref{app_mtrans}. Here the main results of the derivation are given in order to illustrate the connection between the fluid equations and the Schr\"odinger equation. By inserting the Madelung form of the wavefunction into the Schr\"odinger equation we get the following for the left hand side (LHS) and the right hand side (RHS):
+
+\begin{equation}
+LHS = i\nu\frac{\partial\psi}{\partial t}=\frac{i\nu\psi}{\alpha}\frac{\partial\alpha}{\partial t} - \frac{\partial\varphi}{\partial t}
+\end{equation}
+
+\begin{eqnarray}
+RHS	&=& \left( -\frac{\nu^2}{2} \nabla^2 + V \right) \psi \\ \nonumber
+	&=& -\frac{\nu^2\psi}{2\alpha}(\nabla^2\alpha) -\frac{i\nu\psi}{\alpha}(\nabla\varphi).(\nabla\alpha) \\ \nonumber
+	&-&\frac{i\nu}{2}\psi\nabla^2\varphi + \frac{1}{2}\psi(\nabla\varphi)^2 \\ \nonumber
+	&+& V \psi
+\end{eqnarray}
+
+\noindent The first term on the RHS was unexpected by Madelung but he postulates that it would describe `internal forces' of a particle. It is identified as being a pressure-like term. Madelung described the pressure term as `internal forces' but was perplexed by its appearance. He offers some philosophical insight as to what it is. At first I believed that it was an artefact of the transformation, possibly a reference frame issue and hence the associated force is fictitious rather than fundamental.
+
+It became clear that a free particle, that is a fundamental particle such as an electron, should not gain an internal pressure via transformation or rather it is may not be wise to pick a reference frame where this happens.  That is to say, a free particle is truly free and does not have an internal pressure. The resolution to this problem, with more details about the pressure term are given later. David Bohm offered a different interpretation of this term, see the following section \ref{bohm_mech} for a brief review of Bohm's ideas.
+
+Now I will show the equivalence of this transformed equation to the fluid equations. The potential term gives the Bernoulli equation (after dividing the following by $\psi$):
+
+\begin{equation}
+\label{eqn_bernoulli}
+ V\psi = -\frac{\partial\varphi}{\partial t}\psi - \frac{1}{2}\psi(\nabla\varphi)^2
+\end{equation}
+
+\noindent after taking this equation away from the transformed Schr\"odinger equation then we are left with:
+
+\begin{equation}
+\label{eqn_s_continuity}
+\frac{i\nu\psi}{\alpha}\frac{\partial\alpha}{\partial t} = -\frac{\nu^2\psi}{2\alpha}(\nabla^2\alpha) -\frac{i\nu\psi}{\alpha}(\nabla\varphi).(\nabla\alpha) -\frac{i\nu}{2}\psi\nabla^2\varphi
+\end{equation}
+
+\noindent The first term has already been identified as pressure like and, admittedly, is unexpected. Omitting this term we see that the rest of this equation (\ref{eqn_s_continuity}) gives the continuity equation of fluid dynamics (recalling the definitions of $\alpha^2 = \rho$ and $\nabla \varphi = v$):
+
+\begin{equation}
+\frac{\partial\alpha^2}{\partial t} + \nabla . (\alpha^2\nabla\varphi)= 0
+\end{equation}
+
+\noindent Interestingly, the pressure term comes from putting the wavefunction into the $\nabla^2 \psi$ term of the Schr\"odinger equation. It does not rely upon the potential term, $V$. So this requires reconciliation between a free particle Schr\"odinger equation and the fluid equations. Any free particle described by the Schr\"odinger equation experiences no inner forces but a fluid does have internal forces (pressure). So the reconciliation comes from noticing that a free particle will behave like a fluid if you add an internal pressure to it. That is to say that one must add a pressure term to the Schr\"odinger equation {\bf and} work in the classical limit in order to properly describe a fluid. This suggests that the pressure should be defined in the following way:
+
+\begin{equation}
+\label{eqn_pressure}
+-P\psi = -\frac{\nu^2}{2\alpha}(\nabla^2\alpha)\psi = -\frac{\nu^2}{2|\psi|^2}(\nabla^2|\psi|^2)\psi
+\end{equation}
+
+\noindent This definition is consistent with the Madelung transformation as the sign of the pressure term is negative (as it is in the transformed Schr\"odinger equation), suggesting that it should be subtracted from the fluid equations, not added. Expressed in another way: Free Particle Schr\"odinger $=$ Fluid $-$ Pressure. Conclusively, the Schr\"odinger-Poisson system is pressure-free. Madelung points out that the flux (velocity) is vortex free and acted on by conservative forces. This is also true if we use Newton's gravitational force and the simple Poisson potential. I expect that the real dark matter field should have some non-zero velocity dispersion and vorticity but all computer simulations are an approximation to this real field.
+
+Furthermore, the pressure term is the only term that has an effective Planck's constant after transformation. Bohm suggests that it is a ``quantum potential" (see Bohm's interpretation in section \ref{bohm_mech}). If the classical limit of quantum mechanics $\hbar \rightarrow 0$ is applied then this pressure term goes to zero. This is the approach suggested by Short \citep{bib_short} for neglecting the so-called `quantum pressure' term.
+
+Short has already shown that it is also possible to start from the fluid equations (continuity and Euler) and work the other way to arrive back at the Schr\"odinger equation with the addition of the pressure term \citep{bib_short}. In this thesis I am assuming that the Schr\"odinger equation is the fundamental equation to use, not the fluid equations. Dark Matter particles, whatever they are, are quantum in nature, so working with a Schr\"odinger equation (albeit in the classical limit of a large occupation number) seems like a natural approach to take. So the particles are collisionless but self-attract under gravity. Adding a pressure term to the Schr\"odinger equation may make it describe something that is fluid like but this adds extra computational difficulties: equations are not necessarily mass conserving and may require a more advanced technique to solve them. Our approach is not so different from the $N$-body case as the $N$-body codes do not have a pressure term so they cannot properly describe a fluid either.
+
+Short notes that the pressure term is only important in the domain of shell crossing \citep{bib_short}: this is when particles come close together, the particle orbits are said to cross and corresponds to a singularity in density. This is not in regime where we expect a singularity in density but it is the limit of the approximation used. It occurs when the determinant of the Jacobian in the Lagrangian coordinate system is zero. Once `particles' (or fluid elements) into the regime of shell crossing then we could describe the flow as `hot', or that the fluid has `hot' streams. Eulerian and Lagrangrian fluid descriptions can only describe ``single streams'' of flow, that is to say that there is a unique one-to-one mapping of the coordinates. This is one problem that the Schr\"odinger equation is able to avoid (this is shown in the results of Chapter \ref{ch_5}).
+
+Short is able to show that the pressure term makes his Free Particle Approximation (FPA, see Chapter \ref{ch_4} equivalent to the Zel'dovich approximation \citep{bib_zel2} that includes an adhesion term. This latter model is an approximate solution to the growth of perturbations of pressureless matter in an expanding universe. He states that the solution is qualitatively correct even for large perturbations.
+
+The adhesion term, of a later version of the Zel'dovich approximation, and the pressure term of the FPA is roughly negligible before shell crossing. He also performed some simulations where $\nu = \hbar / m >> 0$. This suggests that the approximation of a free particle to a fluid is good in regions of low density. Naturally, in regions of high density then the approximation of a free particle to a fluid will break down as a the fluid's pressure will play a more significant role.
+
+\citet{bib_rj} simulate a CDM fluid using the Schr\"odinger equation but include the pressure term, this approach will exhibit different behaviour from that with no pressure in regions of shell crossing. See section \ref{johnston} for a review of Johnston.
+\newline
+
+It should be noted that this fluid approach is only valid in the non-relativistic limit of quantum mechanics. The Schr\"odinger equation is non-relativistic so it would be incorrect on two counts to consider a conventional fluid approach for relativistic particles. This reinforces the idea of the Schr\"odinger equation describing a distribution of classical particles (a continuous field in space). Widrow \& Kaiser also suggest that it may describe the evolution of the wavefunction of a single `exotic' quantum particle with a large de Broglie wavelength. The latter can be considered as the wavefunction of many particles by application of the Ergodic theorem.
+
+It is common to say that the classical limit of the Schr\"odinger equation is when $\hbar \rightarrow 0$ but this causes the equation to  break down. This limit is the classical limit for quantum mechanics as characterized by non-commuting operators. If $\hbar = 0$ then all operators would commute. For example, position and momentum would commute (as they do classically) in this limit. The quantum mechanical relationship between position and momentum is the following commutation relation: $ [x,p] = xp - px = i\hbar$.
+
+In the limit of $\hbar \rightarrow 0$ then the phase-space resolution tends towards infinity, which allows variables to be deterministic and without error. This is another aspect of classical behaviour. However, taking this limit forces the LHS and the kinetic energy term of the Schr\"odinger equation to be zero which renders the equation inconsistent. Suggesting $\hbar /m \rightarrow 0$ is more acceptable but not sufficient.
+\newline
+
+Thinking of the $\hbar /m$ term as a diffusion coefficient (as a number that dictates viscosity) makes more sense when thinking of the Schr\"odinger equation as describing a classical fluid. A larger diffusion coefficient means that a fluid will disperse faster (like water falling out of a bucket), while a smaller diffusion coefficient means that a fluid will disperse slower (like trying to pour jam from a bucket). This view is also consistent with viewing particles as having larger or small de Broglie wavelengths. A large diffusion coefficient provides a larger de Broglie wavelength and hence the particle has a smaller mass (we can assume $\hbar$ to be fixed). Such a particle would display wave-like behaviour. Conversely, when the diffusion constant is small (slower diffusion) then the de Broglie wavelength is small (particle has higher mass) and hence the particle is more classical in nature.
+
+A useful paper that explores the correspondence of the classical picture with quantum mechanics is by Skodje \citep{bib_skod}. It appears as a reference in the Widrow \& Kaiser paper. Skodje explores this correspondence through the study of quantum phase space without initially invoking the usual semi-classical limit but does show that it can be reduced to a classical system of Liouville dynamics.
+
+\subsubsection{Bohmian mechanics}
+\label{bohm_mech}
+Bohmian mechanics is mentioned in Short \citep{bib_short} in reference to the mysterious pressure term that arises from the Madelung transform. The main features of Bohm's interpretation are presented here as an alternative way of understanding the `pressure' term, the two interpretations (Bohm and Madelung) appear to be similar but differ at a fundamental level. Bohm cites Madelung in his first paper on the idea in 1952 \citep{bib_bohm, bib_bohm2}. It should be noted that the Bohmian interpretation agrees with the results of the Schr\"odinger equation.
+
+Bohm acknowledges that quantum mechanics is self-consistent but believes that it relies upon an assumption that cannot be tested. The wavefunction can only give probabilities of measured quantities and not deterministic quantities: such as wave intensity giving probability density instead of density. He dislikes the non-deterministic nature of quantum mechanics and hypothesizes that at a fundamental level the Universe is deterministic regardless of whether this can ever be measured with infinite precision or not. He also accepts that quantum mechanics is complete but could be an approximation of something more fundamental or that it is missing non-local ``hidden variables''. Bohm's belief in a more fundamental description is driven by the difficulty that quantum mechanics has in describing systems with a fundamental length smaller than $10^{-13}$ m \citep{bib_bohm, bib_bohm2}.
+Bohm states that experiments do not agree as well with quantum mechanics at distances of this scale or smaller, or for times of the order of this distance divided by the speed of light $t\sim (10^{-13} m/ c)$.
+
+Bohm's theory allows for the Universe to be deterministic at a fundamental level but Heisenberg's uncertainty principle prevents measurements that could completely determine a particle's position and momentum. We can see agreement between the interpretations of Schr\"odinger and Bohm. It is in the regime of length scales less than $10^{-13}$ m that Bohm suggests a new understanding is really needed.
+
+Bohm's interpretation is also known as Pilot-Wave theory or de Broglie-Bohm theory. The concept was first introduced by de Broglie, at the Solvay conference in 1927, as a way of understanding quantum mechanics, the idea met much criticism and was not developed further until Bohm revived the idea in 1952. Bohm admits that he did not know about de Broglie's idea when the paper was first written but acknowledges the similarities when he finally published the work \citep{bib_bohm, bib_bohm2}. Bohm's interpretation received more attention after John Bell (of Bell's inequality) championed de Broglie-Bohm theory in the late 80s \citep{bib_bell}.
+
+The original Pilot-Wave theory is a type of hidden variable theory that attempts to describe quantum mechanics in a deterministic way. The position and momentum of a particle are well-defined but hidden variables (from the observer). The initial conditions can not known be exactly known (so Heisenberg's uncertainty principle still applies) but the particle undergoes a chaotic trajectory that is guided by a well-defined pilot-wave (the wavefunction). As before, the density of the particles gives the amplitude of the wavefunction. The evolution of the wavefunction (pilot-wave) is given by the Schr\"odinger equation.
+
+The wavefunction is a function of the position and momentum of all configurations of the Universe, hence the theory is non-local. The evolution of the particles (configurations) are given by a guiding equation. A generic configuration $q$ is given by coordinates $q^k$ which corresponds to the guiding equation:
+
+\begin{equation}
+m_k\frac{d q^k(t)}{dt} = \hbar\;\nabla_k\;\mathcal{I}(\ln \psi(q,t)) = \hbar\; \mathcal{I}\left(\frac{\nabla_k \psi}{\psi} \right)
+\end{equation}
+
+\noindent if $q$ is position then the above equation is that of the velocity (as expected). On the left side is the time-derivative of position with respect to time (velocity) and on the right side is the quantum version as given in a following section by equation \ref{eqn_svel}. Without getting as far as mentioning the pressure term it is worth considering Bohm's interpretation of quantum mechanics as applied to cosmic Large Scale Structure. The underlying particles, whether they are CDM particles or, latterly, a rough representation of galaxies, the Schr\"odinger equation does not give the exact trajectory of these particles but a rough estimate of their trajectory as given by the trajectory of the pilot-wave (wavefunction).
+
+In the same year of the publication of the Pilot-Wave theory, Madelung developed the hydrodynamic interpretation of Schr\"odinger's equation. The two differ philosophically on a fundamental level. Here I provide a sketch derivation of the equations of Bohmian mechanics and note how similar they are to that of Madelung. This is where the `quantum pressure' term of Madelung becomes apparent in Bohm's interpretation as the quantum potential.
+
+Bohm transformed the Schr\"odinger equation into two coupled equations: the continuity equation and the Hamilton-Jacobi equation. The wavefunction is:
+
+\begin{equation}
+\psi(\mathbf{x},t) = R(\mathbf{x},t)e^{i S(\mathbf{x},t) / \hbar}. 
+\end{equation}
+
+\noindent here $R^2$ corresponds to the probability density $\rho = \psi\psi^* = R^2$. The continuity equation is:
+\begin{equation}
+ -\frac{\partial \rho}{\partial t} = \nabla \cdot \left(\rho \frac{\nabla S}{m}\right)
+\end{equation}
+
+\noindent and the Hamilton-Jacobi equation is: 
+\begin{equation}
+\frac{\partial S}{\partial t} = -\left[ V + \frac{1}{2m}(\nabla S)^2 -\frac{\hbar ^2}{2m} \frac{\nabla ^2R}{R} \right]. 
+\end{equation}
+
+\noindent The potential term, as Bohm sees it, is a mix of the ordinary Newtonian potential $V$ and a new quantum potential $-\frac{\hbar ^2}{2m} \frac{\nabla ^2 R}{R}$. The velocity is given by $\frac{\nabla S}{m}$. We can now compare the quantum pressure term of Madelung and the quantum potential term of Bohm:
+
+\begin{equation}
+-\frac{\hbar ^2}{2m} \frac{\nabla ^2R}{R} = -\frac{\nu^2}{2}\frac{\nabla ^2\alpha}{\alpha} 
+\end{equation}
+
+\noindent Essentially, the equations have the same form but a different meaning. Madelung's interpretation was examined in the previous section (\ref{hydro}). For Bohm, we note that the force acting upon a particle is the gradient of the total potential which would imply an additional quantum force than one would expect from simply taking $\nabla V$. The additional force presumably only acts upon the particle (configuration) and not upon the wavefunction. This is clearly a contentious point of interpretation and one that won't be dwelt upon. This analysis was merely another way of looking at Madelung's interpretation. The rest of this thesis is closer to that of Madelung than Bohm. The classical behaviour of Bohm's interpretation is apparent when the quantum potential is negligible.
+
+
+
+% ------------------- check references match ------------------------
+\section{Overview of wave-mechanics as applied to LSS}
+
+\subsection{Timeline}
+Here I provide a brief timeline of work in the field of wave-mechanics as applied to astrophysical / cosmological systems. I ignore works that are arguably more related to Quantum Gravity such as the Wheeler-DeWitt equation (also coined the ``Schr\"odinger-Einstein'' equation) and the works of Penrose that look at quantum state reduction via gravity.
+
+\begin{itemize}
+\item 1993 - Widrow and Kaiser - Using the Schr\"odinger equation to simulate collisionless matter
+\item 1995 - Reid - A numerical study of the time dependent Schr\"odinger equation coupled with Newtonian gravity (doctorate thesis)
+\item 1996 - Widrow - Modelling Collisionless Matter in General Relativity
+\item 1996 - Davies and Widrow - Test-bed Simulations of collisionless, self-gravitating systems using the Schr\"odinger method
+\item 2000 - Hu, Barkana, Gruzinov - Fuzzy Cold Dark Matter: The wave properties of Ultralight particles
+\item 2001 - Harrison - A numerical study of the Schr\"odinger-Newton equations (doctorate thesis)
+\item 2002 - Woo - 3D simulation of ultra light scalar field dark matter
+\item 2002 - Szapudi \& Kaiser - Cosmological perturbation theory using the Schr\"odinger equation
+\item 2002 - Coles - The Wave Mechanics of Large-Scale Structure
+\item 2003 - Coles and Spencer - A Wave-Mechanical Approach to Cosmic Structure Formation
+\item 2006 - Short and Coles - Wave mechanics and the adhesion approximation
+\item 2006 - Short and Coles - Gravitational Instability via the Schr\"odinger equation
+\item 2007 - Short - Large-scale structure formation: a wave-mechanical perspective (doctorate thesis)
+\item 2008 - Woo and Chiueh - High-resolution simulation on structure formation with extremely light bosonic dark matter
+\item 2009 - Johnston - Cosmological fluid dynamics in the Schr\"odinger formalism
+\end{itemize}
+
+\subsection{Widrow and Kaiser}
+The original paper to consider Large Scale Structure in a wave-mechanical framework was by Widrow \& Kaiser \citep{bib_wk}. The paper was introduced in the chapter on numerics, see \ref{lsswm_con}. The idea was conceived as a method of improving on all known simulation techniques. This was an ambitious aim but one that has almost been realised. As already suggested it has numerous advantages over previous methods (for example, it has a continuous density field and can follow `hot' streams) but the idea was not developed into a fully three dimensional cosmological code in the first paper. The extension of Widrow \& Kaiser's method to a fully three dimensional cosmological code forms the backbone of the research presented in this thesis and is described in full detail in chapter \ref{ch_5}. Here I will present a briefer review of the paper without too many details.
+
+The authors note a possible transformation from the Schr\"odinger equation to that of the Boltzmann equation. This is similar in spirit to the Madelung transformation; however the wavefunction is said to be a coherent state (or Husimi) representation. Details can also be found in the paper by Skodje et al \citep{bib_skod}.
+
+The key results of their paper are the two models developed using the Schr\"odinger-Poisson system. The first is that of one dimensional collapse of a wavefunction. Essentially, they modelled a free-particle Schr\"odinger equation with the addition of a (self-) gravitational potential (from Poisson's equation for gravity). They re-write the Schr\"odinger equation in terms of dimensionless quantities and arrive at:
+
+\begin{eqnarray}
+2i\mathcal{L} \frac{\partial\chi}{\partial \tau} &=& \nabla_y^2\psi + 2\mathcal{L}^2 U(y)\chi \\
+\nabla_y^2 U &=& \chi\chi^*
+\end{eqnarray}
+
+\noindent here $y = x/L$, $\tau = t/T$ and $\chi = (4\pi/\rho)^{1/2}\psi$. These are simple rescalings to make the variables dimensionless. $\mathcal{L}$ is defined as $\mathcal{L} = mL^2/\hbar T$, and is roughly the ratio of the size of the system to the de Broglie wavelength \citep{bib_wk}. This could be seen as a toy model that is similar to the Plummer sphere. Their method of solving the Sch\"odinger equation is derived from a paper by Goldberg et al in 1967 \citep{bib_gold}. I also use Goldberg's algorithm and provide an outline in Chapter \ref{ch_5}.
+
+The second model of their paper considered a two dimensional Einstein-de Sitter ($\Omega_m = 1$) Universe that used cosmological initial conditions (see \ref{cos_init}; however, it is unclear if their code implements periodic boundary conditions. The final cosmological code that I construct is an extension of their ideas, in that I provide a more general implementation that works for general, flat FLRW Universes and has similar mathematics to that of Widrow \& Kaiser. For comparative purposes I will present the scaled Schr\"odinger equation that they use below but will leave all the details until Chapter \ref{ch_5}.
+
+\begin{eqnarray}
+i\frac{4\mathcal{L}}{3} \frac{\partial\chi}{\partial \ln a} &=& -\nabla_y^2\psi + \frac{4\mathcal{L}^2}{3} U\chi \\
+\nabla_y^2 U &=& \chi\chi^*  - 1
+\end{eqnarray}
+
+\subsection{Guenther}
+Not long after the original paper from Widrow \& Kaiser, a PhD thesis from Guenther \citep{bib_glr} was released that studied the Schr\"odinger-Poisson system (not applied to LSS). He used a different method from Widrow \& Kaiser to solve the equations: an Alternating Direction Implicit (ADI) method of evolving the wavefunction. He interprets the wavefunction as a scalar field that describes bosonic matter, or a Bose condensate. As a test of the code, the author attempts to model an idealised Boson star using the Schr\"odinger-Poisson equations. The equations were re-scaled to be more computationally tractable and then eventually rewritten into spherical polar coordinates. Guenther also considered the possibility of adding a rotational degree of freedom to the equations.
+
+\subsection{Widrow and Davies}
+The study of wave-mechanics was continued by Widrow \citep{bib_wid} using the Klein-Gordon equation and attempted to include General Relativistic effects into the simulations. He tests his method upon a 1D wavefunction in a static and plane symmetric background. As with the one dimensional model in the original paper, the density is gaussian and the initial velocities are zero (cold collapse). A second test of the method follows ``hot'' particles that have some initial velocity distribution. The mathematical details are far beyond the scope of this thesis but I believe this is an interesting direction for future researchers.
+
+Widrow also performed simulations of spherical collapse with Davies and compared them to $N$-body simulations \citep{bib_wd}. This paper considers the Schr\"odinger equation again rather than the Klein-Gordon equation, it follows the same rescaling of variables procedure (see Widrow and Kaiser above) which renders the final equations dimensionless. The authors evolve the wavefunction using a different algorithm known as Visscher's method which they claim is three times faster.
+
+These authors make the same point I do about the Schr\"odinger equation being applicable to ``any collisionless system regardless of what form the constituent particles take." The intra-gridcell physics is smoothed out or otherwise not accounted for. The same is true for $N$-body and phase-space methods. The constituent particles could be anything from black holes to elementary particles, the dynamics is independent of their true nature (at least at the scales of interest using the S-P system). Here, the authors promptly note that if dark matter is an ultra-light scalar field then quantum mechanical effects could affect the dynamics but the S-P equations would provide their exact (non-relativistic) motion.
+
+\subsection{Hu et. al.}
+\label{whu}
+An interesting paper from Hu et al \citep{bib_whu} considers what the relevant mass of a CDM particle should be if it displays wave-like nature at large scales. They call such candidates Fuzzy Cold Dark Matter particles (FCDM). Allowing for a large finite $\nu$ may provide insight to structure formation on small scales which is still currently not well understood. It is therefore hoped that the Schr\"odinger method may improve theoretical limits on the `cuspy-ness' of galaxies and its impact on galaxy formation.
+
+If we accept that CDM particles exist and have a large de Broglie wavelength would it be possible to see wave-like nature at astrophysical scales? Quick calculations yield that the mass of such a particle is lighter than any other CDM candidate ($10^{-22}$ ev, \citep{bib_whu}). Hu et al believe that such a candidate cannot be ruled out from current experimental evidence despite unnaturalness (as he calls it) from a theoretical point of view. Theory current favours the Axion as the best CDM candidate it has a mass that is about $10^{-6}$ ev.
+
+These authors suggest that ultralight scalar particles in an initially cold Bose-Einstein condensate would provide the correct characteristics that would stabilize gravitational collapse and suppress small-scale linear power.  They state that the de Broglie wavelength is the ground state of a particle in a potential well: $\lambda_{db} \sim (mv)^{-1} \sim m^{-1} (G\rho)^{-1/2} r^{-1}$, setting $r_J = \lambda = r$ returns the Jeans scale (or Jeans length). Stability is guaranteed by the uncertainty principle as an increase in momentum opposes any attempt to confine the particle further.
+
+They perform a series of one dimensional simulations of a free-particle wavefunction under going gravitational collapse. Unfortunately no numerical details are supplied. As with my simulations, they also use periodic boundary conditions. Their conclusions are that:
+\begin{itemize}
+\item For $r_J >> L$ (Jeans scale much greater than the length of the simulation box) their model does not form a gravitational halo; 
+\item For $r_J \sim L$ a gravitationally bound halo is formed but the cusp is not observed. They note that the acceleration is smooth, hence the forces will be less affected by the ``wiggles'' of interference;
+\item For $r_J <<L$ the density has larger interference effects. They also find a small-scale cutoff (in the power spectrum) at the Jeans scale.
+\end{itemize}
+
+Interference effects are not necessarily quantum in origin and are readily seen in (low viscosity) fluids. Another worry is whether the interference pattern is a numerical effect. In Chapter \ref{ch_5} I show spurious interference effects in a one dimensional simulation whenever the wavefunction is allowed to pass through the boundaries and self-interfere over a long time (thousands of time steps, and longer than time of interest, if code is to be kept stable). In the results of Hu et al, I don't believe that is the case but I offer this as a word of warning for future simulations of wave-mechanics.
+
+In the cosmological simulations of this thesis (see Chapter \ref{ch_5}) the wavefunction is supposed to represent some underlying distribution of matter that is CDM-like in nature. I claim that the underlying physics on scales much less than a grid cell as smoothed out and in principle could be anything, we need not assume the matter is CDM, just as in an $N$-body code. However, we do use initial conditions that come from the theory of the evolution of CDM perturbations. I implicitly assume that the matter has a small de Broglie wavelength and hence behaves classically. As mentioned in Chapter \ref{ch_3}, a high occupation number and that the CDM `fluid' is classical in nature. Any quantum nature in the simulations would not be present. Hence, the parameter of $\nu = \hbar/m$ will be seen as an {\it effective} Planck's constant which I argue is like a classical diffusion coefficient in the limit $\nu \rightarrow 0$.
+
+\subsection{Harrison}
+The PhD thesis of Harrison \citep{bib_har} builds upon the work of Penrose (who is cited as a supervisor) which suggests that gravity might be the cause of wavefunction collapse in quantum mechanics. This work is not strictly astrophysical but the numerical considerations presented are very much in line with what is presented in this thesis. He notes the system should conserve probability density (or mass), momentum and angular momentum from a theoretical point of view and also uses a Crank-Nicolson integrator for evolving the Schr\"odinger equation. As we will discuss later in Chapter \ref{ch_5}, the implicit method that we call the Cayley method is actually the same as the Crank-Nicolson method.
+
+The author looks at high order states (excitation states) of the system, again such a concept is ignored in all astrophysical wave-mechanics as we implicitly assume the scalar field to be in the ground state. The latter is true for a Bose condensate but I would not rule out the interesting possibility of trying to model an astrophysical problem with higher order quantum states.
+
+Harrison also performs tests that include ``sponge boundaries'' that absorb the wavefunction to prevent back scatter. Such boundaries have not been found in any of the astrophysical wave-mechanics publications although they may yet find a place in astrophysical simulations. Lastly, he considers adding a second dimension to his system. In the 2D case he considers the possibility of a rigidly rotating object. He shows that they exist but are unstable.
+
+
+\subsection{Szapudi and Kaiser}
+Separately, Szapudi and Kaiser \citep{bib_sk} studied non-linear perturbation theory using the Schr\"odinger method. They note that the formalism is equivalent to the collisionless Boltzmann equations but remains valid even after shell-crossing. All other formulations explicitly break down at shell-crossing. The mathematical details are beyond the scope of my project; trying to understand if they are consistent and as powerful as described would have taken too long to verify. If I were writing a thesis on perturbation theory then it might be appropriate to review it in full. I chose not to go down the path of developing a perturbation code as creating a code that is closer in spirit to an $N$-body code is more appealing.
+
+These authors show the connection between the Schr\"odinger Perturbation Theory (SPT) with conventional perturbation theories at the tree-level at third order. That is they show the connections for the bispectrum, skewness, cumulant correlator and three-point function. The authors go on to show that cumulants up to $N=5$ from Eulerian PT agree with SPT.
+
+This paper also presents an alternative version of the Schr\"odinger equation, one that is also used by Hu et al \citep{bib_whu}. It takes the following form:
+
+\begin{equation}
+i\hbar\dot{\psi} + \frac{3}{2}H\psi + {\bf H}\psi = 0
+\end{equation}
+
+\noindent This version explicitly includes expansion as a separate term, rather than as a modification to the time variable as appeared in the original paper wave-mechanics paper of Widrow \& Kaiser. Here the term $H$ is the Hubble parameter as defined in equation \ref{eqn_fdmn}; it dictates the expansion of the coordinate system. This should not be confused with ${\bf H}$ which is the Hamiltonian from the regular Schr\"odinger equation. The extra Hubble term is not necessarily obvious at first sight; however, if one starts from the equations of an expanding fluid and transform to the Schr\"odinger equation then this term appears naturally.
+
+Unlike the original paper this one does not work directly with the Schr\"odinger equation but rather a transformed set of equations. First they introduce a particular form of the wavefunction:
+
+\begin{equation}
+\psi(r,t) = \psi_0 \left(\frac{a}{a_0}\right)^{-3/2} e^{A(r,t) + i B(r,t)/\hbar}
+\end{equation}
+
+\noindent The fields $A$ and $B$ are real scalar fields that are introduced but the intention of doing so is not clearly stated. The authors note that the resultant equations are similar to the Eulerian fluid equations. That is to say that the transformed equations are similar to what Madelung found (see \ref{hydro}).
+
+Common to all versions of wave-mechanics is the notion that the sesqui-linear quantity $\psi\psi^*$ is always taken to be the density $\rho$. In calculating this quantity it is clear that the imaginary ($i B(r,t)$) term in the exponential disappears, which I crudely identify as a ``velocity'' term. When considering cold collapse $B$ is zero by definition, hence the wavefunction is only constructed from / or a statement about the density. From the original paper by Widrow \& Kaiser the imaginary term is related to the momentum $p$ in the following way: $\nabla B = p$.
+
+The real term in the exponential $A$ does not disappear when computing $\psi\psi^*$: this term is a function that shapes the density distribution. In the work of Watanabe \citep{bib_wat} the $A$ term is equal to a squared variable (position-squared: ${\vec x}^2$), hence the exponential of the squared variable provides a gaussian distribution for density (and also for velocity when the same is true of the $B$ term). The value $\psi_0$ is likely to be a constant although that is not stated explicitly, and the $\frac{a}{a_0}$ term is a time-dependent scaling term that corresponds to coordinate expansion.
+
+After inserting this wavefunction into the Schr\"odinger equation the authors produce two transformed equations that have a similar form to the fluid equations. This is not wholly surprising given previous published work and the idea of relating the wavefunction amplitude to density. In addition to these two equations is an appropriate version of the Poisson equation in order to include gravity.
+
+\begin{eqnarray}
+\dot{A} &=& -\frac{1}{2ma^2}(\nabla^2 B + 2\nabla A\nabla B),\\
+\dot{B} &=& \frac{\hbar^2}{2ma^2}(\nabla^2 A + |\nabla A|^2) - \frac{1}{2ma^2}|\nabla B|^2 -m V, \\
+\nabla^2 V &=& 4\pi Ga^2\bar{\rho}(a^{2A}  - 1).
+\end{eqnarray}
+
+\noindent The final equation here is the Poisson equation and the first equation looks similar in form to the continuity equation. The so-called pressure term is omitted from here but appears as the first term in the second equation, I identify it by $\nabla^2 A$. The second equation is perhaps an alternative form of the familiar Bernoulli equation which I conclude from noting that $B$ is like a velocity potential and that this equation holds the potential term $V$. This is not explicit in the paper but I make such identifications here in order to understand how it relates to other published work and to try and understand what the authors are trying to achieve. As mentioned, the authors use these two transformed equations instead of the Schr\"odinger equation.
+
+This identification becomes slightly clearer once we see that the authors identify the density contrast with $A$ in the following way: $\delta = e^{2A} -1$.
+
+\subsection{Coles, Spencer, Short}
+Perhaps the most widely developed form of cosmic wave-mechanics to date is the Free Particle Approximation (FPA), which was developed and studied in various papers by Coles, Spencer and Short. It is reviewed more thoroughly in Chapter \ref{ch_4}. I spent the first 18 months understanding the FPA, checking the results of Short's 3D simulations and developing a new approach to computing the peculiar velocity field within this framework. The FPA is unitary but sacrifices accuracy for speed \citep{bib_col, bib_spe, bib_sho, bib_sho2, bib_short}. It should be noted that Short has shown that this method is equivalent to the Zel'dovich approximation with adhesion \citep{bib_short}.
+
+\subsection{Woo and Chiueh}
+More recently a group from Taiwan has published two papers relevant to LSS simulations using the wave-mechanical method (Woo \& Chiueh \citep{bib_woo, bib_wooc}). I believe their publications draw direct lineage to the Hu paper and extend those ideas into three dimensions. Hitherto, Woo \& Chiueh have produced the highest resolution wave-mechanical simulations with $1024^3$ grid points. Similar to the approach of Widrow \& Kaiser \citep{bib_wk}, they choose to re-scale the Schr\"odinger-Poisson system into variables that are more appropriate for cosmological simulations. They appear to consider an Einstein-deSitter Universe hence it is less general than the re-scaling I suggest in section \ref{gen_exp}. Their equations are:
+
+\begin{eqnarray}
+i \frac{\partial}{\partial \tau}\psi &=& -\frac{1}{2a^2\nu}\tilde{\nabla}^2\psi + \frac{3\Omega_m\eta}{2a} U \psi \\
+\tilde{\nabla}^2 U &=& |\psi|^2 - 1
+\end{eqnarray}
+
+\noindent here $\eta = m\Delta^2 H_0/\hbar$ is said to set the Jeans length, $\Delta$ is the computational grid spacing. The dimensionless gravitational potential is $U(x) = V(x)/(3\Omega_m\eta/2a)$, the time parameter is $\tau = H_0 t$, and $\tilde{\nabla} = \frac{1}{\Delta}\nabla$.
+
+In a similar manner to myself they note that the evolution of a wavefunction is simply the exponential of the Hamiltonian:
+
+\begin{equation}
+\psi^{j+1} = e^{-i H dt} \psi^j
+\end{equation}
+
+\noindent From Quantum Mechanics we know this is a unitary transformation. Caveat: the quantity $j$ denotes the time-step, in later chapters I also use an upper index on the wavefunction to denote a time step but I use $n$ while using $j$ (as a lower index) to denote spatial position.
+
+Woo \& Chiueh split the Hamiltonian into two parts (kinetic $K$ and potential $V$) and solve each part separately: $e^{-i H dt} = e^{-i(K + V)dt}$. In one dimensional simulations there is no problem; however, at higher dimensions there are problems of commutation: $e^{-i(K)}e^{-i(V)dt} \ne e^{-i(V)}e^{-i(K)dt}$. These authors suggest expanding both of these exponentials as a Taylor series and writing the final evolution as a combination of the two:
+
+\begin{equation}
+e^{-i(K + V)dt} \approx \frac{1}{2}[e^{-i K dt} e^{-i V dt} + e^{-i V dt} e^{-i K dt}]
+\end{equation}
+
+\noindent Prima facie: it is not obvious if this particular method of splitting the kinetic and potential energy operators preserves the unitary nature of time evolution that Quantum Mechanics requires. Specific calculations of mass conservation are not present in either paper. In section \ref{split}, I suggest a different method of splitting the operators that preserves unitarity to within machine precision (also see results in section \ref{ch_5_robust}). Their method further differs from my own in that they perform the calculation of the Kinetic energy in Fourier space and appear to calculate Potential energy in real space. This is the opposite way around from my approach.
+
+These authors strongly emphasize the idea of their simulations representing CDM as a Bose-Einstein condensate. The particles share a coherent wavefunction with particle mass of the order $10^{-22}$ eV (as suggested by Hu et al \citep{bib_whu}) but they state that such particles are also known as Extremely Light Bosonic Dark Matter or ELBDM (see references contained within Woo \& Chiueh). Particles of such a light mass imply that the parameter $\nu = \hbar/m \sim 10^{-15}/10^{-22}$ is of order $10^{7}$ (eV.seconds). It is clear that this is much larger than the classical limit of $\hbar \rightarrow 0$, hence the associated de Broglie wavelength will be large and we expect non-classical behaviour. According to Hu et al a mass of $10^{-22}$ eV would correspond to a visible effect on astrophysical scales.
+
+Just as Widrow \& Kaiser, and Hu et al suggested; Woo \& Chiueh are suggesting that these particles will exhibit quantum behaviour at astrophysical scales. Their de Broglie wavelength is expected to be large enough. This would be a truly quantum description of dark matter but an interpretation that I've been slower to adopt. I treat $\nu$ as an effective Planck constant in a classical system; all quantum behaviour is suppressed. However, until dark matter is detected and the mass becomes known then the idea of ELBDM cannot be ruled out.
+
+The interesting result they show is that their code suppresses the formation of low-mass (subgalactic) halos but still yields galaxy halos (as described in the dark matter section in Chapter \ref{ch_1}) that are cuspy (cores tend to a singularity). The profiles yielded are similar to but not the same as the Navarro-Frenk-White profiles \citep{bib_nfw}. It was speculated in the Hu paper that this approach could eliminate the sub-galactic sized halos. The current $N$-body simulations predict that there should be $\sim 1000$ sub-galactic halos for every milky way sized galaxy. Observational data previously suggested that the number of these `dwarf' galaxies should be $\sim 10 \rightarrow 100$; however, a recent comparison of theory and data by \citet{bib_toll} suggests that the two are now consistent. He notes that the data from Via Lacta provides $\sim 300 \rightarrow 600$ satellites within 400 kpc of the Sun, and potentially up to $\sim 1000$ on estimates of the faintest satellites. Using limits from the Sloan data, Tollerud notes that observations and theory are consistent.
+
+The over abundance of such structures in $N$-body codes was suggested to be an artefact of the simulations. The cuspy nature of the density profiles were also believed to be artefacts of the simulations; however, the most recent simulations (Aquarius project \citep{bib_aqu, bib_nfw2}) show that the NFW profile is still a good fit. So the truth could be that halos are cuspy.
+
+The cuspy-ness may not be eliminated in wave-mechanics simulations but the decreased abundance of low-mass halos may provide a better comparison than the $N$-body codes with observations. \citep{bib_wooc}
+
+\subsection{Johnston et. al.}
+\label{johnston}
+The most recent paper of wave-mechanics in an LSS context comes from Johnston et al \citep{bib_rj}. This paper from Johnston forms the backbone of her PhD (unpublished at the time of writing). Most publications in this field have focussed upon the numerical problems rather than the cosmological problems, as it is necessary to have a working and reliable code before we can tackle the key problems of modern cosmological simulations. Johnston et al focus less upon the numerical issues and attempt to apply their equations directly to cosmological models.
+
+There are many unique considerations in this paper that are not present in any other astrophysical wave-mechanics publication. Johnston adopts the philosophical standpoint that they are modelling a dark matter fluid within the Schr\"odinger formalism, this is crucially different from my own approach as their system is describing a fluid and not free-particles in a self-gravitational potential. What this means is that Johnston adds the pressure term to the Schr\"odinger equation. The equations used are as follows:
+
+\begin{eqnarray}
+i\nu \frac{\partial\psi}{\partial t} &=& \frac{\nu^2}{2} \nabla^2\psi + V\psi + \frac{\nu^2}{2} \frac{\nabla^2 |\psi|}{|\psi|}\psi  \\
+\nabla^2 V &=& 4\pi G|\psi|^2  - \Lambda c^2
+\end{eqnarray}
+
+\noindent here Johnston adopts the same notation as Short and used $\nu=\hbar/m$, the last term in the Schr\"odinger equation is the so-called pressure term. Also unique to the Johnston paper is the inclusion of the Cosmological constant in the equation of the Poisson equation.
+
+The first cosmological model tackled within this framework is the homogeneous background evolution of the dark matter field. Johnston found numerical solutions to this model that were based upon a piecewise analytic solution for the evolution of a compensated spherical overdensity (that is, a tophat). The simulation of the spherical overdensity considers two fluid species, a first for astrophysical wave-mechanics hence Johnston has demonstrated the possibility of using multiple fluid species within the wave-mechanics framework.
+
+This paper includes has some similarities to the papers by Woo \& Chiueh in that it separates the wavefunction into two degrees of freedom and then solves two sets of differential equations. One for the real part and one for the imaginary part. Ultimately, it appears that Johnston integrates two sets of fluid equations, one for each fluid species and within these sets of fluid equations the two degrees of freedom are integrated separately. The potential $V$ is, of course, common to both species. The numerical integration is performed via a set of two interleaved Simpson's rules: this method is not symplectic and would not conserve probability; however, Johnston states the inclusion of the pressure term is a non-linear operator. Such an operator does not preserve the unitary structure of Quantum Mechanics.
+
+The PhD thesis of Johnston may also include her currently unpublished work about a Pauli-Poisson system. In this work she considers a self-gravitating fluid that includes possible sources of vorticity. I've taken a different approach to find a Pauli-like equation in Chapter \ref{ch_7}.
+
+
+\section{Solving the Schr\"odinger equation}
+Numerical Recipes \citep{bib_nr} suggests two methods of solving the Schr\"odinger equation, the first is an an implicit method, that is unconditionally stable, but not unitary. The second method, which uses Cayley's decomposition of exponentials, is stable, implicit and unitary. In Chapter \ref{ch_5} the latter method is explored and was used in all codes. The Free-Particle method in Chapter \ref{ch_4} will be treated separately as it sets the potential in the Schr\"odinger equation to zero.
+
+The evolution of the Schr\"odinger equation is given by:
+
+\begin{eqnarray}
+\label{sch_solve}
+\psi(x, t+dt) &=& e^{(-iHdt)} \psi(x, t) \\
+	&=& e^{(-i(K+V)dt)} \psi(x, t)
+\end{eqnarray}
+
+\noindent but non-commutation must be observed:
+\begin{equation}
+e^{(-i(K+V)dt)} \ne e^{(-i(V+K)dt)} 
+\end{equation}
+
+Solving this equation numerically turns out to be trickier than it first appears. Computationally, this is difficult because of the non-commuting operators in the exponential. There are many different methods for solving the Schr\"odinger equation and there seems to be no general consensus of which approach is the best, the schemes vary from using finite difference to spectral methods.
+
+In this work a unitary method was chosen as it conserves density and hence mass. When expanding coordinates are included the calculations are performed in comoving coordinates and it is the comoving density that is conserved. Renormalization might be an option but as fast unitary methods exist it seems unnecessary to consider them. If the potential is self-consistent (not an external field) then we expect the total energy of the system to be conserved. The Schr\"odinger equation naturally conserves energy and momentum but this property is only preserved when a unitary solver is employed as such a method is inherently symplectic.
+
+\subsection{Wave-mechanics and cosmological initial conditions}
+\label{cos_init}
+The early work of Short, the work of Johnston and of myself (for testing purposes) have looked at applying wave-mechanics to `toy' models. These are systems where there is a high degree of symmetry and at best are only a rough approximation to any real astrophysical example. Some of the tests performed in the section on the FPA method of this thesis differ from that of the fully solved version of the equations; those tests and their initial conditions are investigated in their own subsections. What is presented in this subsection is an overview of initial conditions that are relevant to a proper cosmological simulation and how they are generated. Such simulations were performed both using an FPA code and a full S-P code. The aim of such simulations is to be similar in nature to the `industry standard' simulations such as the $N$-body code Hydra \citep{bib_hmpc1} or those used in the Millennium simulation / Aquarius project: GADGET 2 \citep{bib_mil, bib_spr} and GADGET 3 \citep{bib_aqu}. Also, Via Lacta is a modern $N$-body code \citep{bib_via}.
+
+The construction of a cosmological initial conditions generator is not a simple coding task, especially if all components of the Universe are to be included as well as general relativistic effects (see comments in section \ref{sec_pert}). Given these difficulties it is therefore a better use of time to use an already existing initial conditions generator. The easiest approach was to use the initial conditions generator supplied with the Hydra cosmological code. The overall paradigm of modern cosmology was explained in the opening chapter but that theory will now be re-used to explain how a cosmological initial conditions generator works.
+
+Most LSS simulations start from redshifts in the region $z \sim 100 \rightarrow 50$, this is well after the epoch of recombination (CMB) which occurs around $z \sim 1100, \; t \sim 400,000 \; {\rm years}$. In order to know how the Universe looks at a redshift of 50 or 100 then it is necessary to know the equations and conditions which evolve the Universe from the Big Bang until $z \sim 100$. The distribution of density over the Universe can be described via a power spectrum (the amount of mass clustering at different length scales). The $\Lambda$-CDM model assumes a power spectrum $P$ that corresponds to a scale-invariant Gaussian random field at the time of Inflation (Harrison-Zel'dovich power spectrum).
+
+\begin{equation}
+P_{\rm inf}(|\underline{k}|) = A |\underline{k}|^n
+\end{equation}
+
+\noindent $k$ is the wave vector in Fourier space and corresponds to distance scale. The power spectrum during Inflation is almost scale-invariant with $n\sim 1$ \citep{bib_baum}; the spectrum changes over time as the distribution of matter and energy moves under different processes: gravity, free-streaming of radiation, particle collisions, radiation pressure and so on with other possibilities that might change how matter and energy is distributed in the Universe. The cumulative effect of these different processes is expressed as a transform from an earlier power spectrum to a later power spectrum through a transfer function. The transfer function for a particular mode $k$ is:
+
+\begin{equation}
+T_k = \frac{\delta_k(z_f)}{\delta_k(z_i) D(z_i)}
+\end{equation}
+
+\noindent $z_i$ denotes the initial redshift while $z_f$ denotes the final redshift. $D$ is the linear growth factor between the two redshifts. This gives the transfer of linear perturbations and assumes the decaying mode is negligible. The Hydra initial conditions generator uses the (linear) transfer function that corresponds to adiabatic CDM from Bardeen et al 1986 (BBKS) \citep{bib_bar}:
+
+\begin{eqnarray}
+T(q) &=& \frac{\ln(1+2.34q)}{2.34q}[1+ 3.89q \nonumber \\
+	&+& (16.1q)^2 + (5.46q)^3 + (6.71q)^4]^{1/4} \\
+q(|\underline{k}|) &=& \frac{|\underline{k}| \varsigma^{1/2}_0 }{\Omega_{cdm} h^2} \rm{Mpc^{-1}} \\
+\varsigma_0 &=& \frac{\Omega_{r,0}}{1.68\Omega_{\gamma,0}} \\
+P_i(|\underline{k}|) &=& T_k^2 P_{\rm inf}(|\underline{k}|)
+\end{eqnarray}
+
+\noindent The final line gives the new power spectrum at a later time (redshift $z_f$). All of the functions have an analytic form and are completely deterministic at this point. All of the functions are dependent only upon the modulus of $\underline{k}$. In all simulations, however, the over-densities $\delta$ are a gaussian random field. To create a gaussian realization of over-densities from the power spectrum one must distribute the $\delta_{k}$'s with random phases in the domain $[0,2\pi)$ for the same $k=|\underline{k}|=\sqrt{k_x^2+k_y^2+k_z^2}$. The over-density in configuration space, $\delta(\underline{x})$, is obtained via the inverse FFT (see \ref{ifft}). The imaginary part of the transformed $\delta (\underline{x})$ is ignored as $\delta$ is a real quantity. See the following relations and note the Fourier transform in the second line:
+
+% Hence, $< \delta_k^* \delta_k > = P_{\rm k}$. 
+
+\begin{eqnarray}
+%\underline{k} &=& |\underline{k}| e^{i \theta}, \;\;\; 0 \le \theta < 2\pi \\
+\delta_{\underline{k}} &=& P_i^{1/2} e^{i\theta}, \;\;\; 0 \le \theta < 2\pi \\
+\delta (\underline{x}) &=& \sum \delta_{\underline{k}} e^{-i \underline{k}.\underline{x}}
+\label{ifft}
+\end{eqnarray}
+
+\section{Velocity calculations}
+The calculation of velocity is independent of the method used to evolve the Schr\"odinger-Poisson system. Hence, I provide a general overview of the different methods in this chapter. The preferred method is the probability current (unique to this study of astrophysical wave-mechanics), it appears in both the Free-Particle method (chapter \ref{ch_4}) and in the full Schr\"odinger-Poisson system (chapter \ref{ch_5}).
+
+
+\subsection{Phase Unwrapping}
+In order to calculate the velocity potential ($\varphi_v$), it must be extracted from the wavefunction $\psi$; it is the argument of the wavefunction. See equation \ref{eqn_mad} for the definition of the wavefunction that we are using, it is the so-called Madelung transform. The variable $\varphi_v$ is `wrapped' to lie in the interval  $[-\pi,\pi)$. This wrapping will in general lead to `phase aliasing', these lead to discontinuities in the computed velocity field. This problem will be worse where the phase varies rapidly from grid point to grid point. Coles and Short \citep{bib_sho} implemented a `phase unwrapping' procedure: a simple numerical algorithm designed to check for rapid variations in phase between neighbouring mesh points. The unwrapping procedure is simple and fast in one dimension but is much more complex in higher dimensions. Such an algorithm is computationally intensive in three dimensions. An alternative approach is to calculate velocities using the probability current.
+
+The argument of $\psi$ is, in general, discontinuous then a continuous phase can be defined via an unwrapping procedure (denoted $W^{-1}$), which provides a continuous velocity potential.
+
+\begin{equation}
+  \varphi = - \nu W^{-1}(arg(\psi))
+\end{equation}
+
+\noindent Taking the comoving gradient of the potential gives the comoving velocity on the mesh:
+\begin{equation}
+  v = - \nabla \varphi
+\end{equation}
+
+\noindent The gradient of $\varphi_v$ can be calculated from finite difference or via standard Fourier techniques. As mentioned in Short \citep{bib_short}: the phase unwrapping procedure is complicated, with a high-running time, in three dimensions.
+
+
+\subsection{Phase-angle method}
+From the definition of an arbitrary complex number $c = a+ i b$ the associated phase angle, $\varphi$, as shown on an Argand diagram, can be computed from $tan(\varphi) = \frac{b}{a}$. Hence in the above Schr\"odinger formalism the phase angle $\varphi$ is computed as follows:
+
+\begin{eqnarray}
+\arctan\left(\frac{\Im(\psi)}{\Re(\psi)}\right)&=& -\frac{\varphi_{v}}{\nu}  + n \pi \\
+\underline{v} &=& -\nabla \frac{-\varphi_v}{\nu}
+\end{eqnarray}
+
+\noindent $\Im(\psi)$ is the imaginary part of $\psi$ and $\Re(\psi)$ is the real part. $\psi$ can also be written as: $\psi = \cos(-\frac{\varphi}{\nu}) + i \sin(-\frac{\varphi}{\nu})$ . However, this does not bypass the problem of wrapped phase angles. It merely states a way of obtaining the angle given $\psi$. Unwrapping is not necessary if one can negate the $n \pi$ term, that is setting $n=0$. If $n \neq 0$ then we expect the derivative of $\varphi$ to be large, this may have physical significance. A highly wrapped phase may indicate a high concentration of mass; so to ignore unwrapping one can appeal to a method of cross-checking the velocity potential with the density field. If the velocity field is tending to infinity because of a non-zero $n$ value then we can check what the density field is doing at the same point in space. This would allow us to determine if the phase is wrapped due to an accumulation of mass, even though we still expect the system to be stable, or if it is an unexpected numerical problem. The other possibility is a deficit of mass which we will later identify as a possible source of vorticity. This latter point would should a singularity of zero mass and would also give a singularity in the velocity.
+
+\subsection{Probability current method}
+\label{sec_j}
+In non-relativistic quantum mechanics there exists a relationship between the wavefunction, $\psi$, and the probability current, $\underline{J}$:
+
+\begin{equation}
+\label{eqn_j}
+ \underline{J} = \frac{\hbar}{2mi} (\psi^* \nabla \psi - \psi \nabla \psi^*)
+\end{equation}
+
+\noindent This equation allows us to compute the velocity directly from the wavefunction using the relationship between probability current and particle (phase) ``velocity":
+\begin{equation}
+\label{eqn_vj}
+\underline{v} = \frac{\underline{J}}{\psi\psi^*}
+\end{equation}
+
+\noindent which therefore by-passes the problem of wrapped phases. This method is fourth order as it contains four fields: $\psi,\psi^*,\nabla\psi,\nabla\psi^*$. Meaning that it should lead to greater accuracy than the phase method, that is to say that it will be more sensitive to non-linearities. The phase method, above, is second order. Recall that:
+
+\begin{equation}
+ v = \nabla \varphi=\frac{d}{dx}\varphi \mbox{ and } -\frac{\varphi}{\nu} \simeq tan^{-1} (\frac{\psi_{im}}{\psi_{real}})
+\end{equation}
+ \noindent Therefore $v$ is a second order calculation as:
+\begin{equation}
+\frac{d}{dx} \arctan x = \frac{1}{1 + x^2}
+\end{equation}
+
+\noindent However the form of the probability current can be re-stated in a simpler and easier to compute format:
+\begin{eqnarray}
+ \underline{v} = \frac{J}{\psi\psi^*} &=& \frac{\frac{\hbar}{2mi} (\psi^* \nabla \psi - \psi \nabla \psi^*)}{\psi\psi^*}\\
+ \underline{v} &=& \frac{\hbar}{2mi}\left(\frac{\nabla \psi}{\psi} - \frac{\nabla \psi^*}{\psi^*} \right)
+\end{eqnarray}
+
+\noindent Re-writing the velocity enables direct computation of $\underline{v}$ from $\psi$ without having an intermediate step of explicitly computing the probability current, $J$. This expression can be further simplified by using the alternative definition of the probability current:
+
+\begin{equation}
+\underline{J} = \frac{\hbar}{m} \Im(\psi^* \nabla \psi) = \Re(\psi^* \frac{\hbar}{mi}\nabla \psi)
+\end{equation}
+
+\noindent which yields a simple form of the velocity as follows:
+\begin{equation}
+\label{eqn_svel}
+\underline{v} = \frac{\hbar}{m} \Im\left(\frac{\nabla \psi}{\psi}\right)
+\end{equation}
+
+\noindent Appendix \ref{app_v} shows the consistency of the the probability current and the phase unwrapping method. It demonstrates that the probability current recovers the same form of the initial velocity as given by Short \citep{bib_short}. A quick way of obtaining the last velocity equation is to note that $i k = \nabla \psi / \psi$ and $p/m = v$.
+
+
+\section{Singularities as points of vorticity}
+\label{vort}
+From an astrophysics point of view, it would be interesting to be able to identify points of vorticity in nature and in simulations. In the $\Lambda$-CDM model vorticity is not said to exist. A basic assumption of the model is that velocity comes from the gradient of a scalar potential (irrotational) which is consistent with the observation of a gaussian random field in the CMB and with models of Inflation. This is a statement of zero angular momentum: while it is not unreasonable to expect the net angular momentum of the Universe to be zero, it is not obvious why we see any in the first place. That is to say that the origin of angular momentum is not known.
+
+Galaxies are observed to spin, so at that level of resolution modern simulations should consider the effects of spinning objects (my suggestions are presented in Chapter \ref{ch_7}). The concern of this section is to illustrate how to identify possible points of vorticity. The possibility of the CDM being a Bose-Einstein condensate is an interesting one and one that may allow for non-zero angular momentum and the generation of vorticity. It is a related topic to this thesis but was not investigated so we make no further comment.
+
+The velocity at a grid point is undefined when the phase of the wavefunction becomes undefined. This happens whenever the wavefunction becomes singular at some grid point. As before, the phase can be calculated from: $\varphi_{v} = - \nu \arctan\left(\frac{\Im(\psi)}{\Re(\psi)}\right)$. From this definition it is clear that the wavefunction becomes singular with an undefined phase when $\mathfrak{I}(\psi) = 0$. The most readily identifiable points of singularity occur when both real and imaginary parts of the wavefunction are zero.
+
+If $\psi = (0,0), \;\psi\in\mathbb{C}$ then the density is zero and the phase is undefined. This corresponds to a void. Another type of vorticity would be at the centre of a spinning mass, such as a galaxy. Such phenomena do not exist in current simulations, they are strictly forbidden. Intrinsic angular momentum (spin) is zero by definition as the ordinary Schr\"odinger equation does not admit spin. This is also true of $N$-body codes as the particles do not account for spin either. 
+
+Extrinsic angular momentum (such as vorticity) is forbidden by Kelvin's circulation theorem. This theorem holds for bodies under conservative forces in an inviscid, barotropic flow. The force of gravity is a conservative force and given our review of the Schr\"odinger equation in Chapter \ref{ch_3} we do not expect there to be any pressure or pressure gradients. These conditions are met hence we do not expect to see any vorticity or circulation.
+
+Kelvin's circulation theorem forbids vorticity forming in a system where none initially exists. According to Short \citep{bib_short}, Kelvin's theorem is only true before shell-crossing. However, the FPA breaks down at shell-crossing so the results from the FPA are no longer valid anyway. As vorticity is not expected from a standard simulation then identifying singularities is a diagnostic for determining the robustness of the code.
+
+Numerically, these singularities may not be identically equal to zero but are close within machine precision. The velocity vectors at nearby gridpoints should be indicative of a vortex too.
+
+
