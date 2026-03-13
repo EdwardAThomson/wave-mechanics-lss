@@ -1,0 +1,101 @@
+
+;---- 0000
+z       31.000000
+
+max(Vx)      291.781
+max(Vy)      269.569
+max(Vz)      285.382
+minVx     -299.866
+minVy     -310.380
+minVz     -264.729
+mean_vx  2.23890e-06
+mean_vx  2.23890e-06
+mean_vx  2.23890e-06
+sigma vx_phys       68.023247
+sigma vy_phys       68.582149
+sigma vz_phys       67.779438
+
+
+;---- 000
+z       3.0000000
+
+max(Vx)      812.380
+max(Vy)      1227.26
+max(Vz)      810.852
+minVx     -903.434
+minVy     -858.084
+minVz     -756.823
+mean_vx  -0.00470603
+mean_vx  -0.00470603
+mean_vx  -0.00470603
+sigma vx_phys       185.21685
+sigma vy_phys       186.91275
+sigma vz_phys       184.70871
+
+
+;---- 001
+z       2.0000003
+
+max(Vx)      1970.41
+max(Vy)      1667.10
+max(Vz)      1619.80
+minVx     -1713.57
+minVy     -1706.07
+minVz     -1891.63
+mean_vx  -0.00458461
+mean_vx  -0.00458461
+mean_vx  -0.00458461
+sigma vx_phys       213.86247
+sigma vy_phys       215.80787
+sigma vz_phys       213.51718 
+
+
+;---- 002
+z       1.0000000
+
+max(Vx)      2509.62
+max(Vy)      2028.88
+max(Vz)      2474.56
+minVx     -1961.37
+minVy     -2350.90
+minVz     -1981.12
+mean_vx  -0.00451827
+mean_vx  -0.00451827
+mean_vx  -0.00451827
+sigma vx_phys       264.06476
+sigma vy_phys       265.95588
+sigma vz_phys       263.08601
+
+
+;---- 003
+z      0.49999994
+
+max(Vx)      2484.90
+max(Vy)      2570.01
+max(Vz)      2623.09
+minVx     -2612.43
+minVy     -2796.16
+minVz     -2911.58
+mean_vx  -0.00164926
+mean_vx  -0.00164926
+mean_vx  -0.00164926
+sigma vx_phys       298.20559
+sigma vy_phys       299.55973
+sigma vz_phys       297.34700
+
+
+;---- 004
+z     0.050000000
+
+max(Vx)      3343.61
+max(Vy)      2869.91
+max(Vz)      2830.58
+minVx     -2989.48
+minVy     -2888.97
+minVz     -3359.14
+mean_vx  -0.00836968
+mean_vx  -0.00836968
+mean_vx  -0.00836968
+sigma vx_phys       320.57129
+sigma vy_phys       321.90450
+sigma vz_phys       319.07370

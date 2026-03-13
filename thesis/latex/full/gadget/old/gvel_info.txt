@@ -1,0 +1,118 @@
+Ng, dx          64    0.0156250
+physical length in MPC      500.000
+
+------------ 0000 -----------------
+z       31.000000
+
+max(Vx)      51.5801
+max(Vy)      47.6536
+max(Vz)      50.4489
+minVx     -53.0093
+minVy     -54.8680
+minVz     -46.7978
+mean_vx  1.62097e-06
+mean_vx  1.62097e-06
+mean_vx  1.62097e-06
+sigma vx_phys       12.024926
+sigma vy_phys       12.123726
+sigma vz_phys       11.981825
+  dv        2.05077
+  dv1        2.01023
+  dv2        1.90680
+
+------------ 000 -----------------
+z       3.0000000
+
+max(Vx)      406.190
+max(Vy)      613.628
+max(Vz)      405.426
+minVx     -451.717
+minVy     -429.042
+minVz     -378.411
+mean_vx  -0.00235301
+mean_vx  -0.00235301
+mean_vx  -0.00235301
+sigma vx_phys       92.608427
+sigma vy_phys       93.456374
+sigma vz_phys       92.354353
+  dv        16.8217
+  dv1        20.4445
+  dv2        15.3694
+
+------------ 001 -----------------
+z       2.0000003
+
+max(Vx)      1137.62
+max(Vy)      962.502
+max(Vz)      935.194
+minVx     -989.329
+minVy     -984.999
+minVz     -1092.13
+mean_vx  -0.00263333
+mean_vx  -0.00263333
+mean_vx  -0.00263333
+sigma vx_phys       123.47361
+sigma vy_phys       124.59674
+sigma vz_phys       123.27424
+  dv        41.7049
+  dv1        38.1863
+  dv2        39.7515
+
+------------ 002 -----------------
+z       1.0000000
+
+max(Vx)      1774.57
+max(Vy)      1434.63
+max(Vz)      1749.78
+minVx     -1386.90
+minVy     -1662.33
+minVz     -1400.86
+mean_vx  -0.00326753
+mean_vx  -0.00326753
+mean_vx  -0.00326753
+sigma vx_phys       186.72198
+sigma vy_phys       188.05920
+sigma vz_phys       186.02990
+  dv        61.9894
+  dv1        60.7249
+  dv2        61.7772
+
+------------ 003 -----------------
+z      0.49999994
+
+max(Vx)      2028.92
+max(Vy)      2098.40
+max(Vz)      2141.74
+minVx     -2133.04
+minVy     -2283.05
+minVz     -2377.30
+mean_vx  -0.00141257
+mean_vx  -0.00141257
+mean_vx  -0.00141257
+sigma vx_phys       243.48389
+sigma vy_phys       244.58950
+sigma vz_phys       242.78276
+  dv        81.6070
+  dv1        85.9109
+  dv2        88.6086
+
+
+
+------------ 004 -----------------
+z     0.050000000
+
+max(Vx)      3263.03
+max(Vy)      2800.74
+max(Vz)      2762.37
+minVx     -2917.43
+minVy     -2819.34
+minVz     -3278.18
+mean_vx  -0.00816816
+mean_vx  -0.00816816
+mean_vx  -0.00816816
+sigma vx_phys       312.84552
+sigma vy_phys       314.14656
+sigma vz_phys       311.38385
+  dv        121.185
+  dv1        110.198
+  dv2        118.442

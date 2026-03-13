@@ -1,0 +1,104 @@
+% Show consisitency of J and V_i
+%
+%
+\section{Derivation of the initial velocity of the FPA}
+\label{app_v}
+For determining the velocity in this work the probability current was employed as opposed to the phase unwrapping method. Hence, I show agreement between this probability current method and the unwrapping method by demonstrating that the former gives the expected form of the initial velocity (as given by Chris Short). The FPA model allows for the initial velocity to be derived analytically. The form of the velocity is not necessarily analytic once evolution has begun. The initial density contrast $\delta_i$ represents a symmetric distribution of CDM particles and corresponds to an initial velocity potential $\varphi_i$ as given below. The subscript $i$ refers to the initial states and does not the imaginary party of a complex number.
+
+\begin{equation}
+ \delta_i = - \delta_a \cos\left(\frac{2 \pi x}{p}\right) \;\;\;
+ \varphi_i = - \left(\frac{p}{2 \pi} \right)^2 \delta_i
+\end{equation}
+
+Given both the density potential velocity field, one can combine these into a single function known as the Madelung transform:
+
+\begin{equation}
+ \psi_i = (1+ \delta_i)^{1/2}\exp\left(\frac{-i\varphi_i}{\nu}\right), \;\; \psi_i^* = (1+ \delta_i)^{1/2}\exp\left(\frac{i\varphi_i}{\nu}\right)
+\end{equation}
+
+$\psi^*$ is the complex conjugate of $\psi$. Written out fully these functions are:
+
+\begin{equation}
+ \psi_i = \left(1- \delta_a \cos\left(\frac{2 \pi x}{p}\right)\right)^{1/2}
+ \exp\left(\frac{-i}{\nu}(\frac{p}{2\pi})^2 \delta_a \cos\left(\frac{2 \pi x}{p}\right) \right)
+\end{equation}
+
+\begin{equation}
+ \psi_i^* = \left(1- \delta_a \cos\left(\frac{2 \pi x}{p}\right)\right)^{1/2}
+ \exp\left( \frac{i}{\nu}(\frac{p}{2\pi})^2 \delta_a \cos\left(\frac{2 \pi x}{p}\right) \right)
+\end{equation}
+
+Now I will define:
+
+\begin{eqnarray}
+\alpha 1 & = & \left(1- \delta_a \cos\left(\frac{2 \pi x}{p}\right)\right)^{1/2} \\ \nonumber
+\alpha 2 & = & \exp\left(\frac{-i}{\nu}(\frac{p}{2\pi})^2 \delta_a \cos\left(\frac{2 \pi x}{p} \right) \right) \\ \nonumber
+\alpha 2^* & = & \exp\left(\frac{i}{\nu}(\frac{p}{2\pi})^2 \delta_a \cos\left(\frac{2 \pi x}{p} \right) \right) \\ \nonumber
+\alpha 3 & = & \frac{1}{2}\left(1-\delta_a \cos\left(\frac{2 \pi x}{p}\right)\right)^{-1/2} \left(\delta_a(\frac{p}{2\pi}) \sin\left(\frac{2\pi x}{p}\right)\right) = \nabla\alpha 1 \\ \nonumber
+\alpha 4 & = & \frac{i}{\nu} \frac{p}{2 \pi} \delta_a sin\left(\frac{2\pi x}{p}\right) = \frac{\nabla\alpha2}{\alpha2}\\ \nonumber
+\end{eqnarray}
+
+Such that:
+\begin{equation}
+ \psi_i = \alpha 1 * \alpha 2  \; \;  \psi_i^* = \alpha 1 * \alpha 2^* 
+\end{equation}
+
+\begin{equation}
+\nabla\psi_i = (\alpha 3* \alpha 2) + (\alpha 1 * \alpha 2 * \alpha 4)
+\end{equation}
+
+\begin{equation}
+\nabla\psi_i^* = (\alpha 3* \alpha 2^*) - (\alpha 1 * \alpha 2^* * \alpha 4)
+\end{equation}
+
+In quantum mechanics one can find a relation for $J$, the probability current, as follows:
+
+\begin{equation}
+ J_i = \frac{\hbar}{2mi} (\psi_i^* \nabla \psi_i - \psi_i \nabla \psi_i^*)
+\end{equation}
+
+Recall that $\nu = \frac{\hbar}{m}$. Using the initial conditions one can compute the initial velocity field.
+
+\begin{equation}
+ J_i = \frac{\hbar}{2mi} [(\alpha 1 * \alpha 2^*) (\alpha 3* \alpha 2 + \alpha 1 * \alpha 2 * \alpha 4) - (\alpha 1 * \alpha 2 )(\alpha 3* \alpha 2^* - \alpha 1 * \alpha 2^* * \alpha 4)]
+\end{equation}
+
+\begin{equation}
+ J_i = \frac{\hbar}{2mi}
+[\alpha 1\alpha 2^*\alpha 3\alpha 2 + \alpha 1\alpha 2^*\alpha 1\alpha 2\alpha 4 - \alpha 1\alpha 2\alpha 3\alpha 2^* + \alpha 1\alpha 2\alpha 1\alpha 2^*\alpha 4]
+\end{equation}
+
+Note that $\alpha 2 * \alpha 2^* = 1$
+
+\begin{equation}
+J_i = \frac{\hbar}{2mi} [\alpha 1 * \alpha 3 - (\alpha 1)^2 \alpha 4 -\alpha 1 * \alpha 3 - (\alpha 1)^2 \alpha 4]
+\end{equation}
+
+\begin{equation}
+J_i = \frac{\hbar}{2mi} [ 2* (\alpha 1)^2 \alpha 4] = \frac{\hbar}{mi} [(\alpha 1)^2 \alpha 4]
+\end{equation}
+
+Essentially, $\alpha 4 = \frac{i}{\nu} \nabla \varphi_i$ and $\alpha 1 = |\psi|$. Hence:
+\begin{equation}
+J_i = |\psi|^2 \nabla \varphi_i
+\end{equation}
+
+The probability current is related to the velocity of the distribution as follows:
+
+\begin{equation}
+v_i = \frac{J_i}{\rho} = \frac{J_i}{|\psi_i|^2}
+\end{equation}
+
+\begin{equation}
+v_i = \nabla \varphi_i
+\end{equation}
+
+So:
+\begin{equation}
+v_i = \nabla \left(-\left(\frac{p}{2\pi}\right)^2 \delta_a \cos\left(\frac{2\pi x}{p}\right)\right)
+\end{equation}
+\begin{equation}
+v_i = \left(\frac{p}{2\pi}\right)\delta_a \sin\left(\frac{2\pi x}{p}\right)
+\end{equation}
+
+QED. This matches the result of Short in his PhD thesis.

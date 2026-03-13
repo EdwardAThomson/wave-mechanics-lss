@@ -1,0 +1,459 @@
+%% a file containing just the text macros from Brockie's typesetting file
+
+
+%% colours
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+
+%% Bold greek quantities
+\newcommand{\bxi}{\mbox{\boldmath$\xi$}}
+
+%% Defining aliases...
+
+\newcommand{\ie}{{\em i.e. }}
+\newcommand{\eg}{{\em e.g. }}
+\newcommand{\etal}{{\em et al. }}
+
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\ba}{\begin{eqnarray}}
+\newcommand{\ea}{\end{eqnarray}}
+
+\newcommand{\glos}[2]{
+\begin{tabular}{ll}
+	\parbox[t]{0.16 \textwidth}{#1} &
+	\parbox[t]{0.76 \textwidth}{#2} \\
+\end{tabular}
+}
+
+\newcommand{\apriori}{{\it a priori} }
+
+%%ADS abstract ervice Bibtex entries
+
+\newcommand{\aj}{Astronomical Journal}
+\newcommand{\araa}{Annual Review of Astronomy and Astrophysics}
+\newcommand{\apj}{Astrophysical Journal}
+\newcommand{\apjl}{Astrophysical Journal, Letters}
+\newcommand{\apjs}{Astrophysical Journal, Supplement}
+\newcommand{\ao}{Applied Optics}
+\newcommand{\apss}{Astrophysics and Space Science}
+\newcommand{\aap}{Astronomy and Astrophysics}
+\newcommand{\aapr}{Astronomy and Astrophysics Reviews}
+\newcommand{\aaps}{Astronomy and Astrophysics, Supplement}
+\newcommand{\azh}{Astronomicheskii Zhurnal}
+\newcommand{\baas}{Bulletin of the AAS}
+\newcommand{\jrasc}{Journal of the Royal Astronomical Society of Canada}
+\newcommand{\memras}{Memoirs of the Royal Astronomical Society}
+\newcommand{\mnras}{Monthly Notices of the Royal Astronomical Society}
+\newcommand{\pra}{Physical Review A: General Physics}
+\newcommand{\prb}{Physical Review B: Solid State}
+\newcommand{\prc}{Physical Review C}
+\newcommand{\prd}{Physical Review D}
+\newcommand{\pre}{Physical Review E}
+\newcommand{\prl}{Physical Review Letters}
+\newcommand{\pasp}{Publications of the ASP}
+\newcommand{\pasj}{Publications of the ASJ}
+\newcommand{\qjras}{Quarterly Journal of the Royal Astronomical Society}
+\newcommand{\skytel}{Sky and Telescope}
+\newcommand{\solphys}{Solar Physics}
+\newcommand{\sovast}{Soviet Astronomy}
+\newcommand{\ssr}{Space Science Reviews}
+\newcommand{\zap}{Zeitschrift fuer Astrophysik}
+\newcommand{\nat}{Nature}
+\newcommand{\iaucirc}{IAU Cirulars}
+\newcommand{\aplett}{Astrophysics Letters}
+\newcommand{\apspr}{Astrophysics Space Physics Research}
+\newcommand{\bain}{Bulletin Astronomical Institute of the Netherlands}
+\newcommand{\fcp}{Fundamental Cosmic Physics}
+\newcommand{\gca}{Geochimica Cosmochimica Acta}
+\newcommand{\grl}{Geophysics Research Letters}
+\newcommand{\jcp}{Journal of Chemical Physics}
+\newcommand{\jgr}{Journal of Geophysics Research}
+\newcommand{\jqsrt}{Journal of Quantitiative Spectroscopy and Radiative Transfer}
+\newcommand{\memsai}{Mem. Societa Astronomica Italiana}
+\newcommand{\nphysa}{Nuclear Physics A}
+\newcommand{\physrep}{Physics Reports}
+\newcommand{\physscr}{Physica Scripta}
+\newcommand{\planss}{Planetary Space Science}
+\newcommand{\procspie}{Proceedings of the SPIE}
+
+%% Abbreviations etc...
+
+\newcommand{\astrolib}{\textsc{Astrolib}}
+\newcommand{\ircamdr}{\textsc{Ircamdr}}
+\newcommand{\ircam}{\textsc{Ircam}}
+\newcommand{\daophot}{\textsc{Daophot}}
+\newcommand{\ukirt}{\textsc{Ukirt}}
+\newcommand{\hipp}{\textsc{Hipparcos}}
+\newcommand{\baddata}{\textsc{Bad Data}}
+\newcommand{\iraf}{\textsc{iraf}}
+\newcommand{\isis}{\textsc{isis}}
+
+\newcommand{\stare}{\textsc{Stare}}
+
+%% Outer/inner scales...
+
+\newcommand{\Lo}{\ensuremath{L_0}}
+\newcommand{\lo}{\ensuremath{l_0}}
+
+%% r_0, D/r_0...
+
+\newcommand{\ro}{\ensuremath{r_0}}
+\newcommand{\Dro}{\ensuremath{\frac{D}{\ro}}}
+\newcommand{\roff}{\ensuremath{\ro(0.55\mu m)}}
+
+\newcommand{\arcsec}{\mbox{\ensuremath{^{\prime\prime}}}}
+\newcommand{\arcmin}{\mbox{\ensuremath{^{\prime}}}}
+\newcommand{\arcpix}{\mbox{\ensuremath{^{\prime\prime}}/pixel}}
+\newcommand{\mas}{\mbox{\ensuremath{mas}}}
+\newcommand{\masyr}{\mbox{\ensuremath{mas\ yr^{-1}}}}
+
+\newcommand{\cosa}{\mbox{\ensuremath{\cos\alpha}}}
+\newcommand{\cosd}{\mbox{\ensuremath{\cos\delta}}}
+\newcommand{\sina}{\mbox{\ensuremath{\sin\alpha}}}
+\newcommand{\sind}{\mbox{\ensuremath{\sin\delta}}}
+\newcommand{\seca}{\mbox{\ensuremath{\sec\alpha}}}
+\newcommand{\secd}{\mbox{\ensuremath{\sec\delta}}}
+
+\newcommand{\mR}{\ensuremath{m_R}}
+
+\newcommand{\bolitem}[2]{
+	\item \textbf{#1}
+
+	#2
+}
+\newcommand{\nbolitem}[2]{
+	\item #1
+
+	#2
+}
+
+%% Maths stuff...
+
+\renewcommand{\vec}[1]{\ensuremath{\underline{#1}}}	%% redefines
+							%% an existing
+							%% command...!
+\newcommand{\curly}[1]{\ensuremath{\mathcal{#1}}}
+
+%%NNets maths symbols...
+
+\newcommand{\eqnspace}{\hspace{1.0cm}}
+\newcommand{\oline}[1]{\ensuremath{\overline{#1}}}
+
+
+
+%%my stuff from Mike's ddoc
+\newcommand{\micron}{\mbox{\ensuremath{\,\mu}\rm{m}}}
+\newcommand{\kel}{\ensuremath{\,\rm{K}}}
+\newcommand{\power}[2]{\mbox{\ensuremath {#1 \times 10^{ #2 }}}}   % exp power
+\newcommand{\Trot}{\ensuremath{T_{\rm{rot}}}}
+\newcommand{\Lsolar}{\mbox{\ensuremath{\rm L_{\odot}}}}
+\newcommand{\Lprime}{\ensuremath{L'}}
+\newcommand{\Msolar}{\mbox{\ensuremath{\rm M_{\odot}}}}
+\newcommand{\Zsolar}{\mbox{\ensuremath{\rm Z_{\odot}}}}
+\newcommand{\kms}{\mbox{km\ensuremath{\rm{s}^{-1}}}}
+\newcommand{\jy}{\ensuremath{\,\rm{Jy}}}
+\newcommand{\ang}{\,\AA}
+\newcommand{\ghz}{\,GHz}
+\newcommand{\mhz}{\,MHz}
+
+%%lick indices names
+\newcommand{\mgb}{\ensuremath{\rm{Mg}_b}}
+\newcommand{\mgone}{\ensuremath{\rm{Mg}_1}}
+\newcommand{\mgtwo}{\ensuremath{\rm{Mg}_2}}
+\newcommand{\ctwo}{\ensuremath{\rm{C}_2}}
+\newcommand{\hdelta}{\ensuremath{{\rm H}\delta}}
+\newcommand{\hdeltaa}{\ensuremath{{\rm H}\delta_A}}
+\newcommand{\hdeltaf}{\ensuremath{{\rm H}\delta_F}}
+\newcommand{\hgamma}{\ensuremath{{\rm H}\gamma}}
+\newcommand{\hgammaa}{\ensuremath{{\rm H}\gamma_A}}
+\newcommand{\hgammaf}{\ensuremath{{\rm H}\gamma_F}}
+
+
+\newcommand{\degrees}{\mbox{\ensuremath{^{\circ}}}}
+\newcommand{\electrons}{\ensuremath{\rm{e}^-}}
+
+\newcommand{\hubsq}{\mbox{\ensuremath{h^{-2}}}}
+\newcommand{\hub}{\mbox{\ensuremath{h^{-1}}}}
+
+\newcommand{\logten}{\mbox{\ensuremath{{\rm log}_{10}}}}
+\newcommand{\loge}{\mbox{\ensuremath{{\rm log}_e}}}
+
+\newcommand{\intinf}{\ensuremath{\int_{- \infty}^{\infty}}}
+
+
+%	MATRICES AND DETERMINANTS
+%	=========================
+%							UNIT ARRAY
+\newcommand{\unitarray}{%
+		\begin{array}{lll}
+			 1	 &	 0	 &	 0	\\
+			 0	 &	 1	 &	 0	\\
+			 0	 &	 0	 &	 1	
+		\end{array}%
+		}
+%							3 BY 3 ARRAY
+\newcommand{\arrayyy}[1]{%
+		\begin{array}{lll}
+		 {#1}_{11}	 &	 {#1}_{12}	 &	 {#1}_{13}	\\
+		 {#1}_{21}	 &	 {#1}_{22}	 &	 {#1}_{23}	\\
+		 {#1}_{31}	 &	 {#1}_{32}	 &	 {#1}_{33}	
+		\end{array}%
+		}
+%							2 BY 2 ARRAY
+\newcommand{\arrayy}[1]{%
+		\begin{array}{ll}
+		 {#1}_{11}	 &	 {#1}_{12}	\\
+		 {#1}_{21}	 &	 {#1}_{22}
+		\end{array}%
+		}
+\newcommand{\unitm}{\left(\unitarray\right)}		% UNIT MATRIX
+\newcommand{\unitd}{\left|\unitarray\right|}		% UNIT DET
+\newcommand{\mattt}[1]{\left(\arrayyy{{#1}}\right)}	% 3*3  MATRIX
+\newcommand{\matt}[1]{\left(\arrayy{{#1}}\right)}	% 2*2  MATRIX
+\newcommand{\dettt}[1]{\left|\arrayyy{{#1}}\right|}	% 3*3  DET
+\newcommand{\dett}[1]{\left|\arrayy{{#1}}\right|}	% 2*2  DET
+
+\newcommand{\vrow}[1]{(#1_1,#1_2,#1_3)}			% ROW VECTOR
+\newcommand{\myvrow}[2]{(#1_1,#1_2, . .\  #1_#2)}	% ROW VECTOR
+
+\newcommand{\vcol}[1]{\left(\!%				% COL VECTOR
+		\begin{array}{l}
+			{#1}_{1}	\\
+			{#1}_{2}	\\
+			{#1}_{3}
+		\end{array}%
+		\!\right)}
+\newcommand{\myvcol}[2]{\left(\!%				% COL VECTOR
+		\begin{array}{l}
+			{#1}_{1}	\\
+			{#1}_{2}	\\
+			. \\
+			. \\
+			{#1}_{#2}
+		\end{array}%
+		\!\right)}
+
+\newcommand{\mydesign}[3]{\left(\!%			% Design matrix
+		\begin{array}{lllll}
+			{#1}_{11} & {#1}_{12} & . & . & {#1}_{1#3} \\
+			{#1}_{21} & {#1}_{22} & . & . & {#1}_{2#3} \\
+			. & & & & . \\
+			. & & & & . \\
+			{#1}_{#21} & {#1}_{#22} & . & . & {#1}_{#2#3} \\
+		\end{array}%
+		\!\right)}
+
+\def\dmatrix#1{\left|\matrix{#1}\right|}
+
+%		 CALCULUS
+%		========
+\newcommand{\de}{\,{\rm d}}				% d for dx etc.
+\newcommand{\dd}[2]{\frac{\de#1}{\de#2}}		% derivative df/dx
+\newcommand{\pp}[2]{\frac{\partial#1}{\partial#2}}	% partial df/dx
+\newcommand{\ff}[2]{\frac{\delta#1}{\delta#2}}		% functional df/dx
+\newcommand{\ddt}[2]{\frac{\de^{2}\! #1}{\de#2^{2}}}	% 2nd der: d2f/dx2
+\newcommand{\ppt}[2]					% 2nd partial der.
+	{\frac{\partial^{2}\! #1}{\partial#2^{2}}}
+\newcommand{\ppm}[3]						% 2nd partial mixed
+	{\frac{\partial^{2}\! #1}{\partial#2\partial#3}}	
+\newcommand{\fft}[2]
+	{\frac{\delta^{2}\! #1}{\delta#2^{2}}}		% 2nd functional der.
+\newcommand{\ddn}[3]
+	{\frac{\de^{#1}\! #2}{\de#3^{#1}}}		% nth derivative
+\newcommand{\ppn}[3]
+	{\frac{\partial^{#1}\! #2}{\partial#3^{#1}}}	% nth partial der.
+\newcommand{\ffn}[3]
+	{\frac{\delta^{#1}\!#2}{\delta#3^{#1}}}		% nth functional der.
+
+%% Reference yet to find...
+
+%%\newcommand{\findcite}[1]{[!!! Find ref to: #1!!!]}
+%%\newcommand{\findref}[1]{[!!! Need to cross--reference to: #1!!!]}
+
+\newcommand{\todo}[1]{
+\vspace{0.5in}
+\textbf{Todo: #1}
+\vspace{0.5in}
+}
+
+\newcommand{\next}[1]{
+\vspace{2in}
+\begin{large}
+\textbf{Next: #1}
+\end{large}
+\vspace{2in}
+}
+
+\newcommand{\grumpy}				% draws a grumpy face
+{\mbox{\begin{picture}(20,20)(0,7)
+\put(10,10){\circle{15}}
+\put(12.5,12.5){\circle*{2}}
+\put(7.5,12.5){\circle*{2}}
+\put(6,1){\shortstack[l]{$\mbox{}^{\frown}$}}
+\end{picture}}}
+
+\newcommand{\happy}				% draws a happy face
+{\mbox{\begin{picture}(20,20)(0,7)
+\put(10,10){\circle{15}}
+\put(12.5,12.5){\circle*{2}}
+\put(7.5,12.5){\circle*{2}}
+\put(6,1){\shortstack[l]{$\mbox{}^{\smile}$}}
+\end{picture}}}
+
+%% The keys to the graphs...
+
+\newcommand{\xxx}{		%% Cross...
+	$\!\!\!\!\!$
+	\setlength{\unitlength}{1pt}
+	\mbox{
+	\begin{picture}(16,4)(0,0)
+	\put(8,2){\makebox(0,0){$\times$}}
+	\put(0,2){\line(1,0){16}}
+	\end{picture}
+	\setlength{\unitlength}{1pt}
+	$\!\!\!\!\!$
+	}
+}
+
+\newcommand{\xxxns}{		%% As above, no symbol...
+	$\!\!\!\!\!$
+	\setlength{\unitlength}{1pt}
+	\mbox{
+	\begin{picture}(16,4)(0,0)
+	\put(0,2){\line(1,0){16}}
+	\end{picture}
+	\setlength{\unitlength}{1pt}
+	$\!\!\!\!\!$
+	}
+}
+
+\newcommand{\ddd}{		%% Diamond...
+	$\!\!\!\!\!$
+	\setlength{\unitlength}{1pt}
+	\mbox{
+	\begin{picture}(16,4)(0,0)
+	\put(8,2){\makebox(0,0){$\diamond$}}
+	\put(0,2){\line(1,0){4}}
+	\put(6,2){\line(1,0){4}}
+	\put(12,2){\line(1,0){4}}
+	\end{picture}
+	\setlength{\unitlength}{1pt}
+	$\!\!\!\!\!$
+	}
+}
+
+\newcommand{\dddns}{		%% As above, no symbol...
+	$\!\!\!\!\!$
+	\setlength{\unitlength}{1pt}
+	\mbox{
+	\begin{picture}(16,4)(0,0)
+	\put(0,2){\line(1,0){4}}
+	\put(6,2){\line(1,0){4}}
+	\put(12,2){\line(1,0){4}}
+	\end{picture}
+	\setlength{\unitlength}{1pt}
+	$\!\!\!\!\!$
+	}
+}
+
+\newcommand{\ttt}{		%% Triangle...
+	$\!\!\!\!\!$
+	\setlength{\unitlength}{1pt}
+	\mbox{
+	\begin{picture}(16,4)(0,0)
+	\put(8,2){\makebox(0,0){\begin{tiny}$\triangle$\end{tiny}}}
+	\put(0,2){\line(1,0){3}}
+	\put(4,2){\line(1,0){1}}
+	\put(6,2){\line(1,0){3}}
+	\put(10,2){\line(1,0){1}}
+	\put(12,2){\line(1,0){3}}
+	\end{picture}
+	\setlength{\unitlength}{1pt}
+	$\!\!\!\!\!$
+	}
+}
+
+\newcommand{\key}[3]{\\\mbox{\xxx} #1,\\\mbox{\ddd} #2 and\\\mbox{\ttt} #3}
+\newcommand{\keydef}{\key{no prediction}{neural network}{linear predictor}}
+\newcommand{\keydefs}{\key{no prediction}{neural networks}{linear predictors}}
+
+%% A figure...
+
+\newcommand{\fig}[4]{
+	\begin{figure}
+	\setlength{\epsfxsize}{0.8 \textwidth}
+	\centerline{\epsfbox{#1}}
+	\caption[#2]{ \label{#4} #3}
+	\vspace{18pt}
+	\end{figure}
+}
+
+%% A scaleable figure...
+
+\newcommand{\scfig}[5]{
+	\begin{figure}
+	\setlength{\epsfxsize}{#1 \textwidth}
+	\centerline{\epsfbox{#2}}
+	\caption[#3]{ \label{#5} #4}
+	\vspace{18pt}
+	\end{figure}
+}
+
+%% Fitting 2 graphs into one figure on one page...
+
+\newcommand{\pfig}[7]{
+	\begin{figure}
+	\begin{center}
+	\begin{tabular}{c}
+	\setlength{\epsfxsize}{0.8 \textwidth} \epsfbox{#1} \\
+	(a) \begin{minipage}[t]{0.75 \textwidth} #2 \end{minipage} \\
+	\\
+	\setlength{\epsfxsize}{0.8 \textwidth} \epsfbox{#3} \\
+	(b) \begin{minipage}[t]{0.75 \textwidth} #4 \end{minipage} \\
+	\end{tabular}
+	\end{center}
+	\caption[#5]{\label{#7} #6}
+	\end{figure}
+}
+
+\newcommand{\scpfig}[9]{
+	\begin{figure}
+	\begin{center}
+	\begin{tabular}{c}
+	\setlength{\epsfxsize}{#8 \textwidth} \epsfbox{#1} \\
+	(a) \begin{minipage}[t]{0.75 \textwidth} #2 \end{minipage} \\
+	\\
+	\setlength{\epsfxsize}{#9 \textwidth} \epsfbox{#3} \\
+	(b) \begin{minipage}[t]{0.75 \textwidth} #4 \end{minipage} \\
+	\end{tabular}
+	\end{center}
+	\caption[#5]{\label{#7} #6}
+	\end{figure}
+}
+
+%% Fitting another two graphs onto a second page, retaining figure
+%% number of the previous...
+
+\newcommand{\ppfig}[7]{
+	\begin{figure}
+	\addtocounter{figure}{-1}
+	\begin{center}
+	\begin{tabular}{c}
+	\setlength{\epsfxsize}{0.8 \textwidth} \epsfbox{#1} \\
+	(c) \begin{minipage}[t]{0.75 \textwidth} #2 \end{minipage} \\
+	\\
+	\setlength{\epsfxsize}{0.8 \textwidth} \epsfbox{#3} \\
+	(d) \begin{minipage}[t]{0.75 \textwidth} #4 \end{minipage} \\
+	\end{tabular}
+	\end{center}
+	\caption[$\!\!$(\emph{cont.}) #5]
+		{\label{#7_cont} $\!$(\emph{cont.}): #6}
+	\end{figure}
+}
+
+%%
+%% End of file...
+%%

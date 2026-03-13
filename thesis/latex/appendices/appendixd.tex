@@ -1,0 +1,26 @@
+\section{Derivation of the Schr\"odinger and Poisson equations in the EdS model}
+\label{app_eds}
+\subsection{Poisson equation}
+This is equation (17) in Widrow \& Kaiser except there is a mistake in their version of the coupled equations.
+
+\begin{eqnarray}
+\nabla^2 V &=&  \frac{4\pi G}{a} (\psi\psi^* - <\psi \psi^*>) \\
+\nabla^2 V / <\psi \psi^*> &=&  \frac{4\pi G}{a} (\psi\psi^*/<\psi \psi^*> - 1) \\
+\nabla^2 V (6\pi G t_0^2) &=&  \frac{4\pi G}{a} (\psi\psi^* (6\pi G t_0^2) - 1) \\
+\nabla^2 V (6\pi G t_0^2) &=&  \frac{4\pi G}{a} (\chi\chi^* - 1) \\
+(6\pi G t_0^2) \frac{2 L^2}{3 t_0^2 a}  \frac{1}{L^2} \nabla_y^2 U &=& \frac{4\pi G}{a} (\chi\chi^* - 1) \\
+\nabla_y^2 U &=& \chi\chi^* - 1
+\end{eqnarray}
+
+\subsection{Schr\"odinger equation}
+Now for the derivation of the Schr\"odinger which appears incompletely in the Widrow \& Kaiser paper.
+
+\begin{eqnarray}
+i \hbar \frac{\partial}{\partial t} \psi &=& \left(\frac{-\hbar^2}{2 m} \nabla^2 +mV\right) \psi \\
+\frac{i \hbar}{{(6\pi G t_0^2)}^{1/2}} \frac{\partial}{\partial t} \chi &=& -\frac{\hbar^2}{{(6\pi G t_0^2)}^{1/2}(2ma^2L^2)}\nabla_y^2 \chi + \frac{2m L^2}{{(6\pi G t_0^2)}^{1/2}(3 t_0^2 a)} U \chi \\
+i \hbar \frac{\partial}{\partial t} \chi &=& -\frac{\hbar^2}{2ma^2L^2}\nabla_y^2 \chi + \frac{2m L^2}{3 t_0^2 a} U \chi \\
+\frac{2ma^2L^2}{\hbar^2} i\hbar \frac{\partial}{\partial t} \chi &=& -\nabla_y^2 \chi +\frac{2m L^2}{3 t_0^2 a} \frac{2ma^2L^2}{\hbar^2} U \chi\\
+i \frac{4\mathcal{L}}{3} \frac{\partial}{\partial ln a}\chi &=& -\nabla_y^2 \chi + \frac{4\mathcal{L}^2}{3} U \chi
+\end{eqnarray}
+
+\noindent Here $\mathcal{L} = \frac{m a^{1/2}L^2}{\hbar t_0}$.

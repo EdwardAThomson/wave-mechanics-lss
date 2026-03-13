@@ -1,0 +1,77 @@
+%%
+%%       --- typesetting.tex ---
+%%
+%%
+%% The typesetting file for my thesis...
+%%
+%% A4 paper: 210 x 297mm...
+
+\documentclass[12pt,a4paper,oneside]{report}
+\setcounter{secnumdepth}{3}
+%\usepackage{astron}
+\usepackage{graphicx}
+\usepackage{lscape}
+\usepackage{subfigure}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{epstopdf}
+\usepackage{amsmath}
+\usepackage{natbib}
+% \usepackage{setspace}
+% \setstretch{2}
+\renewcommand{\baselinestretch}{1.5}
+
+\usepackage{hyperref}
+\hypersetup{
+    unicode=true,          % non-Latin characters in Acrobat’s bookmarks
+    linktocpage=true,
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=true,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdfnewwindow=true,      % links in new window
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=red,          % color of internal links
+    citecolor=blue,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+
+
+\pagestyle{fancy}
+
+\input{reg_margins}
+
+
+%%sorting out the header and footer properly
+\fancyhf{}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter:\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection:\ #1}}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\rightmark}
+\fancyhead[RE]{\leftmark}
+\fancypagestyle{plain}{%
+   \fancyhead{} %
+   \renewcommand{\headrulewidth}{0pt} %
+}
+
+%\newlength{\epswidth}
+%\newlength{\epsheight}
+%\setlength{\LTcapwidth}{\textwidth}
+%\setlength{\LTpre}{18pt}
+
+
+\newcommand{\dsp}{\setlength{\baselineskip}{22pt}}
+\newcommand{\ssp}{\setlength{\baselineskip}{18pt}}
+
+\include{macros}
+
+%%
+%% End of file...
+%%

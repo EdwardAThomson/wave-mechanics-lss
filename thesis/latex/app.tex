@@ -1,0 +1,46 @@
+%%
+%%       --- app.tex ---
+%%
+%%
+%% LaTeX's a specific appendix of my thesis...
+
+\input{typesetting}
+
+\newcommand{\loadchapter}[1]{
+	\setcounter{chapter}{#1}
+	\addtocounter{chapter}{-1}
+	\input{c#1}
+}
+
+\begin{document}
+
+%\tableofcontents
+%\listoffigures
+%\listoftables
+
+\ssp
+
+%%\loadchapter{1}
+%%\loadchapter{2}
+%%\loadchapter{3}
+%%\loadchapter{4}
+%%\loadchapter{5}
+%%\loadchapter{6}
+%%\loadchapter{7}
+
+\input{appendixa}
+%%\input{appendixb}
+\input{appendixc}
+
+\clearpage
+
+\bibliographystyle{mnras}
+\bibliography{refs}
+
+\end{document}
+
+%%
+%% End of file...
+%%
+
+

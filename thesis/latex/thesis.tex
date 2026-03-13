@@ -1,0 +1,76 @@
+%%
+%%       --- thesis.tex ---
+%%
+%%
+
+\input{typesetting}
+\begin{document}
+% %
+ %\nopagenumber
+\pagenumbering{roman}
+ \input{intro_pages/titlepage}
+ \ssp			% macro for single line spacing
+ \newpage
+ \input{intro_pages/dedication}
+ \newpage
+ \input{intro_pages/quotes}
+ \newpage
+ \input{intro_pages/abstract}
+ \newpage
+ \input{intro_pages/acknow}
+
+% %
+%\pagenumbering{roman}
+\tableofcontents
+%
+%\listoftables\addcontentsline{toc}{chapter}{List of Tables}
+\listoffigures\addcontentsline{toc}{chapter}{List of Figures}
+\dsp			% macro for double line spacing
+% %
+% \input{summary}
+% \input{acknow}
+% \input{mine}
+% \input{glossary}
+% %
+\newpage			% forces Chapter 1 to start on page 1
+\pagenumbering{arabic}
+% \input{c1}  	%FIRST CHAPTER
+% \input{c2}      % SECOND CHAPTER
+\input{thesis2}
+% %\input{c4}
+% \input{c5}
+% \input{c6}
+% \input{c7}
+% \input{c8}
+
+% 
+ \newpage
+%  \ssp
+% 
+ \bibliographystyle{aa} %\addcontentsline{toc}{chapter}{Bibliography}
+ \bibliography{biblio}
+
+
+ %\input{bibliography/bibliography}
+ % 
+
+ \appendix
+ \chapter{Translation} %Appendices
+ \input{appendices/appendixa}
+ \chapter{Mathematical appendix}
+ \input{appendices/appendixb}
+ \input{appendices/appendixc}
+ \input{appendices/appendixd}
+% \chapter{Computer code}
+% \input{appendices/appendixe}
+% \input{appendices/appendixf}
+\end{document}
+
+%%
+%% End of file...
+%%
+
+
+
+
+

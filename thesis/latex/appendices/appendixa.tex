@@ -1,0 +1,141 @@
+\section{Translation of Madelung's 1927 paper}
+\begin{center}
+          {\large\bf Quantentheorie in hydrodynamischer Form.} \newline
+		From E. Madelung in Frankfurt \newline
+ 		(Accepted 25th October 1926) \newline
+	Translated by T. Kr\"amer and E. Thomson \newline
+			14th August 2008 \newline
+\end{center}
+
+\section*{\center{abstract}}
+\label{app_m}
+\noindent I show that the Schr\"odinger equation for a one-electron problem can be transformed into the equations for hydrodynamics.
+\newline
+\newline
+\noindent E. Schr\"odinger [1] has shown that the Quantum theory of the one-electron problem is given an ``amplitude equation":
+
+\begin{equation}
+\label{one}
+\nabla^2 \psi_0 + \frac{8 \pi^2 m}{h^2}(W-U)\psi_0 = 0, \;\;\; \psi = \psi_0 e^{i2\pi Wt/h}
+\end{equation}
+Here $W$ is the energy of the system, $U$ is the potential energy and is a function of the coordinates of the electron, $m$ is the electron mass. One must seek a solution that is finite and continuous. That is to find a solution to the equation for a particular $W$. These ``eigenvalues" $W_i$ are the energies of the system at the allowed ``Quantum states". These can be investigated via spectroscopy. Comparison of theory and experience shows that this is the right method \footnote{`This' refers to the method / quantum description given by Schr\"odinger}.
+
+For each eigenvalue there is an eigen-solution, which is normalised and has a time-factor $e^{i2\pi Wt/h}$ which is how Schr\"odinger describes the system. Schr\"odinger gives an ans\"atze for interpreting his equation in his paper. I will show that his equation is analogous to the equations for hydrodynamics.
+
+The second equation can be derived from equation \ref{one} by eliminating $W$, including time factors:
+\begin{equation}
+\label{two}
+\nabla^2 \psi - \frac{8 \pi^2 m}{h^2}U\psi - i\frac{4\pi m}{h}\frac{\partial\psi}{\partial t} = 0.
+\end{equation}
+
+This contains all the solutions of \ref{one} but also all of the linear combinations of equation \ref{two}. This is very important. Set $\psi = e^{i\beta} $, then in \ref{one} only $\beta$ is linearly dependent on t but in equation \ref{two} both $\alpha$ and $\beta$ are time dependent.
+
+
+By putting $\psi = \alpha e^{i\beta}$ into \ref{two}:
+\begin{equation}
+\label{thr}
+\nabla^2\alpha-\alpha(\nabla\beta)^2 -\frac{8\pi^2 m}{h^2}U -\frac{4\pi m}{h}\alpha\frac{\partial\beta}{\partial t} = 0
+\end{equation}
+\noindent and
+\begin{equation}
+\label{four}
+\alpha\nabla^2\beta +2(\nabla\alpha.\nabla\beta) -\frac{4\pi m}{h}\frac{\partial\alpha}{\partial t} = 0
+\end{equation}
+
+From (\ref{four}) it follows $\varphi = -2 \frac{\beta h}{2\pi m}$:
+\[
+\nabla.(\alpha^2 \nabla\varphi) + \frac{\partial\alpha^2}{\partial t} = 0 \;\;\;\;\;\;\;\;\;\; (4')
+\]
+
+\noindent (4') has the characteristics of the hydrodynamic continuity equation, where $\alpha^2$ is density and $\varphi$ is the velocity potential of a flux\footnote{Str\"omung may be translated as flux or current} $u = \nabla \varphi$.
+
+(\ref{thr}) leads to (3'):
+\[
+\frac{\partial\varphi}{\partial t} + \frac{1}{2}(\nabla\varphi)^2 +\frac{U}{m}-\frac{\nabla^2\alpha}{\alpha}\frac{h}{8\pi^2 m^2} = 0. \;\;\;\;\; (3')
+\]
+
+\noindent Also this equation resembles a hydrodynamic equation, namely the flux $u$ is vortex free and acted on by conservative forces.[2]
+
+This gives $\nabla\times u = 0$:
+\[
+\frac{\partial u}{\partial t} +\frac{1}{2}\nabla u^2=\frac{du}{dt} =-\frac{\nabla U}{m}+\nabla\frac{\nabla^2\alpha}{\alpha}\frac{h}{8\pi^2 m^2}.
+\;\;\;(3'')
+\]
+
+\noindent $-\frac{\nabla U}{m}$ corresponds to the term $\frac{f}{\varrho}$ (density of force/ density of mass), $\frac{\nabla^2\alpha}{\alpha}\frac{h^2}{8\pi^2 m^2}$ corresponds to $-\int\frac{dp}{\varrho}$ and can be interpreted as the force-function of ``inner" forces of the continuum.
+
+We can also see that (\ref{two}) can be re-interpreted in a completely hydrodynamic way and that an anomaly\footnote{Besonderheit} only occurs in the first term which represents the inner mechanism of the continuum.
+
+In fact equation \ref{one} gives $\frac{\partial \alpha}{\partial t}=0$ and $\frac{\partial \varphi}{\partial t}=-\frac{W}{m}$. This means that the eigen-solutions of \ref{one} just yield a picture of a stationary current although it has a time factor. Quantum states in this picture have to be seen as static states of current\footnote{Str\"omungszust\"ande}. Additionally, when  $\nabla\beta=0$ it would be a static object\footnote{statische Gebilde}.
+
+
+Solutions to the general equation \ref{two} are also linear combinations of the eigen-solutions. Set $\psi = \alpha e^{i\beta} = \psi_1 + \psi_2 = c_1\alpha_1 e^{i\beta_1} + c_2\alpha_2 e^{i\beta_2}$, where $\psi_0$ and $\psi_2$ are eigen-solutions to (\ref{one}) and contain the time-factor $e^{i2\pi Wt/h}$, then:
+\[
+\alpha^2 = c_1^2\alpha_1^2 + c_2^2\alpha_2^2 + 2c_1 c_2\alpha_1\alpha_2 cos(\beta_2 - \beta_1)
+\]
+\noindent and
+\[
+\alpha^2 \nabla\beta = c_1^2\alpha_1^2\nabla\beta_1 + c_2^2\alpha_2^2\nabla\beta_2+c_1c_2\alpha_1\alpha_2\nabla (\beta_1 + \beta_2) cos(\beta_1 - \beta_2),
+\]
+\[
+\int\alpha^2 dV= c_1^2\int\alpha_1^2 dV + c_2^2\int\alpha_2^2 dV,
+\]
+
+\noindent i.e. ``Density" and ``current-strength" contain a term that is time dependent with $\nu = \frac{W_1 - W_2}{h}$. The ``total quantity" is constant.
+
+In the case of stationary current (3') becomes:
+\begin{equation}
+\label{five}
+W = \frac{m}{2}\nabla\varphi^2 + U-\frac{\nabla^2\alpha}{\alpha}\frac{h^2}{8\pi^2 m}
+\end{equation}
+
+\noindent Can re-write $\alpha^2=\sigma$ and $\sigma m = \varrho$, with the normalization $\int\sigma dV =1$:
+\[
+W = \int dV \left\{\frac{\varrho}{2}u^2 + \sigma U -\sqrt{\sigma}.\nabla^2\sqrt{\sigma}\frac{h^2}{8\pi^2 m} \right\} \;\;\;\;\;\;\;\;\;\;\; (5')
+\]
+
+\noindent This form of the energy as volume integral over kinetic and potential energy-density obviously. This can also be re-written in another form:
+
+\noindent There is no obvious reason why this can't be applied to non-stationary currents. The conservation law $\frac{dW}{dt}=0$ is fulfilled by showing the orthogonality of the eigen-solutions.
+
+One question of interest: do all  the equations of interest (3'),(4'),(5') contain all the described anomalies?
+Especially:
+\begin{enumerate}
+\item the existence of discrete stationary current-states with energy $W_i$,
+\item The fact that all non-stationary states exclusively have periodicity of the form $\nu_{ik} = \frac{W_i - W_k}{h}$.
+\end{enumerate}
+
+
+Apparently (2) follows from (3') and (4'), on other hand (1) follows from (5'). The hydrodynamic equations are equivalent to the Schr\"odinger equation, i.e. as a model they are adequate at describing all the important moments of the Quantum theory of atoms.
+
+It appears that the Quantum-problem seems to be tackled by the hydrodynamics of continuously distributed electricity with the mass density is proportional to the charge density. This tackles the Quantum-problem but a number of problems still exist:
+\begin{enumerate}
+\item mass density is not as expected from electrodynamics
+\item the mutual interaction of electrons $\sqrt{\sigma}\nabla^2\sqrt{\sigma}\frac{h^2}{8\pi^2 m}$  should not depend only on density at the location of the charge and the derivatives of the density but should also depend on the total distribution of charge.
+\end{enumerate}
+
+I was not able to show if the two above can be fulfilled by employing a purely mathematical transformation.
+
+How do you treat a many electron problem? Schr\"odinger doesn't give a specific form --- only says kinetic energy must be calculated in an equal way to the depiction of movement in phase space: $T = \sum_i m_i \frac{u_i^2}{2}$ and to be treated as if independent of each other and not to assume that the electrons form one current field.
+
+That could be an obvious possibility but here are a few alternatives:
+\begin{enumerate}
+\item do a few electrons flow together to form a bigger object?
+\item or do they exclude each other and merge under certain conditions?
+\item or do they penetrate each other without fusing?
+\end{enumerate}
+
+I think option 3 is most likely. 1 would lead to the same solution as the one electron problem but requires a different normalization and would give the wrong outcome. 2 is unlikely regarding ``dipping orbits" but still thinkable. In 3 a number of vectors have to be defined at every point in space as well as the associated velocity potentials. The continuum would possess the descriptive quality of a swarm whose constraints would possess an infinite path length.
+
+To decide which form the function U has, as far as it concerns the interaction of electrons, as well as the quantum term in equation (3'), to be given it can only be decided after having successfully calculated at least one of the above cases.
+
+At least there is hope on this basis\footnote{the hydrodynamic method} to deal with quantum theory of atoms. I admit that all processes involving emission can only be handled partly \footnote{only have part command to describe emission processes}. Although it seems to explain that an atom within a certain quantum state does not emit radiation and that the emission is at the expected frequencies and without a ``jump" but rather with a slow transfer in a non-stationary state. But a lot of other facts, e.g. Quantum absorption, remain absolutely unclear. It is too early to speculate on these things.
+
+
+% Bibliography might not work when appendice is included in main file?
+%
+%
+\subsection*{Bibliography}
+Schr\"odinger, E. - Ann. d. Phys. 79, 361, 489; 80, 437; 81, 109, 1926.
+Vgl. z. B. Weber und Gans, Repertorium d. Physik I, 1, S. 304.
+

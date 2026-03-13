@@ -1,0 +1,15 @@
+length (Mpc)       100.00000, critical density (Msun/Mpc)   2.9999999e+13
+box mass (Msun)   2.9999999e+15
+computational length (L_r/L_r)      1.00000
+computational mass (M_r)   2.9999999e+15
+	
+Ng, dx (inits)          64    0.0156250
+dynamical dx (inits)       1.0000000
+H0       72.000000 t0 (years)   1.3555749e+10 om0      0.30000000
+ nu   5.0000000e-08
+ dur        3200
+initial a    0.0400000 final a      0.98130119
+LL[0]       1.2086385
+	
+ r  (tophat radius)       7.5000003
+Mass in cell at maximum (final)(   8.5192918e+10,       0.0000000)

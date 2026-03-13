@@ -1,0 +1,91 @@
+% Madelung transform: shows equivalance of Schroedinger to the Continuity equation
+%
+%
+\section{Madelung transform}
+\label{app_mtrans}
+This derivation shows the mathematical equivalence of the Schr\"odinger equation and the Continuity equation of fluid dynamics
+\noindent Schr\"odinger equation. This is similar to the translated Madelung paper but uses notation that is consistent with this thesis and that of Short. The role of the pressure term is discussed elsewhere and is extracted out from this derivation in the appropriate place.
+\begin{equation}
+i\nu\frac{\partial\psi}{\partial t}= -\frac{\nu^2}{2}\nabla^2\psi + V\psi
+\end{equation}
+
+\noindent Apply the Madelung transform with the positive signed exponential. The dynamics for a negative signed exponential are the same but require a sign change in the definition of the potential $V$, this derivation is not provided as it is otherwise the same as the following derivation.
+\begin{equation}
+ \psi = (1+ \delta)^{1/2}exp\left(\frac{i\varphi}{\nu}\right) = \alpha exp\left(\frac{i\varphi}{\nu}\right)
+\end{equation}
+
+\noindent LHS, Differentiate $\psi$ with respect to time :
+\begin{equation}
+\frac{\partial\psi}{\partial t} = \frac{\partial\alpha}{\partial t}exp\left(\frac{i\varphi}{\nu}\right) + \frac{i\alpha}{\nu}exp\left(\frac{i\varphi}{\nu}\right)\frac{\partial\varphi}{\partial t}
+\end{equation}
+
+\begin{equation}
+i\nu\frac{\partial\psi}{\partial t}=i\nu\frac{\partial\alpha}{\partial t}exp\left(\frac{i\varphi}{\nu}\right)-\psi\frac{\partial\varphi}{\partial t}
+\end{equation}
+
+\noindent Tidy up:
+\begin{equation}
+LHS = \frac{i\nu\psi}{\alpha}\frac{\partial\alpha}{\partial t} - \frac{\partial\varphi}{\partial t}
+\end{equation}
+
+\noindent Now for RHS, find $\nabla^2 \psi$
+\begin{eqnarray}
+\nabla\psi &=& \nabla\left(\alpha exp\left(\frac{i\varphi}{\nu}\right)\right)\\
+&=& (\nabla\alpha) exp\left(\frac{i\varphi}{\nu}\right) + \frac{i\alpha}{\nu} exp\left(\frac{i\varphi}{\nu}\right)\nabla\varphi \nonumber
+\end{eqnarray}
+
+\begin{eqnarray}
+\nabla^2\psi &=& \nabla . (\nabla \psi) \\ \nonumber
+&=& \nabla.[(\nabla\alpha) exp\left(\frac{i\varphi}{\nu}\right) + \frac{i\alpha}{\nu} exp\left(\frac{i\varphi}{\nu}\right)\nabla\varphi] \\ \nonumber
+&=& (\nabla^2\alpha)exp\left(\frac{i\varphi}{\nu}\right) +\frac{i}{\nu} exp\left(\frac{i\varphi}{\nu}\right)\nabla\varphi.\nabla\alpha \\ \nonumber
+&+&\frac{i\alpha}{\nu} exp\left(\frac{i\varphi}{\nu}\right)\nabla^2\varphi +\frac{i}{\nu} \nonumber exp\left(\frac{i\varphi}{\nu}\right)\nabla\varphi.\nabla\alpha \\ \nonumber
+&+& \frac{i^2\alpha}{\nu^2}exp\left(\frac{i\varphi}{\nu}\right)\nabla\varphi.\nabla\varphi \nonumber
+\end{eqnarray}
+
+\noindent Note the expressions for V (Bernoulli equation) and P:
+\begin{equation}
+V = -\frac{\partial\varphi}{\partial t}\psi - \frac{1}{2}\psi(\nabla\varphi)^2 
+\end{equation}
+
+\begin{equation}
+P = \frac{\nu^2}{2}\frac{(\nabla^2\alpha)}{\alpha}
+\end{equation}
+
+\noindent Leads to (RHS = K + V):
+\begin{eqnarray}
+RHS &=& -\frac{\nu^2\psi}{2\alpha}(\nabla^2\alpha) -\frac{i\nu\psi}{\alpha}(\nabla\varphi).(\nabla\alpha) \\ \nonumber
+&-&\frac{i\nu}{2}\psi\nabla^2\varphi + \frac{1}{2}\psi(\nabla\varphi)^2 \\ \nonumber
+&-&\frac{\partial\varphi}{\partial t}\psi - \frac{1}{2}\psi(\nabla\varphi)^2  \\ \nonumber
+\end{eqnarray}
+
+\noindent The last two terms above are from the potential. Now compare LHS and RHS, cancelling terms. The pressure and potential terms have been omitted here.
+\begin{equation}
+\frac{i\nu\psi}{\alpha}\frac{\partial\alpha}{\partial t} = -\frac{i\nu\psi}{\alpha}(\nabla\varphi).(\nabla\alpha)-\frac{i\nu}{2}\psi\nabla^2\varphi
+\end{equation}
+
+\noindent Which yields the continuity equation and hence showing that the Madelung transformation casts the Schr\"odinger equation into fluid dynamic form (Madelung: `hydrodynamischer').
+\begin{equation}
+\frac{\partial\alpha}{\partial t} +(\nabla\varphi).(\nabla\alpha)+\frac{\alpha}{2}\psi\nabla^2\varphi = 0
+\end{equation}
+
+\noindent To show that this is the continuity equation, work from the continuity equation until arriving at the above equation:
+\begin{equation}
+\frac{\partial\rho}{\partial t} +\nabla.(\rho\nabla\varphi) = 0
+\end{equation}
+\noindent Re-call the following definitions:
+\begin{equation}
+\rho = \psi\psi^* = |\psi|^2 = \alpha^2
+\end{equation}
+
+\noindent Then re-write the continuity equation as:
+\begin{equation}
+\frac{\partial\alpha^2}{\partial t} + \nabla . (\alpha^2\nabla\varphi)= 0
+\end{equation}
+\begin{equation}
+2\alpha\frac{\partial\alpha}{\partial t} + \alpha^2\nabla^2\varphi + 2\alpha\nabla\alpha.\nabla\varphi = 0
+\end{equation}
+\noindent Finally leading to the desired form of the continuity equation that one arrives at when inserting the Madelung transformation into the Schr\"odinger equation:
+\begin{equation}
+\frac{\partial\alpha}{\partial t} + \frac{\alpha}{2}\nabla^2\varphi + \nabla\alpha.\nabla\varphi = 0
+\end{equation}
+
