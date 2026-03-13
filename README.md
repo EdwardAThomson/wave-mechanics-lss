@@ -17,7 +17,7 @@ The code solved the coupled Schrödinger-Poisson equations in 3D with:
 
 Results were compared with the N-body codes Hydra and GADGET-2.
 
-In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. Independent reviews were conducted using Claude and GPT, then reconciled into a single set of notes. The original LaTeX source has been recovered and split into per-chapter files, ready for corrections. The simulation code is being rewritten from scratch in modern C++.
+In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. Independent reviews were conducted using Claude Opus 4.6 and OpenAI's GPT 5.4, then reconciled into a single set of notes. The original LaTeX source has been recovered and split into per-chapter files, ready for corrections. The simulation code is being rewritten from scratch in modern C++.
 
 ## Repository Structure
 
