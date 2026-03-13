@@ -17,28 +17,37 @@ The code solved the coupled Schrödinger-Poisson equations in 3D with:
 
 Results were compared with the N-body codes Hydra and GADGET-2.
 
-In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. The detailed review notes (377 items across 9 chapters/appendices) are included in this repository.
+In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. Independent reviews were conducted using Claude and GPT, then reconciled into a single set of notes. The original LaTeX source has been recovered and split into per-chapter files, ready for corrections. The simulation code is being rewritten from scratch in modern C++.
 
 ## Repository Structure
 
 ```
 wave-mechanics-lss/
 ├── README.md
-├── project_roadmap.md        # Roadmap for thesis revival project
+├── project_roadmap.md            # Roadmap for thesis revival project
 ├── thesis/
-│   └── 2011thomsonphd.pdf    # Original thesis (250 pages)
-├── review/                   # Chapter-by-chapter review notes (2026)
+│   ├── 2011thomsonphd.pdf        # Original thesis (250 pages)
+│   └── latex/                    # Original LaTeX source and figures
+│       ├── thesis.tex            # Master document
+│       ├── ch01_introduction.tex # Per-chapter files (ch01–ch07)
+│       ├── ...
+│       ├── appendices/           # Appendix LaTeX files
+│       ├── bkg_pix/              # Background/cosmology figures
+│       ├── fpa_pix/              # Free Particle Approximation figures
+│       ├── fpa_cos/              # FPA with cosmological ICs figures
+│       └── full/                 # Full Schrödinger-Poisson figures
+├── review/                       # Reconciled review notes (2026)
+│   ├── notes_ch00_front_matter.md
 │   ├── notes_ch01_introduction.md
-│   ├── notes_ch02_review_numerical_simulations.md
-│   ├── notes_ch03_wave_mechanics.md
-│   ├── notes_ch04_free_particle_approximation.md
-│   ├── notes_ch05_schrodinger_poisson_system.md
-│   ├── notes_ch06_conclusion.md
-│   ├── notes_ch07_epilogue_vorticity_spin.md
-│   ├── notes_appendix_a_translation.md
-│   └── notes_appendix_b_mathematical.md
-├── web/                      # Web version of thesis (planned)
-└── code/                     # Modern code rewrite (planned)
+│   ├── ...
+│   └── sources/                  # Original separate reviews
+│       ├── claude/
+│       └── gpt/
+├── code/                         # Modern C++ rewrite (in progress)
+│   ├── fpa_1d/                   # 1D Free Particle Approximation
+│   ├── fpa_3d/                   # 3D FPA
+│   └── fpa_3d_cosmo/             # 3D FPA with cosmological ICs
+└── web/                          # Web version of thesis (planned)
 ```
 
 ## Review Summary
@@ -56,7 +65,7 @@ wave-mechanics-lss/
 | Appendix B: Mathematical appendix | 7 | 27 |
 | **Total** | **235** | **377** |
 
-Items include typos, grammatical errors, mathematical issues, clarity improvements, and structural comments. Each review file contains an equations check verifying the mathematical content.
+Items include typos, grammatical errors, mathematical issues, clarity improvements, and structural comments. The reconciled notes identify shared findings and reviewer-specific additions. Original reviews are preserved under `review/sources/`.
 
 ## Context
 
@@ -69,7 +78,7 @@ The thesis presents the Schrödinger equation as an alternative to the Euler-Poi
 ## License
 
 - Thesis text and review notes: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- Code (when added): MIT License
+- Code: MIT License
 
 The original thesis was deposited with the University of Glasgow under their standard thesis deposit terms ([http://theses.gla.ac.uk/2976/](http://theses.gla.ac.uk/2976/)), which permit downloading for personal non-commercial research or study. As the copyright holder, the author has chosen to release this work here under the more permissive CC BY 4.0 license.
 
