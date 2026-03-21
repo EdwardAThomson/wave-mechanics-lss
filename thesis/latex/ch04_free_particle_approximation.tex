@@ -4,15 +4,15 @@
 %%%%
 \chapter{Free Particle Approximation}
 \label{ch_4}
-Recently, the Schr\"odinger method has been developed by Coles, Spencer and Short \citep{bib_col, bib_spe, bib_sho, bib_sho2} in a series of papers that implements an approximation method called the Free Particle Approximation (FPA). This method relies upon the free particle Schr\"odinger equation and excludes an explicit potential term. This system can be solved using an exact solution via the standard techniques of Quantum Mechanics. This means that the system is entirely deterministic and that a simulation can jump to any time step without computing the intermediate time steps (say from timestep $t=0$ straight to $t=1000$). Accuracy is sacrificed for speed but time evolution is unitary (that is, it conserves energy).
+Recently, the Schr\"odinger method has been developed by Coles, Spencer and Short \citep{bib_col, bib_spe, bib_sho, bib_sho2} in a series of papers that implements an approximation method called the Free Particle Approximation (FPA). This method relies upon the free particle Schr\"odinger equation and excludes an explicit potential term. This system can be solved using an exact solution via the standard techniques of Quantum Mechanics. This means that the system is entirely deterministic and that a simulation can jump to any time step without computing the intermediate time steps (say from timestep $t=0$ straight to $t=1000$). Accuracy is sacrificed for speed but time evolution is unitary (conserving mass). Furthermore, since the free-particle Hamiltonian is time-independent and the solution is exact, energy is also conserved.
 
 Short \& Coles were the first to introduce the Madelung transform to wave-mechanics of LSS \citep{bib_sho2}. They outlined the consistency between the Schr\"odinger equation and fluid mechanics, and hence also made progress in understanding the role of the pressure term. Short and Coles have also shown that the FPA reduces to the Zel'dovich Approximation in the semi-classical limit ($\nu = \hbar/m \rightarrow 0$) where the quantum pressure term tends to zero \citep{bib_short}.
 
 They note a similarity between the `quantum pressure' term and the viscosity term in the Adhesion Model of the Zel'dovich Approximation. This suggests that the FPA is a useful numerical approximation method capable of accurately describing the quasi-linear evolution ($\delta \rightarrow 1$) of a self-gravitating system.
 
-After taking the initially coupled equations of the Schr\"odinger-Poisson system, the FPA is constructed by creating an effective potential, $V$, that is identically zero. This idea was originally proposed by Coles such that the effective potential is the difference between the gravitational potential $\Phi_g $ and the the velocity potential $\phi_v$; hence, the potential term in the Schr\"odinger equation is: $V =\Phi_g-\phi_v$. In the regime where perturbations grow linearly these two potentials are essentially equal to each other. 
+After taking the initially coupled equations of the Schr\"odinger-Poisson system, the FPA is constructed by creating an effective potential, $V$, that is identically zero. This idea was originally proposed by Coles such that the effective potential is the difference between the gravitational potential $\Phi_g $ and the velocity potential $\phi_v$; hence, the potential term in the Schr\"odinger equation is: $V =\Phi_g-\phi_v$. In the regime where perturbations grow linearly these two potentials are essentially equal to each other. 
 
-Formally,  $\Phi_g = \frac{3\Omega_{cdm}}{2 f^2 D} \phi_v$; however, the multiplicative factor is close to one \citep{bib_short} in the linear regime hence the two potentials are essentially equal: $\Phi_g \approx \phi_v$, therefore the FPA assumes that the resultant effective potential $V$ is identically zero. This decouples the Schr\"odinger equation from the Poisson equation.
+Formally,  $\Phi_g = \frac{3\Omega_{cdm}}{2 f^2 D} \phi_v$, where $f = d\ln D / d\ln a \approx \Omega_m^{0.6}$ is the logarithmic growth rate; however, the multiplicative factor $3\Omega_{cdm}/(2 f^2 D)$ is close to unity in the linear regime at early times \citep{bib_short}, hence the two potentials are essentially equal: $\Phi_g \approx \phi_v$, therefore the FPA assumes that the resultant effective potential $V$ is identically zero. This decouples the Schr\"odinger equation from the Poisson equation.
 
 The gravitational potential no longer has to be calculated, as we will now show;  however, this system is only an approximation and so its validity is restricted. The FPA is valid in the linear regime and will hold fairly well into the mildly non-linear regime, as is shown by its close approximation to the Zel'dovich model. Here I present the Schr\"odinger-Poisson equations as they appeared in Short \citep{bib_short}:
 
@@ -45,14 +45,14 @@ The FPA can be solved exactly in the linear regime (before shell crossing) as in
 
 \begin{equation}
 \label{fpa_evolve}
-\psi = -\frac{1}{(2\pi)^3} \int \hat{\psi}_{\rm init}(\underline{k}) e^{ \left(\frac{-i\nu(D-1)k^2}{2}\right)} e^{(i\underline{k}.\underline{x})}d^3\underline{k}
+\psi = \frac{1}{(2\pi)^3} \int \hat{\psi}_{\rm init}(\underline{k})\, e^{ \left(\frac{-i\nu(D-1)k^2}{2}\right)} e^{(i\underline{k}.\underline{x})}\,d^3\underline{k}
 \end{equation}
 
-\noindent In should be obvious that there is no problem with commutativity in the FPA, as all momentum operators ($K_x, K_y, K_z$) commute with each other. From the evolved wavefunction one can calculate the evolved density and velocity fields as given by the equations in \ref{fpa_equations}.
+\noindent It should be obvious that there is no problem with commutativity in the FPA, as all momentum operators ($K_x, K_y, K_z$) commute with each other. From the evolved wavefunction one can calculate the evolved density and velocity fields as given by the equations in \ref{fpa_equations}.
 
 \subsection{Linear Growth Factor}
 \label{lingrow}
-The linear growth factor, $D$, was the preferred choice of time unit in Short's thesis. I kept this variable for my own work in order to have the simplest comparison between his work and mine. The evolution of linear density perturbations $\delta$ can be expressed as a second-order PDE:
+The linear growth factor, $D$, was the preferred choice of time variable in Short's thesis, serving as an effective time coordinate that absorbs the cosmological expansion history. I kept this variable for my own work in order to have the simplest comparison between his work and mine. The evolution of linear density perturbations $\delta$ can be expressed as a second-order PDE (cf.\ the perturbation theory discussion in Chapter \ref{ch_2}):
 
 \begin{equation}
 \label{D_pde}
@@ -73,7 +73,7 @@ D_- &\propto& H
 D_+ \propto \frac{5}{6} \beta_{\alpha}(5/6, 2/3) \left(\frac{\Omega_{cdm,0}}{\Omega_{\Lambda,0}} \right)^{1/3} \left(1+\frac{\Omega_{cdm,0}}{\Omega_{\Lambda,0}a^3} \right)^{1/2} 
 \end{equation}
 
-\noindent here $\beta_{\alpha}$ is the incomplete Beta function and $\alpha$ is defined as:
+\noindent here $\beta_{\alpha}$ is the incomplete Beta function (evaluated numerically in practice) and $\alpha$ is defined as:
 
 \begin{equation}
 \alpha =  \frac {\Omega_{\Lambda,0}a^3}{\Omega_{cdm,0} + \Omega_{\Lambda,0}a^3}
@@ -91,10 +91,10 @@ One of the goals of writing a 1D code was to verify the results of Short and Col
 \psi_{\rm init} &=& (1+ \delta_i)^{1/2}e^{\left(\frac{-i\varphi_{v_{\rm init}}}{\nu}\right)}
 \end{eqnarray}
 
-\noindent Here $1 \gg \delta_a > 0$, this ensures that the initial perturbation is small. Recall $\nu$ is defined as $\nu = \hbar/m$, $p$ is the comoving period and the functions are defined over the domain $ 1 > x \ge 0$. The number of gridpoints used was 512. Short has shown that the initial velocity can be found analytically by taking the spatial derivative of the initial velocity potential \citep{bib_sho}. This analytic form is also shown to be consistent with the equation for the probability current (see appendix \ref{app_v} for derivation). The initial velocity field, $v_{\rm init}$, is given by:
+\noindent Here $0 < \delta_a \ll 1$, which ensures that the initial perturbation is small. Recall $\nu$ is defined as $\nu = \hbar/m$, $p$ is the comoving period and the functions are defined over the domain $ 1 > x \ge 0$. The number of gridpoints used was 512. Short has shown that the initial velocity can be found analytically by taking the spatial derivative of the initial velocity potential \citep{bib_sho}. This analytic form is also shown to be consistent with the equation for the probability current (see appendix \ref{app_v} for derivation). The initial velocity field, $v_{\rm init}$, is given by:
 
 \begin{eqnarray}
-\underline{v}_{\rm init} &=& \nabla \varphi_{v,\rm init} \\
+\underline{v}_{\rm init} &=& -\nabla \varphi_{v,\rm init} \\
 \underline{v}_{x,\rm init} &=& \left(\frac{p}{2 \pi}\right) \delta_a \sin\left(\frac{2 \pi x}{p} \right)
 \end{eqnarray}
 
@@ -106,7 +106,7 @@ The results of both density and velocity profiles agree very well at all times (
 
 The graphs of over-density (figure \ref{fig.den}) and velocity (figure \ref{fig.vel}) correspond to the same results in Short's thesis on page 77. The initial conditions are also the same, hence this is a like-for-like comparison. The $\Gamma$ parameter in Short's thesis is not used explicitly here but it is the combination of the effective Planck constant and the period: $\Gamma = \nu/p^2$.
 
-The parameters for the initial conditions are: $\delta_a = 0.01, \nu = 1, p = 1$ and the initial mass $= 1.0$. As expected, the final mass of the system is also 1.0. This follows from the fact that the FPA method is unitary and conserves mass. It is worth noting that Short calculated shell crossing to occur at the time $D = 101$, so the results after this point will be unreliable. The FPA does not `blow up' for large values of the effective Planck's constant ($\nu=1$), not even after the time of shell crossing, as the large $\nu$ value prevents collapse and hence appears to  prevent singularities from forming. This effect is similar in spirit to what was proposed by Hu et al \citep{bib_whu}, as previously mentioned (in \ref{whu}); those authors noted that density singularities as found in $N$-body codes may be avoided in the Schr\"odinger method for large de Broglie wavelengths (corresponds to large $\nu$). Large values of $\nu$ are a statement of the diffusion being large and hence the smoothing length is also large. This effect acts oppositely to the force of gravity.
+The parameters for the initial conditions are: $\delta_a = 0.01, \nu = 1, p = 1$ and the initial mass $= 1.0$. As expected, the final mass of the system is also 1.0. This follows from the fact that the FPA method is unitary and conserves mass. It is worth noting that Short calculated shell crossing to occur analytically at the time $D = 1/\delta_a = 101$ (for $\delta_a = 0.01$, from the Zel'dovich approximation), so the results after this point will be unreliable. The FPA does not `blow up' for large values of the effective Planck's constant ($\nu=1$), not even after the time of shell crossing, as the large $\nu$ value prevents collapse and hence appears to  prevent singularities from forming. This effect is similar in spirit to what was proposed by Hu et al \citep{bib_whu}, as previously mentioned (in \ref{whu}); those authors noted that density singularities as found in $N$-body codes may be avoided in the Schr\"odinger method for large de Broglie wavelengths (corresponds to large $\nu$). Large values of $\nu$ are a statement of the diffusion being large and hence the smoothing length is also large. This effect acts oppositely to the force of gravity.
 
 For smaller values of the effective Planck constant $\nu \rightarrow \nu_{crit}$ then the density from the FPA will form singularities in density at shell crossing (gravity wins over diffusion and so causes collapse). The critical value of $\nu$ is when it approaches the Nyquist limit, which is the smallest theoretical value that it can meaningfully take. However, while the density appears to `collapse' into a singularity, the total mass of the system is conserved. This indicates that the FPA is highly robust and not susceptible to singularities, there is no two-body relaxation or infinities in mass or energy.
 
@@ -172,7 +172,7 @@ X_{rms} = \sqrt {\frac{1}{n} \sum_{i=1}^{n} (X_i - <X>)^2}
 
 \noindent The correlation coefficient was very close to 1 for both density and velocity: indicating a tight fit. The velocity from the two codes used different calculations but the densities were calculated in the same way $\rho = \psi \psi^*$. We can quantify the difference in velocity (statistically) and show that there is very strong agreement between the velocities at all times of interest (from the initial time up to shell crossing $D=1 \rightarrow 101$).
 
-The following figure (\ref{fig.rms_vel}) shows the RMS deviation of the difference of the two velocities ($V_e$ is myself and $V_c$ is Chris Short). The result shows that the statistic is very close to zero for all times (linear growth factors) of interest. This indicates (along with the correlation coefficient being very close to 1) that the two methods of calculating the velocity agree.
+The following figure (\ref{fig.rms_vel}) shows the RMS deviation of the difference of the two velocities ($V_e$ is my result and $V_c$ is Short's result). The result shows that the statistic is very close to zero for all times (linear growth factors) of interest. This indicates (along with the correlation coefficient being very close to 1) that the two methods of calculating the velocity agree.
 
 
 \begin{figure}[htb]
@@ -182,7 +182,7 @@ The following figure (\ref{fig.rms_vel}) shows the RMS deviation of the differen
                 \epsffile{./fpa_pix/rms_dv.eps} \nolinebreak
 
    \end{center}
-\caption{This is the RMS deviation, $\rho(V_e, V_c)$, of the difference of the two velocities (y-axis) at different `times' $D$ as shown along the x-axis. The deviation is very small hence the two methods for calculating velocity agree very well.}
+\caption{The RMS deviation of the difference of the two velocities, $(V_{diff})_{rms}$, (y-axis) at different growth factors $D$ (x-axis). The deviation is very small, indicating that the two methods for calculating velocity agree very well.}
 \label{fig.rms_vel}
 \end{figure} 
 
@@ -191,7 +191,7 @@ The equations relating to the RMS are provided here:
 \begin{eqnarray}
  V_{difference} &=& V_e - V_c \nonumber \\
  < V_{diff} >  &=& \frac{1}{n} \sum_{i=1}^{n} V_{e_i} - V_{c_i} \nonumber \\
- (V_{diff})_{rms} &=& \frac{1}{n^{1/2}} \sum_{i=1}^{n} (V_{diff} - < V_{diff} >)^2
+ (V_{diff})_{rms} &=& \sqrt{ \frac{1}{n} \sum_{i=1}^{n} (V_{diff,i} - < V_{diff} >)^2 }
 \end{eqnarray}
 
 % from IDL
@@ -220,7 +220,7 @@ Again $\delta_a = 0.01$, $p$ is the period and $x,y,z$ have been defined in the 
 $ 1> x,y,z \ge 0 $. Also $dx,dy$ and $dz$ are chosen such that there are 64 gridpoints for each of the three dimensions (total of $64^3$).
 
 \subsubsection{Results - 3D Toy Model}
-The extension of the FPA to higher dimensions is straight forward as there is no problem of commutation, this is unlike the case of the full S-P system as I will show in Chapter \ref{ch_5}. The trickiest part of implementing a 3D FPA code is working the FFT algorithm and understanding how it re-arranges the data. This means that manipulating the density field in the Fourier domain was far trickier in 3D that it was in 1D. In order to know that our 3D code was correct we tested with an extension of the toy model used by our 1D code. Given that our 3D toy model eventually gave us results that we expected then we could have confidence in using our 3D code with cosmological initial conditions.
+The extension of the FPA to higher dimensions is straightforward as there is no problem of commutation, this is unlike the case of the full S-P system as I will show in Chapter \ref{ch_5}. The trickiest part of implementing a 3D FPA code is working the FFT algorithm and understanding how it re-arranges the data. This means that manipulating the density field in the Fourier domain was far trickier in 3D that it was in 1D. In order to know that our 3D code was correct we tested with an extension of the toy model used by our 1D code. Given that our 3D toy model eventually gave us results that we expected then we could have confidence in using our 3D code with cosmological initial conditions.
 
 Figure \ref{fig.threed} shows similarity to the 1D results although not much more is gained in terms of physical insight.
 
@@ -245,15 +245,17 @@ Figure \ref{fig.threed} shows similarity to the 1D results although not much mor
 \label{rct}
 Now with some confidence that the 3D FPA code works (gravity makes an over-density tend towards collapse), the next test was the important one which involved using proper cosmological initial conditions. In language appropriate to $N$-body codes: we considered a distribution of CDM particles in an expanding spacetime `box' with periodic spatial boundaries. In terms of a fluid code we would talk about the number of gridpoints or the number of mesh points, I use the two interchangeably; there are no longer particles but rather fluid elements. The Schr\"odinger approach to Large Scale Structure simulation is, as should be clearly identified by, closer to a fluid approach (the difference appears in Chapter \ref{ch_3}).
 
-The initial conditions for the 3D FPA code are adapted from the initial conditions generated for the Hydra code. These initial conditions were generated using the generator supplied with the Hydra $N$-body package. Using $N = 64^3$ particles, I created a realization of particles using the following cosmological parameters: $h= 0.71, \Omega_{\rm cdm,0}=0.27, \Omega_{\Lambda,0}=0.73,\Omega_{b,0} =0, \sigma_{8,0}=0.81$.
+The initial conditions for the 3D FPA code are adapted from the initial conditions generated for the Hydra code. These initial conditions were generated using the generator supplied with the Hydra $N$-body package. Using $N = 64^3$ particles, I created a realization of particles using the following cosmological parameters: $h= 0.71, \Omega_{\rm cdm,0}=0.27, \Omega_{\Lambda,0}=0.73,\Omega_{b,0} =0, \sigma_{8,0}=0.81$. Note that baryons are excluded ($\Omega_{b,0} = 0$); this is a CDM-only simulation.
 
 As the initial conditions generator from Hydra produces particle positions then we have to use a smoothing routine to calculate the density contrast, $\delta_{\rm x}$. The Triangular Shaped Cloud (TSC) algorithm (found in a subroutine of the Hydra initial conditions generator) creates a continuous density distribution from the particle positions. Given the initial density field I then calculated the velocity potential from the gravitational potential. As before, the assumption here is that the initial velocity potential is equal to the initial gravitational potential, then one can solve the Poisson equation using standard Fourier techniques (for example: $\phi_k \sim \delta / k^2$). Then we construct the initial wavefunction using the Madelung transform. The wavefunction was a $64^3$ mesh of complex numbers that is equivalent to $64^3$ superparticles of an $N$-body code at the initial timestep: the mass per particle is the same as the mass per fluid element (at $t=0$). Here I present the solution to the Poisson equation and the initial wavefunction as given by the Madelung transform:
 
 \begin{eqnarray}
-	\phi_{\rm g,init}(x,y,z) &=& \int\int 4 \pi G \delta_{\rm init}(x,y,z) dV \nonumber \\
-	\varphi_{\rm v,init} &\sim& \phi_{\rm g,init} \nonumber \\
+	\hat{\phi}_{\rm g,init}(\underline{k}) &=& -\frac{4 \pi G \bar{\rho}}{k^2}\,\hat{\delta}_{\rm init}(\underline{k}) \nonumber \\
+	\varphi_{\rm v,init} &\approx& \phi_{\rm g,init} \nonumber \\
 	\psi_{\rm init}(x,y,z) &=& (1+\delta_{\rm init}(x,y,z))^{1/2}e^{\left(\frac{-i\varphi_{v_{\rm init}}(x,y,z)}{\nu}\right)}
 \end{eqnarray}
+
+\noindent The gravitational potential is obtained by solving the Poisson equation in Fourier space (dividing $\hat{\delta}$ by $k^2$), then inverse-transforming back to real space.
 
 To make this process clear I present an overview of the computational algorithm for the 3D FPA code.
 
@@ -269,6 +271,8 @@ To make this process clear I present an overview of the computational algorithm 
 \item Statistical analysis; compare with n-body codes / Universe.
 \end{itemize}
 
+\noindent A distinctive advantage of the FPA is the ability to jump directly to any growth factor $D$ without computing intermediate time steps. This is possible because the free-particle propagator is known analytically; the only computational cost is one forward and one inverse FFT regardless of how far into the future one evolves.
+
 \subsection{Results - Cosmological Test}
 In this section I present a comparison between the outputs from the Hydra (v 4.2.1) $N$-body code and from my 3D FPA code. The simplest way to do this is to compare density outputs (density contrast in this case). I chose outputs from each code that correspond to the same physical time and then calculated the correlation coefficient between the two density fields for a given time. This follows the same procedure that Short outlined in Chapter 4 of his thesis.
 
@@ -280,7 +284,7 @@ The third figure \ref{fig.fpacor} shows a point-by-point comparison of the densi
 
 In figure \ref{fig.fpacor}, the density contrast values from the Hydra code are along the x-axis, while the corresponding density contrast value for the FPA code is on the y-axis. Each point on the graph corresponds to the same position in the Hydra and FPA density arrays. To keep with the convention of Short \citep{bib_short}, I present these density contrast values as $\ln (2 + \delta)$.
 
-This correlation comparison for density contrast was done at four different time steps ($t = 162, 531, 739, 936$), and shows the evolution from the start to the end of the simulations. At the initial timestep the correlation coefficient is 1. The correlation coefficients for the four fields are $r = 0.9795, \; 0.8336, \; 0.7871, \; 0.8109$. This shows a good agreement between the two codes at all times. The initial conditions are, of course, the same, hence the correlation parameter is 1.0. It is not clear why the correlation steadily decreases but then improves for the last comparison. However the general conclusion is that the FPA code provides a good comparison to the results of an $N$-body code but is far faster.
+This correlation comparison for density contrast was done at four different time steps ($t = 162, 531, 739, 936$), and shows the evolution from the start to the end of the simulations. At the initial timestep the correlation coefficient is 1. The correlation coefficients for the four fields are $r = 0.9795, \; 0.8336, \; 0.7871, \; 0.8109$. This shows a good agreement between the two codes at all times. The initial conditions are, of course, the same, hence the correlation parameter is 1.0. The correlation initially decreases as expected, since the FPA neglects the gravitational potential and so diverges from the full $N$-body evolution as non-linearity grows. The slight recovery at the last timestep ($r = 0.8109$ at $t = 936$) is unexpected; one possible explanation is that at late times the large-scale modes (which dominate the correlation) have re-entered a quasi-stable configuration, while the decorrelation is concentrated in the small-scale non-linear structures that contribute less to the overall statistic. Regardless, the general conclusion is that the FPA code provides a good comparison to the results of an $N$-body code in the quasi-linear regime, while being far faster.
 
 \begin{figure}[htb]
    \begin{center}
@@ -367,7 +371,7 @@ We also performed a check of the velocity components which we also expect to be 
 \end{center}
 \vspace*{1cm}
 
-While the maximum and minimum values of velocity are not exactly the same, the width of the three distributions is very similar. The difference only appears in the 6th decimal place. All of the components have mean velocities zero (within machine precision) which denotes that the particles are not experiencing a net bulk motion in some direction. The slight skewing of the distributions is a cause of some concern but the overall behaviour of the simulations are at least believable, hence we do not suspect that something is terribly wrong.
+While the maximum and minimum values of velocity are not exactly the same, the velocity dispersions $\sigma_{v_x}, \sigma_{v_y}, \sigma_{v_z}$ are nearly identical across all three axes, agreeing to the 6th decimal place. This near-exact isotropy serves as a strong consistency check on the code. All of the components have mean velocities zero (within machine precision) which denotes that the particles are not experiencing a net bulk motion in some direction. The slight skewing of the distributions is a cause of some concern but the overall behaviour of the simulations are at least believable, hence we do not suspect that something is terribly wrong.
 
 \begin{figure}[htb]
    \begin{center}
@@ -400,7 +404,7 @@ An interesting artefact of wave-mechanics is the apparent deformation of velocit
 \includegraphics[width=0.49\columnwidth]{./fpa_cos/vel/Vx_comp_1}
 
    \end{center}
-\caption{This plot shows the $v_x$ components from $N$-body along the x-axis and the FPA along the y-axis in the initial conditions. We expected a tight straight line. The turn-over at each end is unexpected and is an artefact from the construction of the wavefunction.}
+\caption{Point-by-point comparison of $v_x$ components: $N$-body (x-axis) vs FPA (y-axis) in the initial conditions. The central region shows the expected tight linear correlation. The turn-over at the extremes of the velocity range is an artefact of constructing the wavefunction: the phase wrapping at large velocities (where $|v| \to \pi\nu/\Delta x$) aliases the velocity, causing a roll-off rather than the expected linear continuation.}
 
 \label{fig.hy_fpa_vel}
 \end{figure}
@@ -408,11 +412,11 @@ An interesting artefact of wave-mechanics is the apparent deformation of velocit
 
 \subsection{Vorticity}
 \label{ch4vort}
-In section \ref{vort} we mentioned the possibility of detecting vorticity in our velocity outputs. From theory we do not expect vorticity to exist, hence the presences of vortices in our results may indicate when the code has reached the end of its reliability. As previously mentioned, we expect to find the centre of a vortex at a gridpoint where the velocity is undefined. That is when $v = \nabla\phi$ no longer makes sense. This occurs most obviously when $\psi = (0,0), \;\psi\in\mathbb{C}$ which corresponds to a region of no density: that is a vortical void. Such a region is easy to find computationally. For illustrative purposes I will present graphs of $\mathcal{I}(\psi) \;{\rm vs}\; \mathcal{R}(\psi)$ at 3 different linear growth factors $D = 1, 10, 30$.
+In section \ref{vort} we mentioned the possibility of detecting vorticity in our velocity outputs. From theory we do not expect vorticity to exist, hence the presence of vortices in our results may indicate when the code has reached the end of its reliability. As previously mentioned, we expect to find the centre of a vortex at a gridpoint where the velocity is undefined. That is when $v = \nabla\phi$ no longer makes sense. This occurs most obviously when $\psi = (0,0), \;\psi\in\mathbb{C}$ which corresponds to a region of no density: that is a vortical void. Such a region is easy to find computationally. For illustrative purposes I will present graphs of $\mathcal{I}(\psi) \;{\rm vs}\; \mathcal{R}(\psi)$ at 3 different linear growth factors $D = 1, 10, 30$.
 
 At the initial time the distribution of points of the wavefunction corroborate with the fact that the density and velocity follow a gaussian distribution. The circular ring we see has unit radius and the points appear to be even in distribution. At later times the distribution is still evenly distributed (a statement that physics is acting isotropically as required) but the points are no longer a tight ring but smeared out. Eventually the distribution has a closer resemblance to a solid circle. Only at the later times we will see a gridpoint where $\psi = (0,0)$ and hence possibly detect vorticity. From figure \ref{fig.psi_psi} we can see that at $D = 30$ there is potentially a number of gridpoints that are very close to zero.
 
-In figure \ref{fig.vort} we can see an $x-y$ slice at some $z$ of the velocity field. This slice contains a point where the wavefunction is zero. A potential candidate for vorticity. If we look carefully we can see an anomalous velocity vector that has far greater magnitude than the rest of the field. If we zoom into to look closer at this slice then we can see the rest of the velocity vectors `circling' around the wavefunctions null-point.
+In figure \ref{fig.vort} we can see an $x-y$ slice at some $z$ of the velocity field. This slice contains a point where the wavefunction is zero — a potential candidate for vorticity. If we look carefully we can see an anomalous velocity vector that has far greater magnitude than the rest of the field. If we zoom into to look closer at this slice then we can see the rest of the velocity vectors `circling' around the wavefunctions null-point.
 
 \begin{figure}[htb]
    \begin{center}
@@ -443,14 +447,14 @@ In figure \ref{fig.vort} we can see an $x-y$ slice at some $z$ of the velocity f
 %  Conclusion of FPA
 %
 \section{Conclusion and evaluation of FPA}
-The FPA is a fast and efficient method for probing the quasi-linear regime of density perturbations, it proves to be a good match for the Zel'dovich approximation but breaks down at shell crossing as the Zel'dovich method does. The 1D and 3D toy models were a demonstration of the mathematics providing a consistent framework that is able to be coded in such way that gravity (from the Poisson equation) can be coupled to the Schr\"odinger equation.
+The FPA is a fast and efficient method for probing the quasi-linear regime of density perturbations, and proves to be a good match for the Zel'dovich approximation, though like the Zel'dovich method it breaks down at shell crossing. The 1D and 3D toy models were a demonstration of the mathematics providing a consistent framework that is able to be coded in such way that gravity (from the Poisson equation) can be coupled to the Schr\"odinger equation.
 
-After testing the toy models, I have confirmed that the FPA can handle `real' cosmological initial conditions and provide simulation results that are comparable to the widely available $N$-body codes (at least in the quasi-linear regime). The benefit of the FPA is that it runs much faster than all known $N$-body codes.
+After testing the toy models, I have confirmed that the FPA can handle `real' cosmological initial conditions and provide simulation results that are comparable to the widely available $N$-body codes (at least in the quasi-linear regime). The benefit of the FPA is that, in the quasi-linear regime, it runs much faster than $N$-body codes as it can jump directly to any growth factor without computing intermediate time steps.
 
 \subsection{From FPA to solving the full system}
 To plan our subsequent work it is useful to consider the weaker points of the FPA, such as the inability of the FPA to probe far beyond the linear regime. Like the Zel'dovich approximation it breaks down at high densities. In the dense regions where shell crossing occurs, singularities in density prevent the code from being reliable after shell crossing. The evolution, essentially, becomes `stuck' and does not progress after such a time. This can be circumvented by solving the full Schr\"odinger-Poisson system which allows for multi-streaming (density peaks can pass through one another).
 
-As an extension to the FPA, Short tried a perturbative approach as presented in Chapter 5 of his thesis. This involved adding a perturbation term to the free particle Hamiltonian. The effective potential is still set to zero, so this approach will only allow for small deviations from the kinetic energy term of the free particle Hamiltonian. This approach is still valid in the FPA frame work, hence the code can still jump to any time step. Including the potential term in the Hamiltonian is a non-perturbative approach and is consequently much slower as each intermediate time step has to be calculated. In the next Chapter I present my solution to tackling the full Schr\"odinger-Poisson system.
+As an extension to the FPA, Short tried a perturbative approach as presented in Chapter 5 of his thesis. This involved adding a perturbation term to the free particle Hamiltonian. The effective potential is still set to zero, so this approach will only allow for small deviations from the kinetic energy term of the free particle Hamiltonian. This approach is still valid in the FPA framework, hence the code can still jump to any time step. Including the potential term in the Hamiltonian is a non-perturbative approach and is consequently much slower as each intermediate time step has to be calculated. In the next Chapter I present my solution to tackling the full Schr\"odinger-Poisson system.
 
 
 
