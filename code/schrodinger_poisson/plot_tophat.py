@@ -34,8 +34,17 @@ def plot_radial_profiles(output_dir):
         color = cmap(i / max(n - 1, 1))
         alpha = 0.3 + 0.7 * (i / max(n - 1, 1))
 
-        # Only label a subset to keep legend readable
-        label = f"t={time:.4f}" if i % max(n // 8, 1) == 0 or i == n - 1 else None
+        # Auto-detect expanding runs: time values < 1.1 and > 0 are likely scale factor a
+        is_expanding = all(
+            float(re.search(r'time = ([\d.e+-]+)',
+                            open(f).readline()).group(1)) <= 1.1
+            for f in [files[0], files[-1]]
+        )
+        if is_expanding:
+            label_str = f"a={time:.3f}" if i % max(n // 8, 1) == 0 or i == n - 1 else None
+        else:
+            label_str = f"t={time:.4f}" if i % max(n // 8, 1) == 0 or i == n - 1 else None
+        label = label_str
 
         ax1.plot(r, rho, color=color, alpha=alpha, linewidth=1.2, label=label)
         ax2.plot(r, rho, color=color, alpha=alpha, linewidth=1.2, label=label)
@@ -100,10 +109,9 @@ def plot_slices(output_dir, n_show=6):
 
 
 if __name__ == "__main__":
-    d = "output/sp_3d_tophat_grav"
-    if os.path.isdir(d):
-        plot_radial_profiles(d)
-        plot_slices(d)
-    else:
-        print(f"Directory {d} not found")
+    for d in ["output/sp_3d_tophat_grav", "output/sp_3d_tophat_expand"]:
+        if os.path.isdir(d):
+            print(f"\n--- {d} ---")
+            plot_radial_profiles(d)
+            plot_slices(d)
     plt.show()
