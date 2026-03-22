@@ -31,9 +31,9 @@
 ## Conceptual (GPT-only)
 - [x] p113-114: basis discussion — clarified V diagonal in position space, K tridiagonal; explained two-step Poisson/Schrödinger distinction
 - [x] p118-120: implicit vs semi-implicit — identified as Crank-Nicolson (implicit midpoint), unconditionally stable, second-order
-- [ ] p149-150: top-hat ν inconsistency — deferred: needs re-reading of top-hat results section
+- [x] p149-150: top-hat ν inconsistency — fixed: "collapse happens faster" reworded to "evolves more rapidly" with dispersion/gravity distinction
 - [x] p133: switch from Hydra to GADGET-2 — motivated explicitly
-- [ ] p153-156: resolution vs framework issues — deferred
+- [x] p153-156: resolution vs framework issues — added paragraph distinguishing resolution-dependent from framework-intrinsic discrepancies
 - [x] p155-164: "inevitable"/"fundamental" claims — softened to "characteristic feature" / "open question"
 - [x] p158-166: Gaussian smoothing — stated as diagnostic post-processing, not physical
 - [N/A] p174: no-vorticity claim — language already appropriately cautious
