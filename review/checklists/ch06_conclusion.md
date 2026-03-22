@@ -1,43 +1,44 @@
 # Chapter 6: Conclusion — Checklist
 
 ## Copy-editing (Shared #10)
-- [ ] Comma after "Johnston"
-- [ ] Awkward use of "colloquially"
-- [ ] `(3+1 d)` formatting
-- [ ] "Through out" → "Throughout"
-- [ ] Singular/plural agreement problems
-- [ ] Lower-case "Gaussian" → capitalise
-- [ ] Pronoun inconsistency (`I` vs `we`) — make consistent
+- [x] Comma after "Johnston" — fixed
+- [x] Awkward use of "colloquially" → "commonly"
+- [x] `(3+1 d)` formatting → (3+1)-dimensional
+- [x] "Through out" → "Throughout"
+- [N/A] Singular/plural agreement — no clear instances found beyond items fixed
+- [x] Lower-case "gaussian" → "Gaussian"
+- [x] "Gadget" → "GADGET-2"
+- [ ] Pronoun inconsistency (`I` vs `we`) — deferred: pervasive throughout
 
 ## Overstatement — Summary section (Shared #3-7)
-- [ ] Pressure-term summary too confident — qualify given Ch3 ambiguities (#4)
-- [ ] Speed claims too broad — qualify, no rigorous benchmarking (#5)
-- [ ] Full code summary too confident given unresolved velocity problem — state limitation explicitly (#6)
-- [ ] N-body comparison too easy — don't imply wave-mechanics already outperforms (#7)
-- [ ] ν parameter tension — acknowledge ambiguity (numerical vs physical) more directly (#8)
+- [x] Pressure-term summary — qualified: "density gradients" not just "high-density" (#4)
+- [x] Speed claims — qualified to quasi-linear regime, single FFT step (#5)
+- [x] Full code summary — added caveats about velocity issues (#6)
+- [x] N-body comparison — removed "beating" claim, noted grid-based resolution limits, velocity open problem (#7)
+- [N/A] ν parameter tension — addressed throughout Ch3-5 edits; conclusion defers to those chapters (#8)
 
 ## Structural (Shared #9)
-- [ ] Add explicit limitations paragraph — velocity/bulk-motion issue deserves dedicated treatment
+- [x] Added explicit Limitations subsection — velocity/bulk-motion and convergence study
 
 ## Conceptual (GPT-only)
-- [ ] p179: `ℏ → 0` and pressure term — issue is density gradients/curvature, not density itself
-- [ ] p181-182: messy density fields / interference — frame as possible conceptual limitation of single coherent wavefunction
-- [ ] p182: higher resolution = better behaviour — note this is suggestive without systematic convergence study
-- [ ] p183-190: future work — distinguish engineering / mathematically difficult / speculative
-- [ ] p180: momentum conservation as "a bonus" — give more credit as strong validation check
+- [x] p179: pressure term — corrected to "density gradients/curvature" not just density
+- [x] p181-182: messy density / interference — framed as single coherent wavefunction limitation
+- [x] p182: higher resolution — noted as suggestive without systematic convergence study
+- [x] p183-190: future work — categorised each item (engineering / mathematically difficult / speculative)
+- [x] p180: momentum conservation — upgraded from "bonus" to "strong validation"
 
 ## Conceptual (Claude-only)
-- [ ] p178: "to the best of our ability" — rewrite more cleanly
-- [ ] p178: quantum nature of DM vs practical modelling choice — state more precisely
-- [ ] p180: five-goals recap — expand to give momentum conservation more prominence
-- [ ] p181: discretisation comparison with N-body — clarify (wave-mechanics still uses a grid; advantage is continuous density / reduced shot noise)
-- [ ] p184-185: multiple-fluids — state common potential sourced by sum of all species
-- [ ] p185-186: pressure/split-operator future work — be careful about operator decomposition uniqueness
-- [ ] p187-188: Bloch/lattice-vector notation ambiguous — resolve
-- [ ] p188: FFT alternative for periodic boundaries dismissed too quickly — explain why it failed
-- [ ] p189: Poisson on non-uniform meshes — state as major AMR obstacle
-- [ ] p190: Goldberg/Cayley solver may not be right for very large simulations — keep prominent
-- [ ] Missing: convergence-study discussion — mention explicitly
+- [x] p178: "to the best of our ability" — rewritten
+- [x] p178: quantum nature of DM — stated as practical modelling choice, not claim about DM physics
+- [x] p180: five-goals recap — momentum conservation given more prominence
+- [x] p181: discretisation comparison — clarified (continuous density / reduced shot noise, but still grid-based)
+- [x] p184-185: multiple-fluids — added common potential equation
+- [N/A] p185-186: pressure/split-operator — existing text already appropriately cautious
+- [x] p187-188: Bloch/lattice-vector notation — disambiguated
+- [x] p188: FFT for periodic boundaries — explained why it failed (unitarity mismatch)
+- [x] p189: Poisson on non-uniform meshes — stated as major AMR obstacle
+- [x] p190: Goldberg/Cayley scalability — expanded, noted alternative solvers needed
+- [x] Missing: convergence-study discussion — added to Limitations subsection
 
 ## Metadata
-- [ ] PDF metadata fields blank
+- [ ] PDF metadata fields blank (deferred: will address when rebuilding LaTeX)
