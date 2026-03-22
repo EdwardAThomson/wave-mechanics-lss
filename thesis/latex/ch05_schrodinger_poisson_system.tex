@@ -50,7 +50,7 @@ The coupled Schr\"odinger-Poisson (S-P) method overcomes many limitations of the
 \item Density Functional Theory.
 \end{enumerate}
 
-\noindent I decided to use the same method as Widrow \& Kaiser, which is a finite difference scheme based upon using Cayley's decomposition of an exponential (colloquially called the Cayley method).
+\noindent I decided to use the same method as Widrow \& Kaiser, which is a finite difference scheme based upon using Cayley's decomposition of an exponential (commonly called the Cayley method).
 
 \section{Specific requirements of a Schr\"odinger solver}
 \label{spec_requirements}
@@ -62,7 +62,7 @@ The solution to the Schr\"odinger equation is given by:
  \psi(x, t+dt) = e^{(-iHdt)} \psi(x, t) = e^{(-i(K+V)dt)} \psi(x, t)
 \end{equation}
 
-\noindent The operators $K$ and $V$ are represented as matrices. Operating upon these matrices requires extra care. The exponential of a matrix is not the same as a matrix of exponentials. The diagonal matrix is a special case where one can simply exponentiate all the elements along the diagonal. The kinetic energy operator can be expressed as a band diagonal matrix if we use a simple centred difference differentiation method; however, the potential energy term will contain off diagonal elements.
+\noindent The operators $K$ and $V$ are represented as matrices. Operating upon these matrices requires extra care. The exponential of a matrix is not the same as a matrix of exponentials. The diagonal matrix is a special case where one can simply exponentiate all the elements along the diagonal. Computing $V$ from the density requires solving the Poisson equation, which couples all grid points (handled via FFT; see section \ref{sol_poi}). However, once $V$ is known, it enters the Schr\"odinger equation as a diagonal operator: $V(\underline{x})$ simply multiplies $\psi$ at each grid point. The kinetic energy operator $K$, by contrast, is tridiagonal when using a centred-difference approximation to $\nabla^2$ and cannot be trivially exponentiated.
 
 To deal with the matrix exponential, one must use a Lie map to expand the exponential as a power series:
 
@@ -98,7 +98,7 @@ Now we will write our evolution equation as the exponential of a matrix (to firs
  (e^{(-M)})^{-1} e^{(M)} = (1 + M)(1 - M)^{-1}
 \end{equation}
 
-\noindent The order of the terms on the right hand side does not matter, as the ``top'' and ``bottom'' brackets commute with each other.
+\noindent The order of the terms on the right hand side does not matter: $(1+M)$ and $(1-M)^{-1}$ commute because they are both functions of the same matrix $M$ (any two polynomials of a single matrix commute).
 
 %(Figure out how to put these together. Lie map to linear order looks similar to Cayley transform. Also need to note how to use Cayley transform to turn a continuous problem into a discrete one --- see paper). Approximation works for small dt - remember what tobia said about it spinors being aligned and under the approximation of small rotations (see Noether?)
 
@@ -163,7 +163,7 @@ At the heart of the numerical solution is Cayley's unitary time transformation. 
 
 \subsection{One dimension}
 \label{onedim}
-This section outlines the prescription as given in Goldberg. It provides a numerical method for solving the Schr\"odinger equation on a discrete mesh. We wish to see how $\psi$ evolves from time step $n$ to time step $n+1$. For this derivation $\hbar = 1$ and $m = 1/2$. The evolution of the wavefunction can be written as:
+This section outlines the prescription as given in Goldberg. It provides a numerical method for solving the Schr\"odinger equation on a discrete mesh. We wish to see how $\psi$ evolves from time step $n$ to time step $n+1$. For this derivation we set $\hbar = 1$ and $m = 1/2$ (a standard convention in the numerical PDE literature that simplifies the kinetic term to $-\nabla^2$ without loss of generality; the physical constants are restored when converting to dimensionless variables in section \ref{gen_exp}). The evolution of the wavefunction is written in the Crank-Nicolson (implicit midpoint) form, which is unconditionally stable and second-order accurate in time:
 
 \begin{equation}
 (1+ \frac{1}{2} i H dt) \;\psi_{j}^{n+1} =  (1- \frac{1}{2} i H dt) \; \psi_{j}^n
@@ -180,7 +180,7 @@ This section outlines the prescription as given in Goldberg. It provides a numer
 \psi''_{j} = (1/\epsilon^2)(\psi_{j+1} - 2\psi_j + \psi_{j-1}) + \mathcal{O} (\epsilon^3)
 \end{equation}
 
-\noindent $\epsilon$ is the grid spacing, $dx$, and $dt$ will be replaced with $\delta$. Inserting the above form of the second derivative into equation \ref{cayley_kv} we get:
+\noindent $\epsilon$ is the grid spacing, $dx$, and $dt$ will be replaced with $\delta$ (note: this $\delta$ denotes the timestep in the Goldberg scheme, not the density contrast used elsewhere in this thesis). Inserting the above form of the second derivative into equation \ref{cayley_kv} we get:
 
 \begin{eqnarray}
 LHS &=&\psi_j^{n+1} +\frac{i\delta}{2} (\frac{1}{\epsilon^2} (\psi_{j+1}^{n+1} -2\psi_j^{n+1} +\psi_{j-1}^{n+1}) +V^{n+1}\psi_j^{n+1}) \nonumber \\
@@ -355,7 +355,7 @@ i \frac{4\mathcal{L}}{3} \frac{\partial}{\partial \ln a}\chi &=& -\nabla_y^2 \ch
 \nabla_y^2 U &=& \chi\chi^* - 1
 \end{eqnarray}
 
-\noindent here $\mathcal{L} = \frac{m a^{1/2}L^2}{\hbar t_0}$.
+\noindent here $\mathcal{L} = \frac{m a^{1/2}L^2}{\hbar t_0}$ is a dimensionless parameter that measures the ratio of the box size $L$ to the de Broglie wavelength; it controls the number of oscillations the wavefunction can support on the grid.
 
 These equations are solved in the same manner as before: we use Goldberg's method with a gravitational potential and implement periodic boundary conditions. This new version of the equations will account for the expansion. The evolution of the wavefunction is written as:
 
@@ -367,7 +367,7 @@ These equations are solved in the same manner as before: we use Goldberg's metho
 
 \subsubsection{Flat models with non-zero cosmological constant}
 \label{gen_exp}
-In this section an algorithm is outlined that describes a flat Universe with non-zero cosmological constant. We assume that the geometry is still flat $k=0$ but the background Universe does not have to be matter dominated ($\Omega =1$ but $\Omega \ne \Omega_m$). We adopted an approach of finding a set of dimensionless variables that create a dimensionless Schr\"odinger equation as Widow \& Kaiser have done but in a way that also accounts for non-zero cosmological constant. The assumption of working with a comoving density is still true: $<\psi \psi^*>= \rho_{com} = \rho_{phys} a^3 $. The further necessary assumptions are:
+In this section an algorithm is outlined that describes a flat Universe with non-zero cosmological constant. We assume that the geometry is still flat $k=0$ but the background Universe does not have to be matter dominated ($\Omega =1$ but $\Omega \ne \Omega_m$). We adopted an approach of finding a set of dimensionless variables that create a dimensionless Schr\"odinger equation as Widrow \& Kaiser have done but in a way that also accounts for non-zero cosmological constant. The assumption of working with a comoving density is still true: $<\psi \psi^*>= \rho_{com} = \rho_{phys} a^3 $. The further necessary assumptions are:
 
 \begin{eqnarray}
 y &=& x/L \nonumber \\
@@ -404,13 +404,13 @@ U &=& \left(\frac{2 a}{3 L^2 H_0^2 \Omega_{m_0}}\right) V
 \subsection{Higher dimensions}
 To implement a Schr\"odinger solver in more than one dimension requires solving the equation for each spatial dimension sequentially.  This is to say that we solve for the $x$ dimension first then the $y$ and $z$ dimensions, one after the other. This poses a problem if the time steps are too large: there must be enough spatial resolution to approximate the correct three dimensional trajectory.
 
-Without the knowledge of using splitting operators it is tempting to try a simple extension to the Goldberg method:
+Without the knowledge of using splitting operators it is tempting to try a simple extension to the Goldberg method, distributing the potential equally across the three sweeps:
 
 \begin{equation}
 \psi(t+dt) = [e^{(-i(K_x + \frac{1}{3}V)dt)}  [e^{(-i(K_y + \frac{1}{3}V)dt)}  [e^{(-i(K_z + \frac{1}{3}V)dt)}\psi(t)]]]
 \end{equation}
 
-\noindent The operators are right associative, so the the operator closest to the wavefunction on the right hand side is the first operator to act upon the wavefunction. The newly updated wavefunction is then acted upon by the next closest operator and so on until all three dimensions are done. So far there appears to be no way to combine all three spatial dimensions in one operation. Commutation relations must be observed and unitarity must be preserved in order to ensure energy and mass conservation. Under this method there is a clear problem with energy conservation as $P$ and $V$ do not commute.
+\noindent The operators are right associative, so the operator closest to the wavefunction on the right hand side is the first operator to act upon the wavefunction. The newly updated wavefunction is then acted upon by the next closest operator and so on until all three dimensions are done. So far there appears to be no way to combine all three spatial dimensions in one operation. Commutation relations must be observed and unitarity must be preserved in order to ensure energy and mass conservation. Under this method there is a clear problem with energy conservation as $K$ and $V$ do not commute: the ad hoc $V/3$ splitting has no theoretical justification and introduces systematic errors that grow with the timestep. This motivated the use of proper splitting operators as described below.
 
 \subsubsection{Splitting Operators}
 \label{split}
@@ -451,24 +451,18 @@ The equation relating potential to density is:
  \nabla^2 V =  4\pi G \psi\psi^*
 \end{equation}
 
-\noindent To solve for $V$, this can be re-written as:
+\noindent For a periodic domain the mean density must be subtracted (otherwise the Poisson equation has no periodic solution), giving $\nabla^2 V = 4\pi G (|\psi|^2 - \langle|\psi|^2\rangle)$. This is solved in Fourier space: denoting the Fourier transform of the real-space density contrast $\rho(\underline{x}) = |\psi(\underline{x})|^2$ by $\hat{\rho}_k$, the Fourier-space potential is
 \begin{equation}
- V =  \int 4\pi G \psi\psi^* dV
+\hat{V}_k = -\frac{4\pi G\, \hat{\rho}_k}{k^2} \qquad (k \ne 0), \qquad \hat{V}_0 = 0.
 \end{equation}
 
-\noindent A possible method for solving this equation would be to replace the nabla operator with an equivalent expression in Fourier space. The $k$ subscripts denotes the Fourier space equivalent version of the variable.
+\noindent Note that $\hat{\rho}_k$ is the Fourier transform of the real-space product $|\psi|^2$, not the product of the Fourier transforms $\hat{\psi}_k \hat{\psi}_k^*$ (the latter would be a convolution). Setting $\hat{V}_0 = 0$ enforces the mean-density subtraction. As noted in Numerical Recipes \citep{bib_nr}, when dealing with a finite number of Fourier modes it is possible to improve upon dividing by $k^2$ by using the discrete Laplacian:
 \begin{eqnarray}
-k^2 V_k &=&  4\pi G \psi_k \psi_k^* \nonumber \\
-V_k &=&  \frac{4\pi G \psi_k \psi_k^*}{k^2}
+ \hat{V}_k &=& -\frac{4\pi G\, \hat{\rho}_k}{ 2 \kappa - 6} \nonumber\\
+ \kappa &=& \cos(2 \pi n/L) + \cos(2 \pi m/L) + \cos(2 \pi o/L)
 \end{eqnarray}
 
-\noindent This requires solving the equation in Fourier space. As noted in Numerical Recipes \citep{bib_nr}, when dealing with a finite number of Fourier modes it is possible to improve upon the simple method proposed above of dividing by $k^2$ using cosines:
-\begin{eqnarray}
- V_k &=&  \frac{4\pi G \psi_k \psi_k^*}{ 2 \kappa - 3} \nonumber\\
- \kappa &=& (\cos(2 \pi n/L) + \cos(2 \pi m/L) + \cos(2 \pi o/L))
-\end{eqnarray}
-
-\noindent $m,n,o$ are indices that enumerate the grid points, they run from 0 to $L-1$.
+\noindent where $n,m,o$ are the grid indices running from 0 to $L-1$. This discrete Green's function correctly accounts for the finite grid spacing.
 
 \section{Computational algorithm}
 In this section I will bring together all of the previous ideas in order to outline the flow of computation in my wave-mechanics code.
@@ -495,10 +489,10 @@ This algorithm satisfies the five requirements (3D, self-consistent gravity, exp
 
 
 \section{Initial Conditions}
-Through out the code testing process the main initial condition used was that of a gaussian density profile. This manifests itself as a gaussian envelope: the real part of the wavefunction.  In some cases it was appropriate to add a velocity component to the wavefunction, an initial `kick', which appears as a carrier wave of the wavefunction. This allowed the code to be tested for a free particle with and without an initial velocity. They were applied in the testing phase of the code in all dimensions (1 to 3). The initial 1D wavefunction is:
+Throughout the code testing process the main initial condition used was that of a gaussian density profile. This manifests itself as a gaussian envelope: the real part of the wavefunction.  In some cases it was appropriate to add a velocity component to the wavefunction, an initial `kick', which appears as a carrier wave of the wavefunction. This allowed the code to be tested for a free particle with and without an initial velocity. They were applied in the testing phase of the code in all dimensions (1 to 3). The initial 1D wavefunction is:
 
 \begin{equation}
-\psi_i = \frac{1}{(2\pi w^2)^{1/2}} \;  e^ {\left( -\frac{(x_i-x_0)^2}{4 w^2} + i p_0 x_i \right)}
+\psi_i = \frac{1}{(2\pi w^2)^{1/4}} \;  e^ {\left( -\frac{(x_i-x_0)^2}{4 w^2} + i p_0 x_i \right)}
 \end{equation}
 
 \noindent Here $p_0$ is the initial momentum, $x_0$ is the offset of the peak from the origin, $x_i$ is the gridpoint at which the function is being evaluated, $w$ is the standard deviation of the gaussian. The pre-factor before the exponential is the usual normalization factor.
@@ -516,11 +510,11 @@ Another common and useful test of any cosmological code is a tophat collapse. Th
 I performed this test in 3D in order to understand how different choices of parameters affect the system. There are many parameters to consider so searching this parameter space is daunting. Running the tophat tests mainly helped to guide the choice of the $\nu$ parameter to pick when running the code for proper cosmological initial conditions. The results of tophat testing can be found in section \ref{tophat}.
 
 \subsection{Cosmological Initial Conditions}
-The main test of my cosmological wave-mechanics code is to compare it with an $N$-body code. The choice of $N$-body code is GADGET-2 \citep{bib_spr}, it is perhaps the most popular code in use today. The $N$-body simulations were performed by Sabiu of UCL. The prescription of comparing these results with my wave-mechanics code will follow the methodology suggested by Short as seen in Chapter \ref{ch_4}. The underlying theory of cosmological initial conditions is provided in Chapter \ref{ch_3}.
+The main test of my cosmological wave-mechanics code is to compare it with an $N$-body code. The choice of $N$-body code is GADGET-2 \citep{bib_spr}, a widely-used TreePM code. The switch from Hydra (used in Chapter \ref{ch_4}) to GADGET-2 was motivated by the availability of GADGET-2's initial conditions generator and its wider adoption in the community, which provides a more authoritative benchmark. The $N$-body simulations were performed by Sabiu of UCL. The prescription of comparing these results with my wave-mechanics code will follow the methodology suggested by Short as seen in Chapter \ref{ch_4}. The underlying theory of cosmological initial conditions is provided in Chapter \ref{ch_3}.
 
 The number of mesh points will determine the density (or mass) resolution available, $128^3$ gridpoints is roughly equivalent to $128^3$ super-particles in an $N$-body code. As previously mentioned, the amount of mass per particle in $N$-body code is fixed but in our case the amount of mass per fluid element can change (although the total of the entire box is fixed). In the initial conditions, the mass per fluid element or mass per mesh in our Wave-mechanics code is the same as the mass per particle of an $N$-body code.  It also sets the spatial resolution as we will take some length for our box (say 100 Mpc on the side) and divide it up into $32, 64, 128$ gridpoints (or mesh points) as we require. In this way, the number of mesh points in a Wave-mechanics code sets the density resolution as it sets both spatial and mass resolutions.
 
-Here I will briefly recapitulate the method used in Chapter \ref{ch_4}: we generated a smooth density field from the particle positions in the initial conditions file. Then we constructed the wavefunction from this density field. Finally, we evolved the wave-mechanics code and compared the outputs with those from the Gadget code. The latter code always outputs particles positions which were smoothed to give a density field. The results from the cosmological simulations are presented in section \ref{cos_sim}.
+Here I will briefly recapitulate the method used in Chapter \ref{ch_4}: we generated a smooth density field from the particle positions in the initial conditions file. Then we constructed the wavefunction from this density field. Finally, we evolved the wave-mechanics code and compared the outputs with those from the GADGET-2 code. The latter code always outputs particles positions which were smoothed to give a density field. The results from the cosmological simulations are presented in section \ref{cos_sim}.
 
 \section{Results}
 \label{ch5_results}
@@ -542,7 +536,7 @@ As I will show in figure \ref{fig.test_e}, the function $e$ takes on some of the
 
 It was natural to guess that the $e$ function would be free from discontinuities if we iterate through the recursion relation for a second time. In the second iteration, I use the value of $e_L$ from the right hand side of the system to seed the new value for $e_0$ on the left hand side of the system. In practice I found that I also had to doubly iterate the equations for $f, \Omega$ and $\psi$ (to ensure mass conservation).
 
-Figure \ref{fig.test_e} also shows that it is unnecessary to perform a third iteration as the second and third iteration are exactly the same. If the relations had not completely converged by the second iteration then the system would not conserve mass. Furthermore, I provide the caveat that while the graphs for all three iterations look similar there is enough of a difference that the first iteration of $e$ does not allow for complete mass conservation when the wavefunction approaches the edge of the system.
+Figure \ref{fig.test_e} also shows that it is unnecessary to perform a third iteration as the second and third iterations are exactly the same. This is expected: the recursion has a finite memory determined by the tridiagonal structure of the matrix, so information from the boundary propagates across the full grid in a single pass; the second pass then closes the periodic loop exactly. If the relations had not completely converged by the second iteration then the system would not conserve mass. Furthermore, I provide the caveat that while the graphs for all three iterations look similar there is enough of a difference that the first iteration of $e$ does not allow for complete mass conservation when the wavefunction approaches the edge of the system.
 
 From Watanabe's paper it is not apparent if his solution to periodic boundaries overcomes this problem of recursion; however, the solution he offered is admittedly more elegant if it can be made to work.
 
@@ -600,7 +594,7 @@ A brief look at this effect is presented in figure \ref{fig.interfere}. The resu
 
 Such a result is important when considering the full cosmological simulations later. We need to ask ourselves what do we expect when the wavefunction crosses over the boundary and how far must it travel in order to create this (feedback) interference effect.
 
-The results from the cosmological simulations in a later subsection (\ref{cos_sim}) have greater variation in the range of densities than first expected. In this later subsection I show a comparison with the `industry standard' code Gadget which is providing our benchmark and hence provides what we expect from a cosmological code. The variation shown in the density outputs from wave-mechanics is far greater than that of Gadget. At first we considered that this variation was due to feedback this is now thought to be unlikely. From the wave-mechanics results it is clear that the waves (in general) have not crossed the entire length of the box, it even appears unlikely that any wave has travelled half of one box length.
+The results from the cosmological simulations in a later subsection (\ref{cos_sim}) have greater variation in the range of densities than first expected. In this later subsection I show a comparison with the `industry standard' code GADGET-2 which is providing our benchmark and hence provides what we expect from a cosmological code. The variation shown in the density outputs from wave-mechanics is far greater than that of GADGET-2. At first we considered that this variation was due to feedback this is now thought to be unlikely. From the wave-mechanics results it is clear that the waves (in general) have not crossed the entire length of the box, it even appears unlikely that any wave has travelled half of one box length.
 
 In our study of feedback in this section the wavefunction must have dispersed a minimum of one box length and hence it gives a self-interaction pattern (shown in figure \ref{fig.interfere}). Here the wave-packet $\psi^*\psi$ (the density) has dispersed and is free of an internal or external potential. As is clear from the figure, the central density decreases in height as the width increases.
 
@@ -792,9 +786,9 @@ Figure \ref{fig.dc_problem} shows this problem from the results of a $64^3$ simu
 
 Simulations of higher resolution (such as $128^3$) do not seem to suffer from the same problem: the increase in $\delta_{max}$ is more gradual. This suggests that resolutions of $64^3$ and below are just too rough for our implementation of wave-mechanics; however, we believe this problem can be resolved. We suspect the problem is to do with the initial density field generated by the TSC routine. If we take an initial field and decrease the initial magnitude of $\delta$ such that the new field is $\delta' = \delta / 10$ then the increase in the over-density is more gradual (as expected).
 
-Before running the wave-mechanics simulation we checked the Gadget files (initial and late times) to see if they were what we expected (that is, the results produce the behaviour we expected). One such test is to create histograms of the density ($\rho$) and the over-density ($\delta$) fields. The histogram of density should be gaussian in shape and show an increase in width over time. The highest density reached in each output is higher than the previous output, indicating that dense regions are accreting more material and collapsing under the force of gravity. The under dense regions are losing more mass over time (the material is attracted away from these regions in the higher density regions), hence the troughs of the density are lower with each output. The histogram at later times are also gaussian. They are plotted in figure \ref{fig.gadhist} and come from a $64^3$ simulation.
+Before running the wave-mechanics simulation we checked the GADGET-2 files (initial and late times) to see if they were what we expected (that is, the results produce the behaviour we expected). One such test is to create histograms of the density ($\rho$) and the over-density ($\delta$) fields. The histogram of density should be gaussian in shape and show an increase in width over time. The highest density reached in each output is higher than the previous output, indicating that dense regions are accreting more material and collapsing under the force of gravity. The under dense regions are losing more mass over time (the material is attracted away from these regions in the higher density regions), hence the troughs of the density are lower with each output. The histogram at later times are also gaussian. They are plotted in figure \ref{fig.gadhist} and come from a $64^3$ simulation.
 
-The behaviour of the over-density fields (from Gadget) corroborates with the behaviour of the density field. The histogram of over-density is initially gaussian but tends towards a log-normal in later outputs as seen in figure \ref{fig.gadhistdc}. The initial density field is smooth where deviations from the mean density are small, as indicated by the tight distribution in the first histogram of over-density (a standard deviation of about 0.02). The over-density field is skewed as the minimum value (by definition) is -1 while the maximum can increase (almost) without bound.
+The behaviour of the over-density fields (from GADGET-2) corroborates with the behaviour of the density field. The histogram of over-density is initially gaussian but tends towards a log-normal in later outputs as seen in figure \ref{fig.gadhistdc}. The initial density field is smooth where deviations from the mean density are small, as indicated by the tight distribution in the first histogram of over-density (a standard deviation of about 0.02). The over-density field is skewed as the minimum value (by definition) is -1 while the maximum can increase (almost) without bound.
 
 \begin{figure}[htb]
    \begin{center}
@@ -808,7 +802,7 @@ The behaviour of the over-density fields (from Gadget) corroborates with the beh
 \includegraphics[width=0.49\columnwidth]{./full/gadget/hist_004}
 
    \end{center}
-\caption{These plots show histograms of density as generated from the Gadget outputs. They have a distinctly gaussian shape and widen over time. The outputs are for $z = 32, 3, 2, 1, 0.5, 0.05.$}
+\caption{These plots show histograms of density as generated from the GADGET-2 outputs. They have a distinctly gaussian shape and widen over time. The outputs are for $z = 32, 3, 2, 1, 0.5, 0.05.$}
 \label{fig.gadhist}
 \end{figure}
 
@@ -824,22 +818,22 @@ The behaviour of the over-density fields (from Gadget) corroborates with the beh
 \includegraphics[width=0.49\columnwidth]{./full/gadget/hist_delta_004}
 
    \end{center}
-\caption{These plots show histograms of over-density as generated from the Gadget outputs. The outputs are for $z = 32, 3, 2, 1, 0.5, 0.05.$}
+\caption{These plots show histograms of over-density as generated from the GADGET-2 outputs. The outputs are for $z = 32, 3, 2, 1, 0.5, 0.05.$}
 \label{fig.gadhistdc}
 \end{figure}
 
 % check velocities are maxwellian?
-The evolution of density and over-density from the wave-mechanics code is similar to that of Gadget but not the same. The initial conditions are the same, as required. However, in the wave-mechanics outputs (see figure \ref{fig.wmhist}), the gaussian shape of the density field skews over time with the peak leaning towards the higher mass end. It also develops a long tail, to balance the skewing towards the top end, as the under-dense regions evacuate. The highest peak of density (and over-density) never goes as high as it does in the Gadget outputs. However, the lowest trough of density is far lower than that of Gadget: $\rho_{min} \sim 10^6$ for wave-mechanics while Gadget only goes as low as $\rho_{min} \sim 10^{9.5}$. The under-dense regions are evacuated faster in wave-mechanics, hence the over-density histogram (figure \ref{fig.wmhistdc}) approaches a log-normal shape more rapidly than it does for Gadget. This was not expected but seems to be an inevitable result of wave-mechanics. All resolutions and choice of $\nu$ tested seem to produce similar behaviour, the results shown in figure \ref{fig.wmhistdc} are typical plots.
+The evolution of density and over-density from the wave-mechanics code is similar to that of GADGET-2 but not the same. The initial conditions are the same, as required. However, in the wave-mechanics outputs (see figure \ref{fig.wmhist}), the gaussian shape of the density field skews over time with the peak leaning towards the higher mass end. It also develops a long tail, to balance the skewing towards the top end, as the under-dense regions evacuate. The highest peak of density (and over-density) never goes as high as it does in the GADGET-2 outputs. However, the lowest trough of density is far lower than that of GADGET-2: $\rho_{min} \sim 10^6$ for wave-mechanics while GADGET-2 only goes as low as $\rho_{min} \sim 10^{9.5}$. The under-dense regions are evacuated faster in wave-mechanics, hence the over-density histogram (figure \ref{fig.wmhistdc}) approaches a log-normal shape more rapidly than it does for GADGET-2. This was not expected and may be a characteristic feature of wave-mechanics, though an implementation-dependent cause cannot be ruled out. All resolutions and choice of $\nu$ tested seem to produce similar behaviour, the results shown in figure \ref{fig.wmhistdc} are typical plots.
 
-A further unexpected outcome of wave-mechanics is the rapid variability in the height of density ($\rho$) from gridpoint to gridpoint (see figure \ref{fig.wmrho}). Naturally, the Gadget outputs can be expected to be smoother as they density field is not continuous but rather is calculated from the discrete distribution of particles. The wave-mechanics code gives more lows and more highs (by number count) than Gadget, while the lowest trough and highest peak are lower than that of Gadget. Again, this appears to be true regardless of resolution.
+A further unexpected outcome of wave-mechanics is the rapid variability in the height of density ($\rho$) from gridpoint to gridpoint (see figure \ref{fig.wmrho}). Naturally, the GADGET-2 outputs can be expected to be smoother as they density field is not continuous but rather is calculated from the discrete distribution of particles. The wave-mechanics code gives more lows and more highs (by number count) than GADGET-2, while the lowest trough and highest peak are lower than that of GADGET-2. Again, this appears to be true regardless of resolution.
 
-The plots in figure \ref{fig.wmrho} have a resolution of $64^3$ with $\nu = 10^{-7}$ and $|\delta|_{\rm initial} \sim 0.03$, otherwise all initial conditions are the same as for the Gadget simulation. In figure \ref{fig.dc_problem}, we noted there was a problem with the maximum value of $\delta$ being too large. There, $\delta_{max} = 6$ after 100 timesteps when $|\delta|_{\rm initial} \sim 0.3$. In the latest run where $|\delta|_{\rm initial} \sim 0.03$, the $\delta_{max}$ from this simulation after 100 timesteps run was $\delta_{max} = 0.7$. This is of a more acceptable magnitude.
+The plots in figure \ref{fig.wmrho} have a resolution of $64^3$ with $\nu = 10^{-7}$ and $|\delta|_{\rm initial} \sim 0.03$, otherwise all initial conditions are the same as for the GADGET-2 simulation. In figure \ref{fig.dc_problem}, we noted there was a problem with the maximum value of $\delta$ being too large. There, $\delta_{max} = 6$ after 100 timesteps when $|\delta|_{\rm initial} \sim 0.3$. In the latest run where $|\delta|_{\rm initial} \sim 0.03$, the $\delta_{max}$ from this simulation after 100 timesteps run was $\delta_{max} = 0.7$. This is of a more acceptable magnitude.
 
-In addition to the histograms (\ref{fig.wmhist}, \ref{fig.wmhistdc}) and the surface plots of density (\ref{fig.wmrho}), I provide a contour plot of over-density (figure \ref{fig.delta_contour}) which has levels at $\delta =  -1, 0, 1, 2, 5$. From the surface plots (\ref{fig.wmrho}) it is hard, at first, to tell if the structure is random as it appears to rapidly change from timestep to timestep. The data is messier than from Gadget, so the conclusion is not as immediately obvious. The contour plots give the clearest picture of how the structure is fragmentary but not completely random. Implicitly, the data has been smoothed to hide the finest structure.
+In addition to the histograms (\ref{fig.wmhist}, \ref{fig.wmhistdc}) and the surface plots of density (\ref{fig.wmrho}), I provide a contour plot of over-density (figure \ref{fig.delta_contour}) which has levels at $\delta =  -1, 0, 1, 2, 5$. From the surface plots (\ref{fig.wmrho}) it is hard, at first, to tell if the structure is random as it appears to rapidly change from timestep to timestep. The data is messier than from GADGET-2, so the conclusion is not as immediately obvious. The contour plots give the clearest picture of how the structure is fragmentary but not completely random. Implicitly, the data has been smoothed to hide the finest structure.
 
 A possible source of such messiness is due to the fact that the whole simulation uses a single coherent wavefunction. As shown in the results of section \ref{per_bou}, a single wavefunction can lead to interference effects. Although we hope to limit this effect by using a small $\nu$ we may not have completely suppressed these effects. That is despite the fact gravity also acts to suppress such interference effects.
 
-In contrast to the Gadget density, the plots of wave-mechanics show more structure. For comparison we can look at the contour plots generated for Gadget (figure \ref{fig.gadget_contour}). These latter plots are far smoother than that of wave-mechanics. It seems also impossible to tell that the results of wave-mechanics and Gadget come from the same initial conditions. It should be noted that the highest value of $\delta$ for Gadget was $\delta \sim 23$, which is far higher than that of wave-mechanics $\delta \sim 9 \rightarrow 14$ (depending on parameter choice: such as varying $\nu$).
+In contrast to the GADGET-2 density, the plots of wave-mechanics show more structure. For comparison we can look at the contour plots generated for GADGET-2 (figure \ref{fig.gadget_contour}). These latter plots are far smoother than that of wave-mechanics. It seems also impossible to tell that the results of wave-mechanics and GADGET-2 come from the same initial conditions. It should be noted that the highest value of $\delta$ for GADGET-2 was $\delta \sim 23$, which is far higher than that of wave-mechanics $\delta \sim 9 \rightarrow 14$ (depending on parameter choice: such as varying $\nu$).
 
 
 All of the following outputs are shown for timesteps: $0, 200, 1000, 2000, 3000, 3500$, or $a = 0.03125,0.038,0.085,0.23, 0.63, 1.03$. The slices through the data were all taken at the some point on the z-axis: $L/2$.
@@ -921,13 +915,15 @@ All of the following outputs are shown for timesteps: $0, 200, 1000, 2000, 3000,
 \includegraphics[width=0.49\columnwidth]{./full/gadget/contour/del_contour004}
 
    \end{center}
-\caption{These plots come from the Gadget simulation and show a contour plot of density contrast ($\delta$). The box is $500 \; {\rm Mpc / h}$ on each side. The contour levels are $\delta = -1, 0, 1, 2, 5$.}
+\caption{These plots come from the GADGET-2 simulation and show a contour plot of density contrast ($\delta$). The box is $500 \; {\rm Mpc / h}$ on each side. The contour levels are $\delta = -1, 0, 1, 2, 5$.}
 \label{fig.gadget_contour}
 \end{figure}
 
 
 \subsubsection{Gaussian smoothing}
-Given the magnitude of the over-densities in the initial condition $|\delta|_{\rm initial} \sim 0.3$ we previously suppressed this value by dividing the values across the whole field by 10. This was an arbitrary choice, however in cosmology there is a an accepted standard for smoothing that advocates smoothing the data with a gaussian window with a standard deviation of  $\sigma = 8$ Mpc. It is an accepted standard because, statistically, all structures larger than 8 Mpc are roughly linear.
+\noindent The Gaussian smoothing described in this section is applied as a post-processing diagnostic tool for comparing outputs between codes; it is not part of the physical evolution of the wave-mechanics simulation itself.
+
+Given the magnitude of the over-densities in the initial condition $|\delta|_{\rm initial} \sim 0.3$ we previously suppressed this value by dividing the values across the whole field by 10. This was an arbitrary choice, however in cosmology there is an accepted standard for smoothing that advocates smoothing the data with a gaussian window with a standard deviation of  $\sigma = 8$ Mpc. It is an accepted standard because, statistically, all structures larger than 8 Mpc are roughly linear.
 
 This method of smoothing was chosen and applied to both the initial density field and to the output density fields. The smoothed initial density field was supplied to the wave-mechanics code for another run of the simulation to be performed.
 
@@ -936,18 +932,18 @@ The smoothing operation is defined in the following way:
 \rho_{gauss} = \frac{1}{W} \sum_{-\sigma_z}^{\sigma_z} \sum_{-\sigma_y}^{\sigma_y} \sum_{-\sigma_x}^{\sigma_x} \rho_{TSC}\; e^{\left(\frac{-(r-r')^2}{2 \sigma^2} \right)}
 \end{equation}
 
-\noindent here $\rho_{gauss}$ is new smooth field and $\rho_{TSC}$ is the density field as generated by the TSC smoothing routine in case of the Gadget outputs. Recall that the TSC routine smooths particle positions onto a uniform grid and hence gives a continuous density field. The weight, $W$, is defined as:
+\noindent here $\rho_{gauss}$ is new smooth field and $\rho_{TSC}$ is the density field as generated by the TSC smoothing routine in case of the GADGET-2 outputs. Recall that the TSC routine smooths particle positions onto a uniform grid and hence gives a continuous density field. The weight, $W$, is defined as:
 \begin{equation}
 W = \sum_{-\sigma_z}^{\sigma_z} \sum_{-\sigma_y}^{\sigma_y} \sum_{-\sigma_x}^{\sigma_x} e^{\left(\frac{-(r-r')^2}{2 \sigma^2} \right)}
 \end{equation}
 
 \noindent where it is already assumed that we will truncate the gaussian to a certain precision, in this case 3 standard deviations ($\sigma$). In the simulation performed, a physical length of $500$ Mpc was chosen, and the resolution was $64^3$. This means that one pixel has a length of $7.8$ Mpc hence 3 pixels roughly corresponds to 3 standard deviations.
 
-Figures \ref{fig.gadgauss} \& \ref{fig.wmgauss} show contour plots of over-density, $\delta$, from Gadget and wave-mechanics respectively. The peaks have been well smoothed out by roughly a factor of 6. The contour levels are black for $\delta < 0$ and blue for $\delta \geq 0$. The results for Gadget look almost static over the full run of the simulation but there is some movement within the structure.
+Figures \ref{fig.gadgauss} \& \ref{fig.wmgauss} show contour plots of over-density, $\delta$, from GADGET-2 and wave-mechanics respectively. The peaks have been well smoothed out by roughly a factor of 6. The contour levels are black for $\delta < 0$ and blue for $\delta \geq 0$. The results for GADGET-2 look almost static over the full run of the simulation but there is some movement within the structure.
 
 The results for wave-mechanics look less random at later times, there are definite structures in the smoothed density fields at late times ($a \sim 1$). In the previous unsmoothed outputs (such as figure \ref{fig.wmhistdc}) long-term structure was not as distinguishable as in these newer results.
 
-The problem seems to have been due to the initial density peaks being too high for our chosen resolution. The maximum over-density peak was $\delta \sim 0.3$ in the original initial conditions, here in the smoothed initial condition it is $\sim 0.05$. The growth of the maximum value of $\delta$ is also much slower and reaches a maximum of $\delta = 9.1$ in the final output. This is comparable to the unsmoothed initial density field of wave-mechanics in the previous section. The big improvement now is that the outputs from wave-mechanics look closer to those from Gadget (after gaussian smoothing).
+The problem seems to have been due to the initial density peaks being too high for our chosen resolution. The maximum over-density peak was $\delta \sim 0.3$ in the original initial conditions, here in the smoothed initial condition it is $\sim 0.05$. The growth of the maximum value of $\delta$ is also much slower and reaches a maximum of $\delta = 9.1$ in the final output. This is comparable to the unsmoothed initial density field of wave-mechanics in the previous section. The big improvement now is that the outputs from wave-mechanics look closer to those from GADGET-2 (after gaussian smoothing).
 
 Like previous results we can see regions of multi-streaming which resemble an interference pattern. The outputs from wave-mechanics are noticeably less clean but this isn't a surprise given the added complexity inherent in wave-mechanics and the fact that we are now dealing with a continuous density field.
 
@@ -963,7 +959,7 @@ Like previous results we can see regions of multi-streaming which resemble an in
 \includegraphics[width=0.45\columnwidth]{./full/gadget/gaussian/004_del_contour.eps}
 
    \end{center}
-\caption{This series of contour plots shows the previously seen Gadget outputs for over-density ($\delta$) after gaussian smoothing has been applied. $z = 32, 3, 2, 1, 0.5, 0.05$. The contour levels are black for $\delta < 0$ and blue for $\delta \geq 0$.}
+\caption{This series of contour plots shows the previously seen GADGET-2 outputs for over-density ($\delta$) after gaussian smoothing has been applied. $z = 32, 3, 2, 1, 0.5, 0.05$. The contour levels are black for $\delta < 0$ and blue for $\delta \geq 0$.}
 \label{fig.gadgauss}
 \end{figure}
 
@@ -986,13 +982,13 @@ Like previous results we can see regions of multi-streaming which resemble an in
 
 \subsubsection{Robustness of results --- conserved quantities}
 \label{ch_5_robust}
-Given the high variability of density peaks spatially, it is not apparent that the code is well-behaved. Hence it is worth performing consistency checks, such as plotting histograms but as mentioned through out this thesis we are ideally concerned with conserved physical quantities. The stability and robustness of the wave-mechanics code is verified by the conservation of mass and momentum. Over the whole simulation from the initial conditions until redshift $z = 0$ (3500 timesteps), the variation of mass is less than 7 significant figures. While momentum conservation (denoted by $P$) is only slightly worse but an unnoticeable effect in the simulation. Together these two conserved quantities dictate that energy must also be conserved, as is required from a symplectic integration scheme. Figure \ref{fig.conserve} shows how these quantities vary over the course of the simulation.
+Given the high variability of density peaks spatially, it is not apparent that the code is well-behaved. Hence it is worth performing consistency checks, such as plotting histograms but as mentioned through out this thesis we are ideally concerned with conserved physical quantities. The stability and robustness of the wave-mechanics code is verified by the conservation of mass and momentum. Over the whole simulation from the initial conditions until redshift $z = 0$ (3500 timesteps), the variation of mass is less than 7 significant figures. While momentum conservation (denoted by $P$) is only slightly worse but an unnoticeable effect in the simulation. Mass and momentum conservation are necessary but not sufficient conditions for a reliable simulation; energy conservation is an independent requirement that follows from the symplectic nature of the integration scheme (as discussed in Chapter \ref{ch_2}). Figure \ref{fig.conserve} shows how these quantities vary over the course of the simulation.
 
 The quantities were calculated as follows:
 
 \begin{eqnarray}
 M_{\rm total} &=& \int^V \psi \psi^* \; dx^3 \\
-P_{\rm total} &=& \int^V |\psi^* \nabla \psi|^2 \; dx^3
+P_{\rm total} &=& -i\nu \int^V \psi^* \nabla \psi \; dx^3
 \end{eqnarray}
 
 Naturally, these quantities have regimes where they are not conserved and the code is has huge errors. The regimes of stability are dictated by the resolutions lengths $dx$ and $dt$ as with any finite difference (or finite element) code. However, there is an additional parameter that dictates stability: $\nu$. When $\nu$ is relatively large (as dictated by choice of $n_g$, the number of gridpoints per side) then the dispersion of the wavefunction is higher but if this value is too large then the wavefunction allows for matter to move too quickly. When this happens, mass and momentum are no longer conserved.
@@ -1009,9 +1005,9 @@ Naturally, these quantities have regimes where they are not conserved and the co
 \end{figure}
 
 \section{Velocity \& Vorticity}
-The main focus of this section is to show the comparison between  the ``industry standard'' code, Gadget, and our own wave-mechanics code. In figure \ref{fig.gadvel} we present the velocity in the form of histograms of the $x$ component of velocity. From symmetry we require that the other velocity components, $y \; \& \; z$, have the same shape (height and width) at all output times. The histograms of the other velocity components confirm this is the case; for brevity, those plots have been omitted from this thesis.
+The main focus of this section is to show the comparison between  the ``industry standard'' code, GADGET-2, and our own wave-mechanics code. In figure \ref{fig.gadvel} we present the velocity in the form of histograms of the $x$ component of velocity. From symmetry we require that the other velocity components, $y \; \& \; z$, have the same shape (height and width) at all output times. The histograms of the other velocity components confirm this is the case; for brevity, those plots have been omitted from this thesis.
 
-Overplotted on each of the Gadget velocity histograms is that of a theoretical gaussian with the same amplitude and standard deviation. We can see very good agreement between the data and the theoretical gaussian. The velocity data from the Gadget output files requires a simple scaling in order to calculate the real physical velocities: $v_{real} = \sqrt{a} v_{code}$ (km/s).
+Overplotted on each of the GADGET-2 velocity histograms is that of a theoretical gaussian with the same amplitude and standard deviation. We can see very good agreement between the data and the theoretical gaussian. The velocity data from the GADGET-2 output files requires a simple scaling in order to calculate the real physical velocities: $v_{real} = \sqrt{a} v_{code}$ (km/s).
 
 The velocity from the wave-mechanics code can be calculated using the probability current as given by equation \ref{eqn_j}. This technique was presented as the big difference between my FPA code that that of Short \citep{bib_short}. We have shown that the velocity from the probability current is consistent with the results of Short who used a phase unwrapping technique. As shown in Chapter \ref{ch_3}, we can use a simpler form of the probability current:
 
@@ -1021,13 +1017,13 @@ The velocity from the wave-mechanics code can be calculated using the probabilit
 
 Figure \ref{fig.wmvel} shows a series of graphs of the $x,y$ components of velocity (at a fixed value of $z$) and correspond to the density and over-density plots from the wave-mechanics code shown above (figures \ref{fig.wmrho} \& \ref{fig.delta_contour}, respectively). The velocities at earlier times appear isotropic as expected and of roughly equal magnitude (with a gaussian distribution).
 
-For comparison with the Gadget histograms (\ref{fig.gadvel}), I also provide histograms for the $x$ component of velocity from the wave-mechanics code. It also appears as a gaussian at earlier times by evolves in a slightly different way to Gadget, the tails of the distributions become much longer than they are in Gadget. Also, I must point out that this data has been smoothed using a gaussian smoothing routine. The effect of this smoothing makes the distribution shorter and fatter, both pre- and post- smoothing distributions are however gaussian. This partly what we expect: we expect a gaussian distribution but it is not entirely obvious why the wave-mechanics code produces a distribution with longer tails. This likely to be a fundamental issue of wave-mechanics rather than our specific implementation.
+For comparison with the GADGET-2 histograms (\ref{fig.gadvel}), I also provide histograms for the $x$ component of velocity from the wave-mechanics code. It also appears as a gaussian at earlier times by evolves in a slightly different way to GADGET-2, the tails of the distributions become much longer than they are in GADGET-2. Also, I must point out that this data has been smoothed using a gaussian smoothing routine. The effect of this smoothing makes the distribution shorter and fatter, both pre- and post- smoothing distributions are however gaussian. This partly what we expect: we expect a gaussian distribution but it is not entirely obvious why the wave-mechanics code produces a distribution with longer tails. Whether this is intrinsic to wave-mechanics or an artefact of our specific implementation remains an open question (see section \ref{known_issues}).
 
-Worth noting is that the range of velocities calculated over time is greater in the wave-mechanics code than in Gadget. Strangely, the initial velocities that we calculated in wave-mechanics is not the same as those in the Gadget code. Currently, this is an unsolved problem and may be due to how the initial wavefunction is constructed: $\psi \propto \rho^{1/2} \exp(i\Phi_g)$. Which uses the gravitational potential rather than the velocity potential. Physically, the two fields are not the same but at early times in the Universe are believed to be linearly proportional to each other. That is to say that this problem is unexpected and the scaling between the two fields may not be the problem. We may then have to consider if the calculation of the gravitational potential from the density field is somehow deficient. Not only does this affect the initial velocity field but it affects the dynamics of our system and hence could be a source of a large systematic error.
+Worth noting is that the range of velocities calculated over time is greater in the wave-mechanics code than in GADGET-2. Strangely, the initial velocities that we calculated in wave-mechanics is not the same as those in the GADGET-2 code. Currently, this is an unsolved problem and may be due to how the initial wavefunction is constructed: $\psi \propto \rho^{1/2} \exp(i\Phi_g)$. Which uses the gravitational potential rather than the velocity potential. Physically, the two fields are not the same but at early times in the Universe are believed to be linearly proportional to each other. That is to say that this problem is unexpected and the scaling between the two fields may not be the problem. We may then have to consider if the calculation of the gravitational potential from the density field is somehow deficient. Not only does this affect the initial velocity field but it affects the dynamics of our system and hence could be a source of a large systematic error.
 
 The velocity results are contradictory with the fact that momentum is conserved (as just shown in figure \ref{fig.conserve}) for the duration of the simulation. To the best of our knowledge the calculations are correct but unfortunately we have not found the root error of this conundrum.
 
-The initial density field is identical to that of Gadget hence the source of discrepancy has to come from either (1) the scaling of gravitational potential to the velocity potential or (2) the calculation of the velocity field is incorrect. The latter might suggest that an additional constant scaling factor must be added to the results. This would force the width of the velocity distribution from wave-mechanics to be identical to that of Gadget, this would also mean that subsequent outputs of velocity will be wider too. At later times this would provide an even greater discrepancy between the maximum and minimum velocities of wave-mechanics versus that of Gadget.
+The initial density field is identical to that of GADGET-2 hence the source of discrepancy has to come from either (1) the scaling of gravitational potential to the velocity potential or (2) the calculation of the velocity field is incorrect. The latter might suggest that an additional constant scaling factor must be added to the results. This would force the width of the velocity distribution from wave-mechanics to be identical to that of GADGET-2, this would also mean that subsequent outputs of velocity will be wider too. At later times this would provide an even greater discrepancy between the maximum and minimum velocities of wave-mechanics versus that of GADGET-2.
 
 
 The following table provides the key values of the velocity distribution (over time) from the wave-mechanics code:
@@ -1062,7 +1058,7 @@ The table indicates that there is a net motion in the $x$ direction, this is als
 \includegraphics[width=0.49\columnwidth]{./full/gadget/vel/vx_h_hist_003_z_}
 \includegraphics[width=0.49\columnwidth]{./full/gadget/vel/vx_h_hist_004_z_}
    \end{center}
-\caption{These plots show a histogram of the $V_x$ component of velocity from the Gadget code. The other velocity components are essentially the same. Overplotted is a theoretical gaussian, shown as asterisks, with the same standard deviation (calculated from the outputted velocity data, shown as diamonds). The times shown are at redshifts: $z = 31, 3, 2, 1, 0.5, 0.05$.}
+\caption{These plots show a histogram of the $V_x$ component of velocity from the GADGET-2 code. The other velocity components are essentially the same. Overplotted is a theoretical gaussian, shown as asterisks, with the same standard deviation (calculated from the outputted velocity data, shown as diamonds). The times shown are at redshifts: $z = 31, 3, 2, 1, 0.5, 0.05$.}
 \label{fig.gadvel}
 \end{figure}
 
@@ -1099,7 +1095,7 @@ The table indicates that there is a net motion in the $x$ direction, this is als
 \end{figure}
 
 \paragraph{Vorticity}
-In section \ref{vort} we discussed how to identify possible regions of vorticity, this proved fruitful when analysing the results from the 3D FPA code as sen in section \ref{ch4vort}. In figure \ref{fig.wmvort} the plots show $\mathcal{I}(\psi) \;{\rm vs}\; \mathcal{R}(\psi)$; we suggested that analysing the patterns of these graphs will help to find areas of vorticity and for providing another check of robustness. The first plot shows a ring with an isotropic distribution which implies that both density and velocity are isotropic, this is what we expect from the initial conditions generator supplied by Gadget. It also shows that our construction of the wavefunction is consistent with the initial conditions generator.
+In section \ref{vort} we discussed how to identify possible regions of vorticity, this proved fruitful when analysing the results from the 3D FPA code as seen in section \ref{ch4vort}. In figure \ref{fig.wmvort} the plots show $\mathcal{I}(\psi) \;{\rm vs}\; \mathcal{R}(\psi)$; we suggested that analysing the patterns of these graphs will help to find areas of vorticity and for providing another check of robustness. The first plot shows a ring with an isotropic distribution which implies that both density and velocity are isotropic, this is what we expect from the initial conditions generator supplied by GADGET-2. It also shows that our construction of the wavefunction is consistent with the initial conditions generator.
 
 The results from the full S-P simulation do not seem to show any signs of vorticity, the wavefunction does not appear to get close enough to zero (min$[\psi_{final} \sim 10]$) to become singular. While the lack of vorticity agrees with the standard theory of cosmology, it is not obvious that singularities are prohibited in our formalism. These singularities were shown in the results of the FPA but there is no good reason for their omission in the results of the full S-P system. Given sufficiently enough time to investigate this phenomena I would try running the simulations for longer to see if they will ever produce a singularity in the wavefunction and hence produce an undefined velocity.
 
@@ -1119,8 +1115,20 @@ The results from the full S-P simulation do not seem to show any signs of vortic
 \label{fig.wmvort}
 \end{figure}
 
+\subsection{Known issues and limitations}
+\label{known_issues}
+Two significant unresolved issues remain in the full S-P code and should be clearly stated:
+
+\begin{enumerate}
+\item \textbf{Velocity discrepancy with GADGET.} The velocity distributions from the wave-mechanics code are systematically wider than those from GADGET, even at the initial conditions. This is a major limitation, not a minor calibration issue. The most likely source is the construction of the initial wavefunction using the gravitational potential $\Phi_g$ rather than the velocity potential $\varphi_v$; while these are approximately equal in the linear regime, any residual difference is amplified by the gradient operation. The GADGET velocity scaling ($v_{\rm real} = \sqrt{a}\, v_{\rm code}$) should also be independently verified.
+
+\item \textbf{Spurious growing bulk flow.} The mean velocity drifts systematically over the course of the simulation (from $\sim -4$ to $\sim -165$ km/s in $V_x$), indicating a net bulk motion that should not exist in a periodic, homogeneous simulation. This drift is present in all three velocity components and grows monotonically. The cause is unknown; possible sources include an asymmetry in the discrete Laplacian, a subtle error in the periodic boundary implementation, or accumulation of floating-point errors in the splitting scheme. This issue must be resolved before the code can be used for quantitative velocity-dependent statistics.
+\end{enumerate}
+
+\noindent These issues do not invalidate the density results or the conservation properties demonstrated above, but they do mean that velocity-dependent outputs from the code should be treated with caution.
+
 \section{Summary}
-This chapter has shown how implement a wave-mechanics code for Large Scale Structure that satisfies our five original requirements: 3D coordinates, self-consistent gravity, expanding coordinates, periodic boundaries, mass conserving. The use of the full Schr\"odinger-Poisson equations goes beyond the FPA model of Short. That is to say that we have extended the original paper of Widrow \& Kaiser; which includes a generalization of their Schr\"odinger equation to allow for more cosmological models.
+This chapter has shown how to implement a wave-mechanics code for Large Scale Structure that satisfies our five original requirements: 3D coordinates, self-consistent gravity, expanding coordinates, periodic boundaries, mass conserving. The use of the full Schr\"odinger-Poisson equations goes beyond the FPA model of Short. That is to say that we have extended the original paper of Widrow \& Kaiser; which includes a generalization of their Schr\"odinger equation to allow for more cosmological models.
 
 The most similar work to what we have done is the full 3D code from the team in Taiwan. Unfortunately, their publication does not provide enough details to make a full comparison with their technique. There are some open questions about their work that are worth addressing: does it conserve mass and momentum? Does it properly implement periodic boundaries? I suspect that the latter is true because it is a necessary requirement of a cosmological code. I'm less sure of the answer to the former question as they do not address the issue and they may regard it as a less important concern. A key strength of our work is that we have shown that our method conserves mass and momentum.
 
@@ -1130,7 +1138,7 @@ We believe that the implementation of periodic boundaries is completely new as p
 
 Proof of multi-streaming (described in section \ref{hydro}), or shell crossing, is clearly shown in the results from the 3D code as seen in section \ref{twobody}. The tophat results show the inclusion of gravity and of a simple cosmologically-based scenario. Such results combined with the conservation of key quantities (mass and momentum) suggest that our final results in section \ref{cos_sim} may be correct but require further investigation. That the whole simulation shares a single wavefunction allows for the possibility of interference, despite our intention to suppress these effects it is still possible that interference is present in our final results (given the apparent messiness of our 3D cosmological results).
 
-A key concern to address is why the density outputs from the wave-mechanics code are not closer to that of Gadget. We expect the results from wave-mechanics to differ from Gadget but it appears that the variation in densities and the patterns produced by wave-mechanics are far greater than expected. As shown in Chapter \ref{ch_4}, the densities from wave-mechanics provided reasonable correlation coefficients with the densities from Hydra. Mass is conserved and the distributions are not completely random; they show a clear pattern of evolution that is different from what we expected but not necessarily wrong. Unfortunately we cannot conclude whether our results are completely correct within the wave-mechanics framework. That is to say that we suspect the wave-mechanics framework is robust and can be correctly applied to LSS simulations but we have not been able to prove that beyond all doubts in this thesis. 
+A key concern to address is why the density outputs from the wave-mechanics code are not closer to that of GADGET-2. We expect the results from wave-mechanics to differ from GADGET-2 but it appears that the variation in densities and the patterns produced by wave-mechanics are far greater than expected. As shown in Chapter \ref{ch_4}, the densities from wave-mechanics provided reasonable correlation coefficients with the densities from Hydra. Mass is conserved and the distributions are not completely random; they show a clear pattern of evolution that is different from what we expected but not necessarily wrong. Unfortunately we cannot conclude whether our results are completely correct within the wave-mechanics framework. That is to say that we suspect the wave-mechanics framework is robust and can be correctly applied to LSS simulations but we have not been able to prove that beyond all doubts in this thesis. 
 
 The biggest problem of the wave-mechanics code is the off-centre velocity distribution which suggests a net bulk motion. From theory, the net motion of the Universe should be zero (ignoring suggestions that the Universe might be rotating as a whole). The velocity scaling also appears to be wrong and will need to be addressed in future research.
 
