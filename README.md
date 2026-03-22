@@ -1,6 +1,7 @@
 # Wave-Mechanics of Large Scale Structure
 
 **Schrödinger Wave-mechanics and Large Scale Structure**
+
 *PhD Thesis by Edward A. Thomson, University of Glasgow, 2011*
 
 ---
@@ -17,7 +18,7 @@ The code solved the coupled Schrödinger-Poisson equations in 3D with:
 
 Results were compared with the N-body codes Hydra and GADGET-2.
 
-In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. Independent reviews were conducted using Claude Opus 4.6 and OpenAI's GPT 5.4, then reconciled into a single set of notes. The original LaTeX source has been recovered and split into per-chapter files, ready for corrections. The simulation code is being rewritten from scratch in modern C++.
+In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. Independent reviews were conducted using Claude Opus 4.6 and OpenAI's GPT 5.4, then reconciled into a single set of notes. The original LaTeX source has been recovered and split into per-chapter files, ready for corrections. The simulation code is being rewritten from scratch in modern C++, with the Free Particle Approximation (Chapter 4) and the full Schrödinger-Poisson solver (Chapter 5) now reimplemented and validated.
 
 ## Repository Structure
 
@@ -44,9 +45,14 @@ wave-mechanics-lss/
 │       ├── claude/
 │       └── gpt/
 ├── code/                         # Modern C++ rewrite (in progress)
-│   ├── fpa_1d/                   # 1D Free Particle Approximation
-│   ├── fpa_3d/                   # 3D FPA
-│   └── fpa_3d_cosmo/             # 3D FPA with cosmological ICs
+│   ├── fpa_1d/                   # 1D Free Particle Approximation (Ch 4)
+│   ├── fpa_3d/                   # 3D FPA toy model (Ch 4)
+│   ├── fpa_3d_cosmo/             # 3D FPA with cosmological ICs (Ch 4)
+│   └── schrodinger_poisson/      # Full Schrödinger-Poisson solver (Ch 5)
+│       ├── sp_1d.cpp             # 1D solver (Goldberg + periodic BCs)
+│       ├── sp_3d.cpp             # 3D solver (splitting operators + expansion)
+│       ├── algorithm.md          # Algorithm reference document
+│       └── output/               # Test outputs (free particle, gravity, tophat)
 └── web/                          # Web version of thesis (planned)
 ```
 
