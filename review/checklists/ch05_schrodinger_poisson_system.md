@@ -43,7 +43,7 @@
 - [x] p118: convention m = 1/2 — justified as standard simplification, constants restored later
 - [x] p119: reusing δ for timestep — added disambiguation note
 - [x] p115: Cayley factors commute — justified (polynomials of same matrix)
-- [ ] p116-117: Goldberg → Suzuki/Strang splitting — deferred: substantial rewrite
+- [x] p116-117: Goldberg → Suzuki/Strang splitting — restructured into three clearly separated ideas: (1) operator splitting (Strang/Suzuki), (2) dimensional splitting, (3) Goldberg solver
 - [x] p116: ad hoc V/3 split — motivated as naive attempt, explained why it fails (no theoretical basis, K/V non-commutativity)
 - [ ] p119-129: recursion relations — deferred: worked example would be valuable but large
 - [x] p123: boundary recursion convergence — added note: tridiagonal structure gives finite memory, two passes close the periodic loop exactly

@@ -414,18 +414,26 @@ Without the knowledge of using splitting operators it is tempting to try a simpl
 
 \subsubsection{Splitting Operators}
 \label{split}
-The naive approach of extending the Goldberg method to higher dimensions is not as robust as Watanabe's suggestion to use splitting operators. Here I will present the approach that I adopted, it is one that uses Suzuki's method of operator splitting.
+The extension to three dimensions requires combining three separate ideas, each addressing a different aspect of the problem:
+
+\paragraph{1. Operator splitting (Strang/Suzuki):} The kinetic and potential energy operators do not commute, so the full evolution $e^{-i(K+V)dt}$ cannot be naively factored. The standard symmetric (Strang) splitting provides a second-order accurate decomposition:
 
 \begin{equation}
-\psi(x, t+dt) = e^{-i (K+V) dt} \psi(x, t) = e^{-i K dt/2} e^{-i V dt} e^{-i K dt/2} \psi(x, t)
+\psi(x, t+dt) = e^{-i (K+V) dt} \psi(x, t) \approx e^{-i K dt/2}\, e^{-i V dt}\, e^{-i K dt/2} \psi(x, t)
 \end{equation}
 
-\noindent In higher dimensions it is possible to make use of the following commutation relation: $[P_x, P_y] = 0$. Here $P_x$ and $P_y$ are the momentum in the $x$ and $y$ directions. Only considering the kinetic energy would give:
+\noindent This is the same splitting discussed in Chapter \ref{ch_3}. It separates the evolution into a kinetic half-step, a full potential step, and a second kinetic half-step. Watanabe \citep{bib_wata} and Suzuki \citep{bib_suzu} have shown how to construct higher-order decompositions; however, the second-order form is sufficient for our purposes.
+
+\paragraph{2. Dimensional splitting:} The momentum operators in different directions commute: $[P_x, P_y] = 0$. This means the kinetic energy can be exactly factored across dimensions without approximation:
 
 \begin{eqnarray}
- e^{-i(K_x + K_y + K_z)dt} &=& e^{-i K_x dt} e^{-i K_y dt} e^{-i K_z dt} \nonumber \\
+ e^{-i(K_x + K_y + K_z)dt} &=& e^{-i K_x dt}\, e^{-i K_y dt}\, e^{-i K_z dt} \nonumber \\
 \psi(x, t+dt) &=& \frac{1- i\frac{dt}{2} K_x}{1+ i\frac{dt}{2} K_x} \frac{1-i\frac{dt}{2} K_y}{1+i\frac{dt}{2} K_y}\frac{1-i\frac{dt}{2} K_z}{1+i\frac{dt}{2} K_z} \psi(x, t)
 \end{eqnarray}
+
+\noindent where the second line shows each 1D kinetic step written in Cayley form. Each factor is a tridiagonal system solved by the Goldberg method (section \ref{onedim}).
+
+\paragraph{3. The Goldberg solver:} Each of the 1D tridiagonal solves above uses the Crank-Nicolson scheme from section \ref{onedim}. The Goldberg method is the workhorse that performs each individual sweep; operator splitting and dimensional splitting determine how these sweeps are assembled into a full 3D timestep.
 
 \noindent Updating the wavefunction in this way allows for a modular code. Kinetic energy and potential energy operators can be switched on or off as desired: that is to say that we can easily run our code with the potential energy routine turned `off' by using a simple check flag in our initial conditions. This should allow the code to run quicker than just setting Newton's gravitational constant $G$ to zero.
 
@@ -434,7 +442,7 @@ As a consequence of re-writing our code in such a modular way, the form of $e$ w
 e = 2 - i\lambda
 \end{equation}
 
-\noindent Here $\lambda = 4\epsilon^2/\delta$. The form for $f$ remains unchanged while the $\Omega$ now has no $V$ term. Updating the wavefunction for the potential is straight forward:
+\noindent Here $\lambda = 4\epsilon^2/\delta$. The form for $f$ remains unchanged while the $\Omega$ now has no $V$ term. Updating the wavefunction for the potential is straightforward:
 
 \begin{equation}
 e^{-i V dt} \psi(x, t) = (1 -\frac{i\delta}{2}V)(1 +\frac{i\delta}{2}V)^{-1} \psi(x, t)
