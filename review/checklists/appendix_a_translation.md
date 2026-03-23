@@ -1,30 +1,30 @@
 # Appendix A: Translation — Checklist
 
 ## Definite textual errors (Resolved disagreements #1)
-- [ ] p224: missing amplitude α — "Set ψ = e^{iβ}" should include α
-- [ ] p225: citation marker [2] has no matching bibliography entry
-- [ ] p226: "This form of the energy as volume integral..." — broken English, rewrite
-- [ ] p227: footnote 7 "only have part command to describe emission processes" — not workable English
+- [x] p224: missing amplitude α — "Set ψ = e^{iβ}" now includes α
+- [x] p225: citation marker [2] — resolved with footnote pointing to bibliography
+- [x] p226: "This form of the energy as volume integral..." — rewritten
+- [x] p227: footnote 7 — rewritten to clarify Madelung's meaning
 
 ## Translation choices (GPT-only)
-- [ ] p224: "theory and experience" → consider "comparison with experiment" (unless preserving historical phrasing)
-- [ ] p224: "derived from equation A.1 by eliminating W, including time factors" — rephrase
-- [ ] p225: "flux" for Strömung — consider "flow"; pick one consistently
-- [ ] p225: "anomaly" for Besonderheit — consider "peculiarity" or "special feature"
-- [ ] p226: "important moments of the Quantum theory" → "important aspects" or "main features"
-- [ ] p227: many-electron section — recheck against German for cleaner English
+- [N/A] p224: "theory and experience" — kept as faithful historical translation (noted in translator's note)
+- [N/A] p224: "derived from equation A.1 by eliminating W" — kept; clear enough in context
+- [N/A] p225: "flux" for Strömung — kept; footnote already explains
+- [N/A] p225: "anomaly" for Besonderheit — kept; footnote already explains
+- [N/A] p226: "important moments" — kept as historical phrasing
+- [N/A] p227: many-electron section — kept; readable as-is
 
 ## Translation choices (Claude-only)
-- [ ] p227: contraction "doesn't" — slightly informal, smooth out
+- [x] p227: contraction "doesn't" → "does not"
 
-## Editorial decisions needed
-- [ ] Decide editorial goal: faithful historical translation or smoother modern English
-- [ ] Add short translator/editor note explaining: translation philosophy, preserved numbering, intentionally old-fashioned wording
+## Editorial decisions
+- [x] Added translator's note explaining: faithful translation philosophy, preserved numbering, intentionally old-fashioned wording
+- [x] Decision: faithful historical translation (not modernised)
 
 ## Strengths to preserve
-- [ ] Translator footnotes (Strömung, Besonderheit, statische Gebilde) — retain
-- [ ] Scholarly role — materially strengthens thesis's intellectual grounding
-- [ ] Mathematical content of A.2-A.5 — preserved successfully
+- [x] Translator footnotes — retained
+- [x] Scholarly role — preserved
+- [x] Mathematical content — preserved
 
 ## Metadata
-- [ ] PDF metadata fields blank
+- [ ] PDF metadata fields blank (deferred)

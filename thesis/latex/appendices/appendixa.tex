@@ -7,6 +7,10 @@
 			14th August 2008 \newline
 \end{center}
 
+\vspace{0.5cm}
+\noindent \textit{Translator's note: This is an English translation of Madelung's 1927 paper, prepared to support the discussion in Chapter \ref{ch_3}. The translation aims to be faithful to the original German rather than to produce polished modern English; some phrasing is intentionally old-fashioned. Madelung's original equation numbering has been preserved where possible. Footnotes marked with the translator's interpretation are ours.}
+\vspace{0.5cm}
+
 \section*{\center{abstract}}
 \label{app_m}
 \noindent I show that the Schr\"odinger equation for a one-electron problem can be transformed into the equations for hydrodynamics.
@@ -28,7 +32,7 @@ The second equation can be derived from equation \ref{one} by eliminating $W$, i
 \nabla^2 \psi - \frac{8 \pi^2 m}{h^2}U\psi - i\frac{4\pi m}{h}\frac{\partial\psi}{\partial t} = 0.
 \end{equation}
 
-This contains all the solutions of \ref{one} but also all of the linear combinations of equation \ref{two}. This is very important. Set $\psi = e^{i\beta} $, then in \ref{one} only $\beta$ is linearly dependent on t but in equation \ref{two} both $\alpha$ and $\beta$ are time dependent.
+This contains all the solutions of \ref{one} but also all of the linear combinations of equation \ref{two}. This is very important. Set $\psi = \alpha e^{i\beta}$, then in \ref{one} only $\beta$ is linearly dependent on $t$ but in equation \ref{two} both $\alpha$ and $\beta$ are time dependent.
 
 
 By putting $\psi = \alpha e^{i\beta}$ into \ref{two}:
@@ -54,7 +58,7 @@ From (\ref{four}) it follows $\varphi = -2 \frac{\beta h}{2\pi m}$:
 \frac{\partial\varphi}{\partial t} + \frac{1}{2}(\nabla\varphi)^2 +\frac{U}{m}-\frac{\nabla^2\alpha}{\alpha}\frac{h}{8\pi^2 m^2} = 0. \;\;\;\;\; (3')
 \]
 
-\noindent Also this equation resembles a hydrodynamic equation, namely the flux $u$ is vortex free and acted on by conservative forces.[2]
+\noindent Also this equation resembles a hydrodynamic equation, namely the flux $u$ is vortex free and acted on by conservative forces.\footnote{Madelung's original reference [2] is to Weber and Gans, listed in the bibliography below.}
 
 This gives $\nabla\times u = 0$:
 \[
@@ -94,7 +98,7 @@ W = \frac{m}{2}\nabla\varphi^2 + U-\frac{\nabla^2\alpha}{\alpha}\frac{h^2}{8\pi^
 W = \int dV \left\{\frac{\varrho}{2}u^2 + \sigma U -\sqrt{\sigma}.\nabla^2\sqrt{\sigma}\frac{h^2}{8\pi^2 m} \right\} \;\;\;\;\;\;\;\;\;\;\; (5')
 \]
 
-\noindent This form of the energy as volume integral over kinetic and potential energy-density obviously. This can also be re-written in another form:
+\noindent This expresses the energy as a volume integral over kinetic and potential energy densities. It can also be re-written in another form:
 
 \noindent There is no obvious reason why this can't be applied to non-stationary currents. The conservation law $\frac{dW}{dt}=0$ is fulfilled by showing the orthogonality of the eigen-solutions.
 
@@ -116,7 +120,7 @@ It appears that the Quantum-problem seems to be tackled by the hydrodynamics of 
 
 I was not able to show if the two above can be fulfilled by employing a purely mathematical transformation.
 
-How do you treat a many electron problem? Schr\"odinger doesn't give a specific form --- only says kinetic energy must be calculated in an equal way to the depiction of movement in phase space: $T = \sum_i m_i \frac{u_i^2}{2}$ and to be treated as if independent of each other and not to assume that the electrons form one current field.
+How do you treat a many electron problem? Schr\"odinger does not give a specific form --- only says kinetic energy must be calculated in an equal way to the depiction of movement in phase space: $T = \sum_i m_i \frac{u_i^2}{2}$ and to be treated as if independent of each other and not to assume that the electrons form one current field.
 
 That could be an obvious possibility but here are a few alternatives:
 \begin{enumerate}
@@ -129,7 +133,7 @@ I think option 3 is most likely. 1 would lead to the same solution as the one el
 
 To decide which form the function U has, as far as it concerns the interaction of electrons, as well as the quantum term in equation (3'), to be given it can only be decided after having successfully calculated at least one of the above cases.
 
-At least there is hope on this basis\footnote{the hydrodynamic method} to deal with quantum theory of atoms. I admit that all processes involving emission can only be handled partly \footnote{only have part command to describe emission processes}. Although it seems to explain that an atom within a certain quantum state does not emit radiation and that the emission is at the expected frequencies and without a ``jump" but rather with a slow transfer in a non-stationary state. But a lot of other facts, e.g. Quantum absorption, remain absolutely unclear. It is too early to speculate on these things.
+At least there is hope on this basis\footnote{the hydrodynamic method} to deal with quantum theory of atoms. I admit that all processes involving emission can only be handled partly \footnote{Madelung's original wording implies that the hydrodynamic method can only partially account for emission processes.}. Although it seems to explain that an atom within a certain quantum state does not emit radiation and that the emission is at the expected frequencies and without a ``jump" but rather with a slow transfer in a non-stationary state. But a lot of other facts, e.g. Quantum absorption, remain absolutely unclear. It is too early to speculate on these things.
 
 
 % Bibliography might not work when appendice is included in main file?

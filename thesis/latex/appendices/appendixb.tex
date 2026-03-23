@@ -3,13 +3,12 @@
 %
 \section{Madelung transform}
 \label{app_mtrans}
-This derivation shows the mathematical equivalence of the Schr\"odinger equation and the Continuity equation of fluid dynamics
-\noindent Schr\"odinger equation. This is similar to the translated Madelung paper but uses notation that is consistent with this thesis and that of Short. The role of the pressure term is discussed elsewhere and is extracted out from this derivation in the appropriate place.
+This appendix provides a full derivation of the continuity and Bernoulli (Euler) equations from the Schr\"odinger equation via the Madelung transform. This is similar to the translated Madelung paper (Appendix \ref{app_m}) but uses notation consistent with this thesis and with Short \citep{bib_short}. The role of the pressure term is discussed elsewhere and is extracted out from this derivation in the appropriate place.
 \begin{equation}
 i\nu\frac{\partial\psi}{\partial t}= -\frac{\nu^2}{2}\nabla^2\psi + V\psi
 \end{equation}
 
-\noindent Apply the Madelung transform with the positive signed exponential. The dynamics for a negative signed exponential are the same but require a sign change in the definition of the potential $V$, this derivation is not provided as it is otherwise the same as the following derivation.
+\noindent \textbf{Convention:} This derivation uses the positive-phase convention $\psi = \alpha\, e^{+i\varphi/\nu}$, so the velocity is $v = +\nabla\varphi$. In the main body of the thesis (Chapters \ref{ch_3}--\ref{ch_5}) the negative-phase convention $\psi = \alpha\, e^{-i\varphi_v/\nu}$ is used, giving $v = -\nabla\varphi_v$. The two are related by $\varphi = -\varphi_v$; all physical results are the same.
 \begin{equation}
  \psi = (1+ \delta)^{1/2}exp\left(\frac{i\varphi}{\nu}\right) = \alpha exp\left(\frac{i\varphi}{\nu}\right)
 \end{equation}
@@ -42,7 +41,7 @@ LHS = \frac{i\nu\psi}{\alpha}\frac{\partial\alpha}{\partial t} - \frac{\partial\
 &+& \frac{i^2\alpha}{\nu^2}exp\left(\frac{i\varphi}{\nu}\right)\nabla\varphi.\nabla\varphi \nonumber
 \end{eqnarray}
 
-\noindent Note the expressions for V (Bernoulli equation) and P:
+\noindent Note the expressions for the potential term (Bernoulli equation, here $V$ denotes the external gravitational potential, not the effective potential of Ch4) and the pressure-like term $P$:
 \begin{equation}
 V = -\frac{\partial\varphi}{\partial t}\psi - \frac{1}{2}\psi(\nabla\varphi)^2 
 \end{equation}
@@ -88,4 +87,6 @@ RHS &=& -\frac{\nu^2\psi}{2\alpha}(\nabla^2\alpha) -\frac{i\nu\psi}{\alpha}(\nab
 \begin{equation}
 \frac{\partial\alpha}{\partial t} + \frac{\alpha}{2}\nabla^2\varphi + \nabla\alpha.\nabla\varphi = 0
 \end{equation}
+
+\noindent This confirms that the Madelung transform casts the Schr\"odinger equation into the continuity equation (above) and the Bernoulli/Hamilton-Jacobi equation (from the real part, yielding the potential and pressure terms). Together these form the Madelung pair, which is the fluid-dynamical equivalent of the Schr\"odinger equation. The pressure-like term $P$ is discussed in detail in Chapter \ref{ch_3}.
 
