@@ -2,3 +2,6 @@
 /sp_1d
 /sp_3d
 /sp_3d_cosmo
+
+# Large binary wavefunction dumps (regenerable)
+output/**/*.bin

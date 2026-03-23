@@ -557,6 +557,29 @@ void write_slice(const std::string& filename,
 }
 
 // ================================================================
+// Binary wavefunction dump (for checkpointing and post-processing)
+//
+// Format: [header] [psi data]
+//   header: step (int), N (int), a (double), nu (double)
+//   data:   N^3 complex doubles (re,im pairs), row-major z-fastest
+//
+// Total size: 16 + N^3 * 16 bytes = ~4 MB at N=64
+// ================================================================
+void write_psi_binary(const std::string& filename,
+                      const std::vector<Complex>& psi,
+                      int step, double a) {
+    std::ofstream file(filename, std::ios::binary);
+    int n = N;
+    file.write(reinterpret_cast<const char*>(&step), sizeof(int));
+    file.write(reinterpret_cast<const char*>(&n), sizeof(int));
+    file.write(reinterpret_cast<const char*>(&a), sizeof(double));
+    file.write(reinterpret_cast<const char*>(&NU), sizeof(double));
+    // Complex is guaranteed to be two contiguous doubles (re, im)
+    file.write(reinterpret_cast<const char*>(psi.data()), N3 * sizeof(Complex));
+    file.close();
+}
+
+// ================================================================
 // Main
 // ================================================================
 int main(int argc, char* argv[]) {
@@ -688,6 +711,7 @@ int main(int argc, char* argv[]) {
     std::string outdir = "output/sp_cosmo_nu_" + std::to_string(NU);
     system(("mkdir -p " + outdir).c_str());
     write_slice(outdir + "/slice_000000.dat", psi, 0, a_init);
+    write_psi_binary(outdir + "/psi_000000.bin", psi, 0, a_init);
 
     // Initial velocity output
     compute_velocity_current(psi, NU, vx_curr, vy_curr, vz_curr);
@@ -733,6 +757,9 @@ int main(int argc, char* argv[]) {
             char fname[64];
             snprintf(fname, sizeof(fname), "/slice_%06d.dat", step);
             write_slice(outdir + fname, psi, step, a);
+
+            snprintf(fname, sizeof(fname), "/psi_%06d.bin", step);
+            write_psi_binary(outdir + fname, psi, step, a);
 
             // Velocity output
             compute_velocity_current(psi, NU, vx_curr, vy_curr, vz_curr);
