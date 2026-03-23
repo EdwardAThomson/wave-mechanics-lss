@@ -2,6 +2,18 @@
 /sp_1d
 /sp_3d
 /sp_3d_cosmo
+/sp_3d_cosmo_3pass
+/sp_3d_cosmo_zyx
+/sp_3d_cosmo_nobulk
+/sp_3d_cosmo_ic_fix
+/sp_3d_cosmo_static
 
 # Large binary wavefunction dumps (regenerable)
 output/**/*.bin
+
+# Experiment output directories (regenerable from committed source)
+output/sp_cosmo_3pass_*/
+output/sp_cosmo_zyx_*/
+output/sp_cosmo_nobulk_*/
+output/sp_cosmo_icfix_*/
+output/sp_cosmo_static_*/
