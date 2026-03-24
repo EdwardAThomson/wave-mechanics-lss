@@ -108,11 +108,55 @@ solution within the finite-difference framework, but the spectral
 method is superior for periodic boxes. The Goldberg method would still
 be preferred for non-periodic boundary conditions.
 
+### Test 4: Zero-velocity ICs (sp_3d_cosmo_nophase.cpp)
+L0 = 35707 (nu = 1e-4), spectral kinetic step.
+psi = sqrt(1+delta), real-valued — no Madelung phase at all.
+Gravity builds the velocity field self-consistently from rest.
+**Result**: Grows more slowly initially (starting from rest rather than
+with the correct velocity), but ALSO freezes — at ~5.5x.
+**Conclusion**: The phase saturation is NOT just an IC aliasing problem.
+Even self-consistently generated velocity hits the same nu*N ceiling.
+The freeze is the fundamental resolution limit of the wave-mechanical
+method at this nu and N.
+
+### Round-trip IC test (post-processing analysis)
+Constructed psi from (delta, phi_v) via Madelung, then extracted
+(delta, v) back from psi to check for information loss.
+**Result at nu=1e-4**: velocity amplitude 92% of expected (8% lost).
+**Result at nu=0.01**: velocity amplitude 99.2% (<1% lost).
+**Mechanism**: exp(-i * phi_v/nu) with phi_v/nu ~ 100 radians generates
+Fourier harmonics far beyond the grid Nyquist. These alias back into
+the resolved modes, corrupting the velocity encoding. The exponential
+of a band-limited function is NOT band-limited.
+
+## Final diagnosis
+
+The growth freeze is the **fundamental nu*N resolution constraint** of
+the wave-mechanical approach. It is NOT caused by:
+- Cayley approximation accuracy (Test 2)
+- Goldberg finite-difference dispersion (Test 3)
+- Auxiliary function wrapping for periodic BCs (Test 3)
+- Madelung IC aliasing alone (Test 4 — self-consistent velocity also freezes)
+
+It IS caused by:
+- The grid's inability to represent phase gradients beyond k_Nyquist
+- At nu=1e-4, the velocity v = nu * grad(phase) requires phase gradients
+  of order v/nu ~ 100 per unit velocity. The grid Nyquist is k_Nyq = pi*N = 201.
+  This gives v_max ~ nu * k_Nyq = 0.02 in box units.
+- The initial velocity field already uses 54% of this budget.
+- Growth freezes when the velocity field saturates the remaining headroom.
+
+The constraint is: **v_max = nu * pi * N**. To simulate at smaller nu
+(more classical), you need proportionally larger N.
+
+For N=64: nu ~ 0.01 is the natural operating point (confirmed by Test 1).
+
 ## Summary table
 
-| File | nu | L0 | Method | k=1 growth | Result |
-|---|---|---|---|---|---|
-| sp_3d_cosmo.cpp | 1e-4 | 35707 | Goldberg | 6.3x | Frozen ✗ |
-| sp_3d_cosmo_substep.cpp | 1e-4 | 35707 | Goldberg + 100 sub-steps | 6.3x | Frozen ✗ |
-| sp_3d_cosmo_spectral.cpp | 1e-4 | 35707 | Spectral FFT | 7.9x | Frozen ✗ |
-| sp_3d_cosmo_smallL0.cpp | 0.01 | 357 | Goldberg | 62x | Correct ✓ |
+| File | nu | L0 | Method | ICs | k=1 growth | Result |
+|---|---|---|---|---|---|---|
+| sp_3d_cosmo.cpp | 1e-4 | 35707 | Goldberg | Madelung | 6.3x | Frozen ✗ |
+| sp_3d_cosmo_substep.cpp | 1e-4 | 35707 | Goldberg+substep | Madelung | 6.3x | Frozen ✗ |
+| sp_3d_cosmo_spectral.cpp | 1e-4 | 35707 | Spectral FFT | Madelung | 7.9x | Frozen ✗ |
+| sp_3d_cosmo_nophase.cpp | 1e-4 | 35707 | Spectral FFT | No phase | 5.4x | Frozen ✗ |
+| sp_3d_cosmo_smallL0.cpp | 0.01 | 357 | Goldberg | Madelung | 62x | Correct ✓ |
