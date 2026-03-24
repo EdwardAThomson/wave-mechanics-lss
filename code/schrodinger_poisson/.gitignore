@@ -7,6 +7,7 @@
 /sp_3d_cosmo_nobulk
 /sp_3d_cosmo_ic_fix
 /sp_3d_cosmo_static
+/sp_3d_cosmo_smallL0
 
 # Large binary wavefunction dumps (regenerable)
 output/**/*.bin
@@ -17,3 +18,4 @@ output/sp_cosmo_zyx_*/
 output/sp_cosmo_nobulk_*/
 output/sp_cosmo_icfix_*/
 output/sp_cosmo_static_*/
+output/sp_cosmo_nu_0.010000/
