@@ -1,8 +1,9 @@
-# Compiled binaries
+# Compiled binaries (no extension = binary executable)
 sp_1d
 sp_3d
 sp_3d_cosmo
 sp_3d_cosmo_*
+!sp_3d_cosmo_*.cpp
 
 # All regenerable data files (dat and bin)
 output/**/*.dat
