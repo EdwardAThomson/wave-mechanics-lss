@@ -68,6 +68,36 @@ def load_gadget_tsc(fpath):
 # Statistical tools
 # ================================================================
 
+def tsc_deconvolve(delta):
+    """Deconvolve the TSC window function from a gridded density field.
+
+    TSC deposit suppresses high-k modes by W_TSC(k) = product over axes of
+    [sin(k_i * dx/2) / (k_i * dx/2)]^3. Dividing in Fourier space undoes
+    this, recovering the true power spectrum of the particle distribution.
+    """
+    dk = np.fft.fftn(delta)
+    dx = 1.0 / N  # grid spacing in box units
+
+    for axis in range(3):
+        k = np.fft.fftfreq(N)  # in cycles per sample: 0, 1/N, ..., 0.5, -...
+        # TSC window per axis: sinc^3(k * dx * N / 2) but k*dx = k_freq/N
+        # W = [sin(pi * k_freq) / (pi * k_freq)]^3 where k_freq = fftfreq(N)
+        # For k_freq = 0: W = 1
+        arg = np.pi * k
+        W_1d = np.ones(N)
+        nonzero = arg != 0
+        W_1d[nonzero] = (np.sin(arg[nonzero]) / arg[nonzero])**3
+
+        # Reshape for broadcasting along the right axis
+        shape = [1, 1, 1]
+        shape[axis] = N
+        W_1d = W_1d.reshape(shape)
+
+        dk /= W_1d
+
+    return np.real(np.fft.ifftn(dk))
+
+
 def power_spectrum(delta, L_box=32.0):
     """Compute spherically averaged power spectrum P(k).
     Returns k (h/Mpc), P(k) (Mpc/h)^3."""
@@ -196,7 +226,8 @@ def main():
 
     for col, (gsnap, sp_file, a_g) in enumerate(pairs):
         z_g = 1.0 / a_g - 1.0
-        a_g_actual, delta_g = load_gadget_tsc(gsnap)
+        a_g_actual, delta_g_raw = load_gadget_tsc(gsnap)
+        delta_g = tsc_deconvolve(delta_g_raw)
         a_sp, delta_sp = load_sp(sp_file)
 
         # Power spectra
@@ -253,7 +284,8 @@ def main():
     for col_i, idx in enumerate(idx_show):
         gsnap, sp_file, a_g = pairs[idx]
         z_g = 1.0 / a_g - 1.0
-        _, delta_g = load_gadget_tsc(gsnap)
+        _, delta_g_raw = load_gadget_tsc(gsnap)
+        delta_g = tsc_deconvolve(delta_g_raw)
         _, delta_sp = load_sp(sp_file)
 
         c_g, h_g = density_pdf(delta_g)
