@@ -106,12 +106,14 @@ S-P, Poisson-derived velocity potential for Madelung construction).
 ### Results
 
 **Power spectrum P(k)**:
+
 - z=19: good agreement at low k, S-P has slight excess at high k
 - z<10: S-P develops progressively more small-scale power
 - After TSC deconvolution, GADGET P(k) is boosted at high k, but the
   S-P excess remains
 
 **Density PDF**:
+
 - z=19: nearly identical Gaussian distributions
 - z<5: S-P has broader high-density tail (sharper peaks) and sharper
   low-density cutoff (emptier voids)
@@ -119,10 +121,12 @@ S-P, Poisson-derived velocity potential for Madelung construction).
   lows and more highs" than N-body
 
 **Point-by-point correlation** (matched ICs):
+
 - z=19: r = 0.49 (large-scale structures match)
 - z<5: r ~ 0.1 (small-scale disagreement dominates)
 
 **rms(δ) growth**:
+
 - Both track together until z~10
 - S-P saturates at rms~6.5 (phase budget exhausted at ν=3×10⁻⁴, N=128)
 - GADGET continues growing to rms~21 at z=0
@@ -146,6 +150,7 @@ S-P, Poisson-derived velocity potential for Madelung construction).
 ### Bulk flow (5 experiments)
 
 Tested whether the solver produces spurious bulk velocity drift:
+
 - 3-pass auxiliary functions: no effect
 - Reversed sweep order (z,y,x): no effect
 - Per-step Galilean correction: helps early, worsens late
@@ -158,6 +163,7 @@ random realisation, not a code artefact. Expansion naturally damps it.
 ### Tophat collapse
 
 Validated gravity with and without expansion:
+
 - Static: collapse on the expected freefall timescale (t_ff ≈ 0.049)
 - Expanding (EdS): gradual overdensity growth as expected
 - Spherical symmetry maintained despite split-operator treatment
@@ -166,6 +172,7 @@ Validated gravity with and without expansion:
 ### Spectral vs Goldberg
 
 The spectral (FFT) kinetic step is recommended over Goldberg:
+
 - Exact dispersion at all k (no finite-difference error)
 - Naturally periodic (no auxiliary function wrapping needed)
 - 14x faster (16s vs 220s for 400 steps at N=128)
@@ -178,6 +185,7 @@ is superior for periodic boxes.
 ## Files
 
 ### Core solvers
+
 - `sp_1d.cpp` — 1D solver (Goldberg + periodic BCs)
 - `sp_3d.cpp` — 3D solver (Goldberg, tophat tests, expansion)
 - `sp_3d_cosmo.cpp` — Cosmological solver (Goldberg, BBKS ICs)
@@ -188,11 +196,13 @@ is superior for periodic boxes.
 - `sp_3d_cosmo_gadget_ic.cpp` — Reads GADGET ICs for matched comparison
 
 ### Analysis
+
 - `compare_za.py` — ZA vs S-P comparison
 - `compare_statistics.py` — P(k), PDF, cross-correlation, rms growth
 - `extract_gadget_ics.py` — TSC deposit + Poisson velocity from HDF5
 
 ### Investigation documents
+
 - `output/bulk_flow_investigation.md`
 - `output/growth_rate_investigation.md`
 - `output/investigation_narrative.md`
