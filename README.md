@@ -20,6 +20,11 @@ Results were compared with the N-body codes Hydra and GADGET-2.
 
 In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. Independent reviews were conducted using Claude Opus 4.6 and OpenAI's GPT 5.4, then reconciled into a single set of notes. The original LaTeX source has been recovered and split into per-chapter files, ready for corrections. The simulation code is being rewritten from scratch in modern C++, with the Free Particle Approximation (Chapter 4) and the full Schrödinger-Poisson solver (Chapter 5) now reimplemented and validated.
 
+## YouTube videos
+
+* [Using 2 LLMs to review my PhD thesis](https://www.youtube.com/watch?v=LpO6d4BPOio)
+* [Claude wrote my PhD code from scratch in C++](https://www.youtube.com/watch?v=J77JQkqD7NE)
+
 ## Repository Structure
 
 ```
