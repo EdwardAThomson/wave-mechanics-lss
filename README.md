@@ -16,9 +16,11 @@ The code solved the coupled Schrödinger-Poisson equations in 3D with:
 - Periodic boundary conditions
 - Mass and momentum conservation (via unitary, symplectic integration)
 
-Results were compared with the N-body codes Hydra and GADGET-2.
+Results in the original thesis were compared with the N-body codes Hydra and GADGET-2. (The 2026 rewrite compares against GADGET-4 — see below.)
 
-In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. Independent reviews were conducted using Claude Opus 4.6 and OpenAI's GPT 5.4, then reconciled into a single set of notes. The original LaTeX source has been recovered and split into per-chapter files, ready for corrections. The simulation code is being rewritten from scratch in modern C++, with the Free Particle Approximation (Chapter 4) and the full Schrödinger-Poisson solver (Chapter 5) now reimplemented and validated.
+In 2026, I revisited the thesis chapter-by-chapter to assess it with fresh eyes. Independent reviews were conducted using Claude Opus 4.6 and OpenAI's GPT 5.4, then reconciled into a single set of notes. The original LaTeX source has been recovered, split into per-chapter files, and the review corrections have been applied to the source across all chapters and appendices (a handful of larger items — such as a consistent `I`/`we` pass and a rebuilt corrected PDF — remain outstanding). The simulation code has been rewritten from scratch in modern C++: the Free Particle Approximation (Chapter 4) and the full Schrödinger-Poisson solver (Chapter 5) are reimplemented and validated, now with an exact spectral (FFT) kinetic step in place of the original Goldberg finite-difference scheme, cosmological initial conditions (BBKS and GADGET-4), and a statistical comparison against GADGET-4 on matched initial conditions.
+
+The rewrite also resolved a 15-year-old open question from the thesis. The original code produced density and velocity fields "messier" than N-body, which the thesis attributed to quantum interference and hoped to suppress by making ν (= ℏ/m) smaller. The rewrite shows the relationship is **backwards**: because velocity is encoded in the wavefunction phase (v = ν∇phase), the grid can only represent velocities up to v_max = ν·π·N. Shrinking ν at fixed resolution makes an unresolvable phase alias into noise. The thesis's ν ≈ 10⁻⁷–10⁻⁸ at N=64 aliased essentially the entire velocity field; correct growth is recovered at, e.g., ν=10⁻³ on N=128. See `code/schrodinger_poisson/output/investigation_narrative.md`.
 
 ## YouTube videos
 
@@ -49,15 +51,20 @@ wave-mechanics-lss/
 │   └── sources/                  # Original separate reviews
 │       ├── claude/
 │       └── gpt/
-├── code/                         # Modern C++ rewrite (in progress)
+├── code/                         # Modern C++ rewrite (core complete)
 │   ├── fpa_1d/                   # 1D Free Particle Approximation (Ch 4)
 │   ├── fpa_3d/                   # 3D FPA toy model (Ch 4)
-│   ├── fpa_3d_cosmo/             # 3D FPA with cosmological ICs (Ch 4)
+│   ├── fpa_3d_cosmo/             # 3D FPA with cosmological ICs, ZA vs FPA (Ch 4)
 │   └── schrodinger_poisson/      # Full Schrödinger-Poisson solver (Ch 5)
 │       ├── sp_1d.cpp             # 1D solver (Goldberg + periodic BCs)
-│       ├── sp_3d.cpp             # 3D solver (splitting operators + expansion)
+│       ├── sp_3d.cpp             # 3D solver (Goldberg, tophat tests, expansion)
+│       ├── sp_3d_cosmo*.cpp      # Cosmological solvers (spectral kinetic step,
+│       │                         #   BBKS/GADGET-4 ICs, N=128/256, ν variants)
+│       ├── extract_gadget_ics.py # TSC deposit + Poisson velocity from GADGET-4 HDF5
+│       ├── compare_statistics.py # P(k), density PDF, cross-correlation, rms growth
 │       ├── algorithm.md          # Algorithm reference document
-│       └── output/               # Test outputs (free particle, gravity, tophat)
+│       └── output/               # Run outputs, GADGET-4 comparison, and the
+│                                 #   investigation write-ups (nu, growth, bulk flow)
 └── web/                          # Web version of thesis (planned)
 ```
 
@@ -77,6 +84,27 @@ wave-mechanics-lss/
 | **Total** | **235** | **377** |
 
 Items include typos, grammatical errors, mathematical issues, clarity improvements, and structural comments. The reconciled notes identify shared findings and reviewer-specific additions. Original reviews are preserved under `review/sources/`.
+
+## Code Rewrite (2026)
+
+The solver has been rebuilt from scratch in C++. It evolves a complex wavefunction ψ on a periodic grid (|ψ|² = density, phase gradient = velocity) with self-consistent gravity via a Poisson solve each step.
+
+Key differences from the 2011 code:
+
+| Aspect | Thesis (2011) | Rewrite (2026) |
+|--------|---------------|----------------|
+| Language | Fortran | C++ |
+| Kinetic step | Goldberg finite-difference | Spectral FFT (exact propagator) |
+| Periodic BCs | Double-recursion auxiliary functions | Inherent in FFT |
+| Unitarity | Exact (Cayley) | Exact (Cayley + spectral) |
+| Poisson solve | FFT with discrete Green's function | FFT with continuum k⁻² |
+| Typical run | Hours on a cluster | Minutes on a laptop (~3 min at N=128) |
+
+**Headline finding — the ν resolution constraint.** The wavefunction can only represent velocities up to **v_max = ν·π·N**. The thesis's "quantum interference" noise was numerical aliasing from an unresolvable Madelung phase at too-small ν; correct linear growth is recovered once ν·N is large enough (e.g. ν=0.01 at N=64, ν=10⁻³ at N=128, ν=10⁻⁴ at N=256). The diagnosis came from a systematic elimination of hypotheses (sub-stepped Cayley, spectral vs Goldberg, zero-velocity ICs, a Madelung round-trip test), each ruling out one candidate cause.
+
+**GADGET-4 comparison.** On matched initial conditions (128³, 32 Mpc/h box), the codes agree in the linear regime (z≈19) and diverge nonlinearly: the S-P code produces excess small-scale power and a broader density PDF — "more lows and more highs" — reproducing the thesis's original comparison against GADGET-2, but now with matched ICs confirming it is physical rather than a random-seed artefact.
+
+Full write-ups are under `code/schrodinger_poisson/output/` (`project_summary.md`, `investigation_narrative.md`, `growth_rate_investigation.md`, and the GADGET-4 `comparison_report.md`).
 
 ## Context
 
