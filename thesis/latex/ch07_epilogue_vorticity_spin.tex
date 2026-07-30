@@ -68,7 +68,7 @@ Any system that obeys the GEM equations can be described using a Schr\"odinger-l
 Watanabe's publication \citep{bib_wat2} that describes electrons in a magnetic field presents the following Schr\"odinger equation:
 
 \begin{equation}
-i\hbar\frac{\partial}{\partial t}\psi(\underline{x},t) =-\frac{\hbar^2}{2m}\left(\nabla^2-\frac{ie}{\hbar}\mathbf{A}\right)^2 \psi(\underline{x},t)
+i\hbar\frac{\partial}{\partial t}\psi(\underline{x},t) =-\frac{\hbar^2}{2m}\left(\nabla-\frac{ie}{\hbar}\mathbf{A}\right)^2 \psi(\underline{x},t)
 \end{equation}
 
 \noindent For simplicity, this equation omits the usual scalar potential $V$. In the GEM case then the electric charge $e$ would be replaced by the gravitational ``charge'' (mass) $m$. As for electromagnetism, there is the expected relation that $B_g = \nabla \times A_g$. The EM version of this equation is consistent with the EM Maxwell equations; therefore, by construction, the gravitational Maxwell equations will be consistent with the GEM Schr\"odinger equation by making the appropriate replacements (such as $A \rightarrow A_g$).
@@ -155,7 +155,7 @@ In order to induce spin in a set of particles we need a gradient in the gravitat
 
 \begin{equation}
 \label{taylor}
-U (\mathbf{R} + \mathbf{r}) = \phi_0 \int \rho\;dV + \partial_i \phi \int \rho \mathbf{r_i}\;dV + \partial_{ij} \phi \int \rho \mathbf{r_i} \mathbf{r_j}\;dV + \ldots
+U (\mathbf{R} + \mathbf{r}) = \phi_0 \int \rho\;dV + \partial_i \phi \int \rho \mathbf{r_i}\;dV + \frac{1}{2}\partial_{ij} \phi \int \rho \mathbf{r_i} \mathbf{r_j}\;dV + \ldots
 \end{equation}
 
 \noindent here $R$ is the centre of mass, $\phi$ is the gravitational potential and the quantities $\partial \phi$ are tensors that take the form of a product between the differential matrix and the gravitational potential. The vector $\mathbf{r}$ is the position of the sub-particle mass with respect to the centre of mass. Caveat: the potential is always a scalar quantity despite the existence of vector and tensors in the expansion.
@@ -225,25 +225,25 @@ U^{(d)} &=& (\partial_i \phi) \mathbf{d_i} = \vec{(\partial \phi)}\cdot\vec{d} \
 \noindent The quadrupole is slightly more complicated and involves, essentially, a double trace (a trace over two pairs of indices). The summation convention is implied for a repeated index of $i$ or $j$, it is not implied for indices $x, y, z$ which are labels for the specific position of the relevant quantity in a vector or a matrix.
 
 \begin{eqnarray}
-U^{(q)} &=& (\partial_{ij} \phi) Q_{ij} = (\partial\partial \phi)\cdot\cdot Q \\
-&=& (\partial_{xx} \phi) Q_{xx} + (\partial_{xy} \phi) Q_{xy} + (\partial_{xz} \phi) Q_{xz} \\
-&+& (\partial_{yx} \phi) Q_{yx} + (\partial_{yy} \phi) Q_{yy} + (\partial_{yz} \phi) Q_{yz} \\
-&+& (\partial_{zx} \phi) Q_{zx} + (\partial_{zy} \phi) Q_{zy} + (\partial_{zz} \phi) Q_{zz}
+U^{(q)} &=& \frac{1}{2}(\partial_{ij} \phi) Q_{ij} = \frac{1}{2}(\partial\partial \phi)\cdot\cdot Q \\
+&=& \frac{1}{2}\left[ (\partial_{xx} \phi) Q_{xx} + (\partial_{xy} \phi) Q_{xy} + (\partial_{xz} \phi) Q_{xz} \right. \nonumber \\
+&& \left. +\, (\partial_{yx} \phi) Q_{yx} + (\partial_{yy} \phi) Q_{yy} + (\partial_{yz} \phi) Q_{yz} \right. \nonumber \\
+&& \left. +\, (\partial_{zx} \phi) Q_{zx} + (\partial_{zy} \phi) Q_{zy} + (\partial_{zz} \phi) Q_{zz} \right]
 \end{eqnarray}
 
 \subsection{$N$-body considerations}
 In order to implement this model into an $N$-body code we have to express the previous potential equation as a force equation. Each term in the expansion must be pre-multiplied by the differential operator of appropriate order. We write $\mathbf{F} = \nabla \otimes U$, where the $\otimes$ denotes that the gradient acts on each term in the multipole expansion and contracts with the corresponding moment to yield a vector (this notation is natural in the Clifford algebra framework used later in this chapter; note also the sign convention $\phi < 0$ for attractive gravity). Thus, the force equation is:
 
 \begin{equation}
-\mathbf{F} (\mathbf{R} +\mathbf{r}) = \nabla \otimes U (\mathbf{R }+ \mathbf{r}) = \partial_i(\phi_0) \int \rho\;dV + \partial_i(\partial_j \phi) \int \rho \mathbf{r_j}\;dV + \partial_i(\partial_{jk} \phi) \int \rho \mathbf{r_j} \mathbf{r_k}\;dV + \ldots
+\mathbf{F} (\mathbf{R} +\mathbf{r}) = \nabla \otimes U (\mathbf{R }+ \mathbf{r}) = \partial_i(\phi_0) \int \rho\;dV + \partial_i(\partial_j \phi) \int \rho \mathbf{r_j}\;dV + \frac{1}{2}\partial_i(\partial_{jk} \phi) \int \rho \mathbf{r_j} \mathbf{r_k}\;dV + \ldots
 \end{equation}
 
 \noindent The first term (the monopole) is the Newtonian force of gravity $F = m(\nabla\phi)$. The quadrupole term in the force equation gives the following complicated relation that involves a three indices but eventually reduces to a vector (as expected):
 \begin{eqnarray}
 \label{quadforce}
-\mathbf{F}^{(q)} &=& \partial_i(\partial_{jk} \phi) \int \rho \mathbf{r_j} \mathbf{r_k}\;dV \\
-&=& \partial_i(\partial_{jk} \phi) Q_{jk} \\
-&=& \partial_i \left(\begin{array}{ccc}
+\mathbf{F}^{(q)} &=& \frac{1}{2}\partial_i(\partial_{jk} \phi) \int \rho \mathbf{r_j} \mathbf{r_k}\;dV \\
+&=& \frac{1}{2}\partial_i(\partial_{jk} \phi) Q_{jk} \\
+&=& \frac{1}{2}\partial_i \left(\begin{array}{ccc}
 \partial_x^2 \phi & \partial_x \partial_y\phi & \partial_x \partial_z\phi  \\
 \partial_y \partial_x\phi & \partial_y^2\phi & \partial_y\partial_z\phi \\
 \partial_z \partial_x\phi & \partial_z \partial_y\phi & \partial_z^2\phi
@@ -260,20 +260,20 @@ r_z r_x & r_z r_y & r_z^2
 This is likely to be computationally expensive; however, we find that there may be a simpler way to test this idea of spin without calculating the quadrupole moment. If we truncate to first order (dipole moment) in the force equation and then try the model suggested above (a mass `dipole') then we find the usual result that the potential and force produced by such a super-particle at this order is zero. This means that such a configuration does not create any new additional force or potential. To dipole order of the Taylor series, such an object would not produce gravitational radiation. However, such an object can still spin due to an external force (a gravitational field generated by other particles). The proof of that last statement comes from considering the following equations of `force':
 
 \begin{eqnarray}
-\mathbf{F} (R +r^{(1)}) = \partial_i(\phi_0) \int \rho\;dV + \partial_i(\partial_j \phi) \int \rho \mathbf{r}^{(1)}_i\;dV \\
+\mathbf{F} (R +r^{(1)}) = \partial_i(\phi_0) \int \rho\;dV + \partial_i(\partial_j \phi) \int \rho \mathbf{r}^{(1)}_j\;dV \\
 \mathbf{F} (R +r^{(2)}) = \partial_i(\phi_0) \int \rho\;dV + \partial_i(\partial_j \phi) \int \rho \mathbf{r}^{(2)}_j\;dV 
 \end{eqnarray}
 
 \noindent here we expand about the centre of mass, $\mathbf{R}$, with respect to $\mathbf{r}$ using the assumption that $|\mathbf{r}|<<1$. These equations are the force upon each of the sub-particles (see figure \ref{fig.dipole} ). These equations can be written as the addition and subtraction of each other as follows:
 \begin{eqnarray}
-m \frac{\partial^2}{\partial t^2} (\mathbf{r}^{(1)} + \mathbf{r}^{(2)}) = 2m \left(\partial_i(\phi_0) + \partial_i(\partial_j \phi) (\mathbf{r}^{(1)}_j + \mathbf{r}^{(2)}_j) \right) \\
-m \frac{\partial^2}{\partial t^2} (\mathbf{r}^{(1)} - \mathbf{r}^{(2)}) = 2m  \left(\partial_i(\partial_j \phi)  (\mathbf{r}^{(1)}_j - \mathbf{r}^{(2)}_j)\right)
+m \frac{\partial^2}{\partial t^2} (\mathbf{r}^{(1)} + \mathbf{r}^{(2)}) = 2m \partial_i(\phi_0) + m \partial_i(\partial_j \phi) (\mathbf{r}^{(1)}_j + \mathbf{r}^{(2)}_j) \\
+m \frac{\partial^2}{\partial t^2} (\mathbf{r}^{(1)} - \mathbf{r}^{(2)}) = m \partial_i(\partial_j \phi)  (\mathbf{r}^{(1)}_j - \mathbf{r}^{(2)}_j)
 \end{eqnarray}
 
 \noindent The first equation is really the dipole term from the Taylor expansion. It is recognisable as the force on the centre of mass (already shown to be zero), while the second equation provides a difference vector that is confusingly similar to the dipole moment vector found in electromagnetism. As before, $\partial_i\partial_j$ is the Hessian matrix which is a three-by-three symmetric matrix with five degrees of freedom. The second equation that looks like the `dipole moment' vector of electromagnetism is non-zero. The first equation cancels due to symmetry but in the second case the same symmetry will cause the sub-particles to `add' together (we return to our example system as shown in figure \ref{fig.dipole}):
 
 \begin{equation}
-2m \left(\mathbf{r}^{(1)}_j - \mathbf{r}^{(2)}_j)\right) = 2m [(x,0,0) - (-x,0,0)] = 4m (x,0,0)
+m \left(\mathbf{r}^{(1)}_j - \mathbf{r}^{(2)}_j\right) = m [(x,0,0) - (-x,0,0)] = 2m (x,0,0)
 \end{equation}
 
 The gravitational potential $\phi$ (not the potential energy) is a single value at the gridpoint of the super-particle as a whole. This vector is the difference of the forces acting on the sub-particles and should change over time, hence the vector will change orientation over time.
@@ -410,8 +410,8 @@ S &=& \int \rho (r \;{\bf e_i})(r  \;{\bf e_j})\;dV
 
 \noindent This gives the quadrupole potential as:
 \begin{eqnarray}
-U^q = B\cdot\cdot S &=& \int \rho\; B_{ij} (r \sigma)_{ij} \;dV = \int \rho\; (B_{xx} r_{xx}\sigma_{xx} + B_{xy} r_{xy}\sigma_{xy} + B_{xz} r_{xz}\sigma_{xz} + \ldots) \;dV \nonumber \\
-&=& \sum_j m_j \; ( (B_{xx})_j (r_{xx}\sigma_{xx})_j + (B_{xy})_j (r_{xy}\sigma_{xy})_j + \ldots)
+U^q = \frac{1}{2} B\cdot\cdot S &=& \frac{1}{2}\int \rho\; B_{ij} (r \sigma)_{ij} \;dV = \frac{1}{2}\int \rho\; (B_{xx} r_{xx}\sigma_{xx} + B_{xy} r_{xy}\sigma_{xy} + B_{xz} r_{xz}\sigma_{xz} + \ldots) \;dV \nonumber \\
+&=& \frac{1}{2}\sum_j m_j \; ( (B_{xx})_j (r_{xx}\sigma_{xx})_j + (B_{xy})_j (r_{xy}\sigma_{xy})_j + \ldots)
 \end{eqnarray}
 
 \noindent This last equation states that to find the total potential at a gridpoint we must sum over all sub-particle masses $m_j$. Each mass will have a separate contribution to overall quadruple matrix. For clarity, each mass has a quadrupole matrix of the following form:
