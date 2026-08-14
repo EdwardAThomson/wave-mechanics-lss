@@ -23,6 +23,7 @@ The validation ladder passes end to end (`make check`, about four minutes):
 | 3 | Jeans growth and the quantum-pressure branch | 3e-9 and 1e-11 |
 | 4 | Warm isothermal sheet stationarity | z_rms drift 4e-6, dE/E 5e-11 over 8 vertical periods |
 | 5a | Hybrid (x, z) Poisson, four ways | round-off (4e-16) end to end; 2nd order vs closed form |
+| 5b | Firehose branch vs finite thickness | fully stabilised at `k h` ~ 1, as Araki (1985) |
 
 Test 3 runs both signs of the dispersion relation (gravity-dominated growth and
 quantum-pressure-dominated oscillation), which pins the sign of the gravity
@@ -52,59 +53,113 @@ Built and validated:
 - **Column diagnostics and the §6 phase offset** (`src/diagnostics2d.h`),
   driver `sheet_2d.cpp`.
 
-Measured, and not yet clean:
+Measured:
 
-- **Bending-wave dispersion relation** (test 5). Frequencies come out within
-  tens of per cent of the razor-thin prediction but scatter non-monotonically
-  with `k h` (ratios 0.84, 1.17, 0.86, 0.97, 0.74 for modes 1 to 5), which is
-  not physical: finite thickness should reduce the frequency monotonically.
-  There were only 5 to 11 zero crossings per mode, and the run heated as it
-  went. Needs longer runs and controlled heating before it is a result.
-- **Landau damping** (test 6) is not attempted, because it depends on the
-  dispersion and the dispersion is being changed by the heating below.
+- **Firehose branch of test 5.** Finite thickness completely stabilises it at
+  `k h` of order one: see below.
+- **The stable bending branch is unreachable in an unsheared box**, for a
+  structural reason that turns out to be the main Stage 1 result.
 
-### The finding that gates the rest: granule heating
+### Correction: the heating was gravitational fragmentation, not granules
 
-The in-plane part of any 2D or 3D initial condition can only be a random-phase
-superposition, so `|psi|^2` carries interference granules of scale
-`lambda_dB = 2 pi hbar_eff / sigma_x` and those granules self-gravitate. The
-effective quasi-particle mass is large: at `hbar_eff = 0.6`, `sigma_x = 10 km/s`
-it is of order `rho lambda_dB h` ~ 5e6 Msun per unit length, comparable to a
-giant molecular cloud, and the relaxation time comes out shorter than a vertical
-period.
+An earlier pass here attributed a large in-plane heating rate to self-gravitating
+interference granules. That was wrong, and the controls say so cleanly.
 
-Measured over two vertical periods, at 12 sigma of velocity headroom in both
-directions:
+**Control 1, three gravity treatments of one identical initial condition.** Under
+a frozen smooth potential the basis functions `u_n(z) exp(i k_x x)` are exact
+eigenstates of the evolution operator, so any drift there is numerical by
+construction:
 
-| streams | rms drho/rho | d(sigma_x) per vertical period | max spill |
-|---|---|---|---|
-| 2 | 0.696 | 17.1 km/s | 0.17 |
-| 8 | 0.346 | 15.3 km/s | 0.08 |
-| 32 | 0.174 | 15.2 km/s | 0.11 |
+| gravity | sigma_x start | sigma_x end | rate per vertical period | max spill |
+|---|---|---|---|---|
+| self-consistent | 10.00 | 17.76 | +5.91 | 3e-11 |
+| frozen smooth | 10.00 | 10.00 | **0.0000** | 4e-29 |
+| frozen initial (static granules) | 10.00 | 10.08 | +0.04 | 2e-18 |
 
-Two things to take from this, one solid and one open.
+So the heating is genuine self-gravity, needs a *time-dependent* potential, and
+is not aliasing: at 24 sigma of headroom the spill is 1e-11 and the heating is
+undiminished. But it stayed stubbornly independent of stream count (5.80, 5.79,
+5.11 for 2, 8, 32 streams) even though the density contrast fell exactly as
+`1/sqrt(N_streams)`. A noise-driven process cannot do that. An **instability**
+can, because it grows exponentially from whatever seed is present, so halving
+the seed only delays it logarithmically.
 
-**Solid:** the heating is severe. Starting from `sigma_x = 10 km/s` it roughly
-quadruples in two vertical periods. It is much milder at larger `sigma_x` (2.4
-km/s per period at `sigma_x = 20`), consistent with a steep dependence, which is
-what the quasi-particle-mass argument predicts, since `lambda_dB` and hence the
-granule mass grows as `1/sigma_x`.
+**Control 2, scan `sigma_x` across the in-plane stability threshold.** A
+non-rotating sheet is Jeans unstable in plane for `k < k_J = 2 pi G Sigma /
+sigma_x^2`, so a box is stable only if even its longest mode is stable, that is
+`sigma_x^2 > G Sigma L_x`. Here that threshold is 29.3 km/s:
 
-**Open, and it contradicts the natural guess:** the density contrast falls
-exactly as `1/sqrt(N_streams)`, as it must, so the potential fluctuations that
-drive the heating should weaken and the heating should fall as `1/N_streams`. It
-does not. Over a 16x range in stream count the rate barely moves. Either the
-heating is not driven by the shared potential fluctuation in the way that
-argument assumes, or these runs are still contaminated: the spill column shows
-8 to 17 per cent of the in-plane power above half-Nyquist by the end, because the
-heating itself eats the velocity headroom. Both need ruling out before the number
-means anything.
+| sigma_x | unstable modes in box | d(sigma_x) per vertical period |
+|---|---|---|
+| 10 | 8 | **3.90** |
+| 20 | 2 | 0.0052 |
+| 30 | 0 | 0.0007 |
+| 45 | 0 | −0.0002 |
+| 60 | 0 | −0.0004 |
 
-**Consequence either way:** granule heating, not resolution, is the binding
-constraint on Stage 1, and it must be controlled before the firehose threshold
-or the Landau damping rate can be trusted, since both depend on the dispersion
-that is drifting. It is also the sharpest warning yet about Stage 2, where a
-single wavefunction is the only affordable option.
+The heating switches off precisely where the box becomes stable, falling by a
+factor of ~750 between the first two rows. It is gravitational fragmentation of
+an unsupported sheet. **Granule relaxation is not a measurable effect here at
+all**, and the Stage 0 worry about it was misplaced.
+
+### The real Stage 1 result: shear cannot be skipped
+
+§2 says "Shear does not affect the local dispersion relation, it only winds the
+pattern up over Gyr timescales. **Skip shear entirely at this stage.** This is
+the single biggest effort saving available and costs you nothing scientifically
+until §6."
+
+It does cost something, and the reason is sharp. Compare the two razor-thin
+dispersion relations for a sheet with in-plane dispersion `sigma_x`:
+
+```
+in-plane (Jeans):  omega^2 = k^2 sigma_x^2 - 2 pi G Sigma k     unstable for k < k_J
+bending:           omega^2 = 2 pi G Sigma k - k^2 sigma_x^2     stable   for k < k_J
+```
+
+They are the same expression with opposite sign, so they share the same critical
+wavenumber. **Wherever bending waves propagate stably, the unsheared sheet is
+gravitationally unstable in plane, and vice versa.** The clean bending regime
+(`omega^2 ≈ 2 pi G Sigma k`, needing `k << k_J`) is exactly the fragmenting
+regime. There is no window.
+
+What breaks the degeneracy in a real disk is rotation: the in-plane relation
+gains `+kappa^2` and Toomre `Q > 1` stabilises it, while the bending relation is
+largely untouched. The Milky Way sits at `Q ≈ 2.4`. And Coriolis needs the
+in-plane perpendicular direction, so it cannot be represented in an `(x, z)` box
+at all.
+
+This also explains the first pass's noisy dispersion measurement: at `L_x = 32`
+kpc and `sigma_x = 4` km/s the box held roughly 430 unstable in-plane modes. It
+was measuring a fragmenting sheet.
+
+**Consequence for the plan:** the stable bending branch, the `<z>` to `<v_z>`
+phase offset of §6, and Landau damping all need rotation, which means they move
+from Stage 1 to Stage 2. The saving §2 offers is real for effort but it removes
+the science it was meant to preserve.
+
+### What Stage 1 can and does deliver: the firehose branch
+
+The firehose lives at `k > k_J`, which is exactly where the sheet is in-plane
+stable, so it is reachable without rotation. Measured at `sigma_x = 45` km/s
+(above the 29.3 threshold, so no fragmentation), displacing four modes and
+watching:
+
+| mode | k [1/kpc] | k h | gamma_thin | gamma_meas | ratio | sign flips |
+|---|---|---|---|---|---|---|
+| 1 | 1.571 | 0.464 | 53.6 | 6.9 | 0.13 | 3 |
+| 2 | 3.142 | 0.928 | 125.5 | 7.3 | 0.06 | 2 |
+| 3 | 4.712 | 1.392 | 196.5 | 5.3 | 0.03 | 5 |
+| 4 | 6.283 | 1.856 | 267.3 | −18.1 | −0.07 | 4 |
+
+Every mode **oscillates** rather than grows: the sign flips say so directly, and
+what little apparent growth rate the fit returns is a few per cent of the
+razor-thin prediction. Finite thickness stabilises the firehose completely at
+`k h` of order one, which is the known result (Araki 1985) and the reason real
+disks are firehose-stable. This is the finite-thickness correction §7 asks to be
+verified, verified.
+
+### A correction to correction 5
 
 ### A correction to correction 5
 
@@ -444,27 +499,26 @@ python3 plot_moments.py output/spiral_tracer output/spiral_selfgrav
 
 ## Suggested next step
 
-Not Stage 2. Granule heating has to be brought under control first, because
-every remaining Stage 1 deliverable (the dispersion relation, the firehose
-threshold, Landau damping) depends on a dispersion that is currently drifting
-faster than the physics being measured.
+Rotation, and it is no longer optional. The stable bending branch, the §6 phase
+offset and Landau damping all need Toomre support, and Coriolis needs the
+in-plane perpendicular direction, so they need at least `(x, y, z)` velocity
+structure. Concretely:
 
-In order:
+1. **Add rotation before anything else.** The cheapest useful form is a rotating
+   box at fixed `Omega` with no shear yet: it supplies `kappa` and therefore
+   Toomre stability, which is all the stable bending branch actually needs. Full
+   Goldreich-Lynden-Bell shearing waves can wait for pattern winding. The
+   awkwardness the plan's appendix anticipates is real, since Coriolis enters
+   the Schrodinger operator as a vector potential with spectral cross-terms.
+2. **Redo the stable dispersion relation** once `Q > 1`, with runs long enough
+   for 20-plus zero crossings per mode, and then Landau damping.
+3. **Then** the §6 phase-offset diagnostic becomes meaningful, since it needs a
+   propagating wave and a fragmenting sheet does not provide one.
+4. Stage 2 (shear, pattern winding, a Sgr-like perturber) after that.
 
-1. **Settle whether the heating is physical or numerical.** Rerun the stream
-   scan with the velocity headroom held fixed *as the disk heats* (start with
-   30 sigma, not 12) so the spill column stays negligible throughout. If the
-   rate still refuses to fall with stream count, the `1/N_streams` argument is
-   wrong and the mechanism needs identifying.
-2. **Map the heating against `hbar_eff` and `sigma_x`.** The quasi-particle-mass
-   argument predicts a steep dependence on both. If it holds, there is a usable
-   window at smaller `hbar_eff`, and its cost in grid points is then known
-   rather than guessed.
-3. **Redo the dispersion relation** inside that window, with long enough runs
-   for 20-plus zero crossings per mode, and only then attempt Landau damping.
-4. Stage 2 becomes a decision point again once 1 to 3 give a heating rate, since
-   a single wavefunction sits at the worst point of whatever scaling emerges.
+Meanwhile the firehose result above stands on its own and needed none of this.
 
 The §9 ordering otherwise holds up. Step 1 was easier than expected
 (correction 2), step 2 was done by a different route (correction 4), and step 4
-is now built but blocked on the above rather than on missing machinery.
+is built but its stable-branch half is blocked by physics rather than by
+missing machinery.

@@ -1,22 +1,27 @@
-// Stage 1: granule heating, and how it scales with the number of streams.
+// Stage 1: in-plane heating vs stream count. SUPERSEDED, kept as the record of
+// how the wrong answer was arrived at and then overturned.
 //
-// This is the risk flagged in the Stage 0 write-up. The in-plane part of a 2D
+// The hypothesis this program was written to test: the in-plane part of a 2D
 // initial condition can only be a random-phase superposition, so |psi|^2
-// carries interference granules of scale lambda_dB = 2 pi hbar_eff / sigma_x,
-// and those granules self-gravitate. In the fuzzy-dark-matter literature that
-// drives spurious two-body-like relaxation. Here it would heat the disk and
-// corrupt exactly the quantities Stage 1 exists to measure: the firehose
-// threshold and the Landau damping rate both depend on the dispersion.
-//
-// The scaling matters more than the absolute rate. Summing T independent
-// realisations gives a density contrast falling as 1/sqrt(T), and the heating
-// is driven by the square of that contrast, so the prediction is
+// carries self-gravitating interference granules, and those drive spurious
+// relaxation. Since summing T realisations makes the density contrast fall as
+// 1/sqrt(T), and heating goes as the square of the contrast, the prediction was
 //
 //     heating rate  proportional to  1 / N_streams
 //
-// If that holds, 2D is safe because streams are cheap there. It is also the
-// sharpest possible warning about 3D, where a single wavefunction is the only
-// affordable option and the heating is therefore at its maximum.
+// The measurement said otherwise: the contrast falls as 1/sqrt(T) exactly, but
+// the heating rate barely moves over a 16x range in T. That is impossible for a
+// noise-driven process and is the signature of an INSTABILITY, which grows
+// exponentially from whatever seed is present.
+//
+// tests/test_granule2.cpp then ruled out numerics (a frozen smooth potential
+// gives exactly zero heating), and tests/test_inplane_jeans.cpp identified the
+// mechanism: a non-rotating sheet is Jeans unstable in plane for
+// k < 2 pi G Sigma / sigma_x^2, and the heating switches off precisely where
+// the box stops holding such a mode. It is gravitational fragmentation of an
+// unsupported sheet. Granule relaxation is not measurable here at all.
+//
+// See README.md, "Correction: the heating was gravitational fragmentation".
 #include <cmath>
 #include <cstdio>
 #include <vector>

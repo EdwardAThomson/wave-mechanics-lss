@@ -10,6 +10,9 @@ test_poisson_xz
 test_bending
 test_granule
 test_mode_noise
+test_granule2
+test_inplane_jeans
+test_firehose
 
 # Regenerable run data
 output/**/*.dat

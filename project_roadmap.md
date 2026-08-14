@@ -137,23 +137,32 @@ fine-grained phase spiral.
       spurious dipole A ≈ 0.70·√(ħ_eff/ω_z)/√N_streams
 - [x] Stage 1 machinery: hybrid (x, z) Poisson (FFT in x, exact O(Nz) recursion in z),
       2D evolver, separable warm ICs, column moments and the §6 phase-offset diagnostic
-- [ ] Stage 1 physics: bending-wave dispersion relation and Landau damping — **blocked**
-      on granule heating (see below)
-- [ ] Stage 2: shearing box and/or a Sagittarius-like perturber
+- [x] Stage 1 physics, firehose branch: finite thickness fully stabilises it at kh ~ 1,
+      confirming Araki (1985) and the §7 finite-thickness correction
+- [ ] Stage 1 physics, stable bending branch and Landau damping — **needs rotation**,
+      so these move to Stage 2 (see below)
+- [ ] Stage 2: rotation first (Toomre support), then shear and a Sagittarius-like perturber
 
 **Notable findings:** a purely harmonic vertical potential produces no phase spiral at
 all (Kohn's theorem), and strong disk self-gravity keeps the dipole response coherent
 so it neither damps nor winds. How much vertical restoring force comes from the disk
 versus the halo is therefore a physics parameter to scan, not a detail.
 
-**The Stage 1 blocker:** in 2D and above, the in-plane initial condition can only be a
-random-phase superposition, so |ψ|² carries self-gravitating interference granules. Their
-effective quasi-particle mass (~10⁶–10⁷ M⊙) gives a relaxation time shorter than a
-vertical period, and the disk heats faster than the physics being measured. The density
-contrast falls as 1/√N_streams as expected, but the heating rate does not, which is not
-yet understood. This gates the dispersion relation, the firehose threshold and Landau
-damping, and it is the sharpest warning about Stage 2, where a single wavefunction is
-the only affordable option.
+**The Stage 1 result: shear cannot be skipped.** The two razor-thin dispersion relations
+for a sheet of in-plane dispersion σ_x are the same expression with opposite sign:
+in-plane Jeans is unstable for k < k_J = 2πGΣ/σ_x², and bending is *stable* for exactly
+that same k < k_J. So in a non-rotating box, wherever bending waves would propagate
+stably the sheet is gravitationally fragmenting, and vice versa: there is no window.
+Confirmed numerically, with the heating switching off precisely where the box stops
+holding an unstable mode (a factor ~750 drop between σ_x = 10 and 20 km/s), and with a
+frozen-potential control giving exactly zero drift.
+
+What breaks the degeneracy in a real disk is rotation (the in-plane relation gains κ²,
+Toomre Q > 1; the Milky Way sits at Q ≈ 2.4), and Coriolis needs the in-plane
+perpendicular direction, so it cannot exist in an (x, z) box at all. The plan's advice to
+"skip shear entirely at this stage" saves real effort but removes the science it was
+meant to preserve. The firehose branch lives at k > k_J, where the sheet *is* stable, and
+is therefore the one piece of test 5 an unsheared box can deliver — which it did.
 
 ---
 
