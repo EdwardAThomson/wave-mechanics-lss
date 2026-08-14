@@ -15,6 +15,10 @@ of the solver.
   Original separate Claude and GPT reviews are preserved under `review/sources/`.
 - `code/` — the C++ rewrite. `fpa_1d`, `fpa_3d`, `fpa_3d_cosmo` (Free Particle
   Approximation, Ch 4) and `schrodinger_poisson` (full solver, Ch 5).
+  `disk_bending` applies the same physics to galactic disk corrugations and
+  vertical phase spirals: a separate, self-contained Stage 0 (1D vertical slab)
+  with its own validation ladder. Read its `README.md` first; it carries a
+  point-by-point review of the adaptation plan, including several corrections.
 - `web/` — planned web edition of the thesis (Phase 2, not built yet).
 - `project_roadmap.md` — the phased plan (archive → web edition → code rewrite → outreach).
 

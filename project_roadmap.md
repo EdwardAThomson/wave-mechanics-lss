@@ -118,6 +118,33 @@ stretch goals requiring more compute than a laptop.
 
 ---
 
+## Phase 3e: New Application — Galactic Disk Corrugations 🔄 STAGE 0 COMPLETE
+**Goal:** Point the same Schrödinger-Poisson machinery at vertical bending waves and
+the Gaia vertical phase spiral instead of cosmological structure. Lives in
+`code/disk_bending/`; see its `README.md`.
+
+Schrödinger-Poisson is a Vlasov-Poisson solver, so anything collisionless is fair game.
+The draw is that Husimi-smoothing |ψ|² gives the full distribution function f(z, v_z) on
+a grid with **no particle shot noise**, which is exactly where N-body struggles for the
+fine-grained phase spiral.
+
+- [x] Isolated (vacuum) vertical Poisson solver — exact and O(N) in 1D, no Green's-function padding needed
+- [x] Warm initial conditions from eigenstates of the self-consistent vertical Hamiltonian
+      (stationary by construction, avoiding the turning-point singularity of stream sampling)
+- [x] Validation ladder: free particle, harmonic oscillator, Jeans growth (both branches), sheet stationarity
+- [x] Husimi transform to f(z, v_z); vertical phase spiral produced from an impulsive kick
+- [x] Settled the multi-stream vs single-ψ question quantitatively:
+      spurious dipole A ≈ 0.70·√(ħ_eff/ω_z)/√N_streams
+- [ ] Stage 1: 2D (x, z) box — bending-wave dispersion relation and Landau damping
+- [ ] Stage 2: shearing box and/or a Sagittarius-like perturber
+
+**Notable findings:** a purely harmonic vertical potential produces no phase spiral at
+all (Kohn's theorem), and strong disk self-gravity keeps the dipole response coherent
+so it neither damps nor winds. How much vertical restoring force comes from the disk
+versus the halo is therefore a physics parameter to scan, not a detail.
+
+---
+
 ## Phase 4: Blog / Outreach 🔄 UNDERWAY
 **Goal:** Document the journey and share insights.
 

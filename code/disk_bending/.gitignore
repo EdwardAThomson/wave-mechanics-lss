@@ -1,0 +1,15 @@
+# Compiled binaries (no extension = binary executable)
+sheet_1d
+test_poisson
+test_free
+test_harmonic
+test_jeans
+test_sheet
+
+# Regenerable run data
+output/**/*.dat
+output/**/*.log
+
+# The root .gitignore excludes *.png everywhere; re-include the two headline
+# figures, which are the point of the exercise and are cheap to carry.
+!figures/*.png
