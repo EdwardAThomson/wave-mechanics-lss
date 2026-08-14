@@ -159,6 +159,40 @@ razor-thin prediction. Finite thickness stabilises the firehose completely at
 disks are firehose-stable. This is the finite-thickness correction §7 asks to be
 verified, verified.
 
+### The stable branch: one half measured, one half not
+
+`tests/test_bending_disp.cpp` scans `sigma_x` at fixed `k` in the stable window
+and fits `omega^2 = A_eff - B_eff sigma_x^2`, so the self-gravity restoring term
+and the in-plane pressure term are measured separately rather than compared
+against one guessed finite-thickness formula. At `k = 2.094 /kpc`, `k h = 0.62`,
+with six to ten full oscillation periods sampled per case:
+
+| sigma_x | omega (mode 1) | omega (mode 2) | sign flips |
+|---|---|---|---|
+| 30 | 76.50 | 84.81 | 13 |
+| 40 | 76.55 | 85.26 | 19 |
+| 50 | 76.51 | 85.52 | 21 |
+
+**What this establishes.** `B_eff = -0.0008` against a razor-thin `k^2 = 4.39`:
+the in-plane pressure term is suppressed by more than 99.9% at `k h = 0.62`. The
+frequency does not move at all across a 67% change in `sigma_x`. That is the
+firehose result seen from the stable side, and it is consistent with it.
+
+**What this does not establish.** `A_eff = 5854` against a razor-thin
+`2 pi G Sigma k = 2830`, a ratio of 2.07. Finite thickness can only *reduce* the
+self-gravity restoring term, never double it, so the oscillation being tracked
+is not a pure bending mode. The `sigma_z` scan reinforces that: `omega` comes out
+28.7, 76.6, 51.3 for `sigma_z` = 14, 20, 26, which is not monotonic and so is not
+a single branch.
+
+The likely cause is that a rigid vertical displacement of each column excites the
+bending mode together with internal vertical motions near `omega_0`, and the
+periodogram is reporting whichever dominates rather than the bending branch. Two
+frequencies close together would also explain the non-monotonic `sigma_z` row.
+Fixing it needs a proper eigenmode decomposition of the vertical response rather
+than a single scalar per mode, which is real work and is not done. **No
+dispersion-relation number here should be quoted as a measurement of `A`.**
+
 ### A correction to correction 5
 
 ### A correction to correction 5
@@ -499,24 +533,28 @@ python3 plot_moments.py output/spiral_tracer output/spiral_selfgrav
 
 ## Suggested next step
 
-Rotation, and it is no longer optional. The stable bending branch, the §6 phase
-offset and Landau damping all need Toomre support, and Coriolis needs the
-in-plane perpendicular direction, so they need at least `(x, y, z)` velocity
-structure. Concretely:
+Two threads, and the cheaper one comes first.
 
-1. **Add rotation before anything else.** The cheapest useful form is a rotating
-   box at fixed `Omega` with no shear yet: it supplies `kappa` and therefore
-   Toomre stability, which is all the stable bending branch actually needs. Full
-   Goldreich-Lynden-Bell shearing waves can wait for pattern winding. The
-   awkwardness the plan's appendix anticipates is real, since Coriolis enters
-   the Schrodinger operator as a vector potential with spectral cross-terms.
-2. **Redo the stable dispersion relation** once `Q > 1`, with runs long enough
-   for 20-plus zero crossings per mode, and then Landau damping.
-3. **Then** the §6 phase-offset diagnostic becomes meaningful, since it needs a
-   propagating wave and a fragmenting sheet does not provide one.
-4. Stage 2 (shear, pattern winding, a Sgr-like perturber) after that.
+1. **Separate the bending mode from the internal vertical response.** This is
+   what blocks the stable-branch measurement, and it needs no new physics, just
+   a better diagnostic: project the vertical response onto its parity/eigenmode
+   structure instead of collapsing each column to the scalar `<z>`. The bending
+   mode is the odd, rigid-displacement component; the contaminating oscillation
+   near `omega_0` is internal. Everything needed to do this is already built.
+2. **Then add rotation.** The `k << k_J` regime, where `omega^2 -> 2 pi G Sigma k`
+   and the razor-thin comparison is clean, is unreachable without Toomre
+   support, and so are Landau damping and a genuinely propagating wave for the
+   §6 phase offset. The cheapest useful form is a rotating box at fixed `Omega`
+   with no shear: it supplies `kappa`, which is all the stable branch needs.
+   Coriolis enters the Schrodinger operator as a vector potential, and in
+   Landau gauge with no `y` dependence it reduces to a local term
+   `(hbar k_y - kappa x)^2 / 2` per `k_y`, which the existing multi-stream
+   architecture can carry directly. The catch is that this term is not periodic
+   in `x`, so the box boundary needs thought.
+3. Stage 2 (shear, pattern winding, a Sgr-like perturber) after that.
 
-Meanwhile the firehose result above stands on its own and needed none of this.
+Meanwhile the firehose result and the fragmentation finding stand on their own
+and needed none of this.
 
 The §9 ordering otherwise holds up. Step 1 was easier than expected
 (correction 2), step 2 was done by a different route (correction 4), and step 4

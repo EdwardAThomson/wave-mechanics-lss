@@ -13,6 +13,7 @@ test_mode_noise
 test_granule2
 test_inplane_jeans
 test_firehose
+test_bending_disp
 
 # Regenerable run data
 output/**/*.dat
