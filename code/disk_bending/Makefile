@@ -9,12 +9,23 @@ LDFLAGS  = -lfftw3 -lm -fopenmp
 #   macOS/brew   : brew install fftw
 
 HEADERS = $(wildcard src/*.h)
-TESTS   = test_poisson test_free test_harmonic test_jeans test_sheet
 
-all: sheet_1d $(TESTS)
+# The validation ladder. Fast enough to run routinely.
+TESTS   = test_poisson test_free test_harmonic test_jeans test_sheet \
+          test_poisson_xz
+
+# Stage 1 measurements: minutes, not seconds, so kept out of `make check`.
+MEASURE = test_bending
+
+all: sheet_1d sheet_2d $(TESTS)
 
 sheet_1d: sheet_1d.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+
+sheet_2d: sheet_2d.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+
+measure: $(MEASURE)
 
 test_%: tests/test_%.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
@@ -30,7 +41,7 @@ check: $(TESTS)
 	@echo "all validation tests passed"
 
 clean:
-	rm -f sheet_1d $(TESTS)
+	rm -f sheet_1d sheet_2d $(TESTS) $(MEASURE)
 
 distclean: clean
 	rm -rf output/

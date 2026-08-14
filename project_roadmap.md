@@ -135,13 +135,25 @@ fine-grained phase spiral.
 - [x] Husimi transform to f(z, v_z); vertical phase spiral produced from an impulsive kick
 - [x] Settled the multi-stream vs single-ψ question quantitatively:
       spurious dipole A ≈ 0.70·√(ħ_eff/ω_z)/√N_streams
-- [ ] Stage 1: 2D (x, z) box — bending-wave dispersion relation and Landau damping
+- [x] Stage 1 machinery: hybrid (x, z) Poisson (FFT in x, exact O(Nz) recursion in z),
+      2D evolver, separable warm ICs, column moments and the §6 phase-offset diagnostic
+- [ ] Stage 1 physics: bending-wave dispersion relation and Landau damping — **blocked**
+      on granule heating (see below)
 - [ ] Stage 2: shearing box and/or a Sagittarius-like perturber
 
 **Notable findings:** a purely harmonic vertical potential produces no phase spiral at
 all (Kohn's theorem), and strong disk self-gravity keeps the dipole response coherent
 so it neither damps nor winds. How much vertical restoring force comes from the disk
 versus the halo is therefore a physics parameter to scan, not a detail.
+
+**The Stage 1 blocker:** in 2D and above, the in-plane initial condition can only be a
+random-phase superposition, so |ψ|² carries self-gravitating interference granules. Their
+effective quasi-particle mass (~10⁶–10⁷ M⊙) gives a relaxation time shorter than a
+vertical period, and the disk heats faster than the physics being measured. The density
+contrast falls as 1/√N_streams as expected, but the heating rate does not, which is not
+yet understood. This gates the dispersion relation, the firehose threshold and Landau
+damping, and it is the sharpest warning about Stage 2, where a single wavefunction is
+the only affordable option.
 
 ---
 

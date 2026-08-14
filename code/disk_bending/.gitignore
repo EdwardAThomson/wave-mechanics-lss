@@ -1,10 +1,15 @@
 # Compiled binaries (no extension = binary executable)
 sheet_1d
+sheet_2d
 test_poisson
 test_free
 test_harmonic
 test_jeans
 test_sheet
+test_poisson_xz
+test_bending
+test_granule
+test_mode_noise
 
 # Regenerable run data
 output/**/*.dat

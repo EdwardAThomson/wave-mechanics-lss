@@ -22,6 +22,7 @@ The validation ladder passes end to end (`make check`, about four minutes):
 | 2 | Harmonic oscillator: spectrum and coherent state | eigen-residual 1e-12; ladder error ∝ dz²; Strang 2nd order |
 | 3 | Jeans growth and the quantum-pressure branch | 3e-9 and 1e-11 |
 | 4 | Warm isothermal sheet stationarity | z_rms drift 4e-6, dE/E 5e-11 over 8 vertical periods |
+| 5a | Hybrid (x, z) Poisson, four ways | round-off (4e-16) end to end; 2nd order vs closed form |
 
 Test 3 runs both signs of the dispersion relation (gravity-dominated growth and
 quantum-pressure-dominated oscillation), which pins the sign of the gravity
@@ -33,6 +34,99 @@ completely free of particle noise (`figures/phase_spiral_tracer.png`), and the
 contrasting case where slab self-gravity suppresses it
 (`figures/phase_spiral_selfgravitating.png`). Both are 320-stream runs on a 4096
 grid, conserving energy to 3e-6 with velocity-space spill below 1e-10.
+
+---
+
+## Stage 1 status (2D, x and z)
+
+Built and validated:
+
+- **Hybrid Poisson solver** (`src/poisson_xz.h`), the §4 option-2 route. FFT in
+  x, then an exact O(Nz) recursion per `k_x` against the exponential kernel.
+  `test_poisson_xz` certifies it four ways, ending at round-off (4e-16) on a
+  separable density, which is what pins the strided batch transform and the FFT
+  normalisation.
+- **2D evolver and separable warm ICs** (`src/evolve2d.h`, `src/slab_ic_2d.h`).
+  The Stage 0 eigenstate library is reused untouched: vertical eigenstates times
+  an in-plane random-phase Maxwellian.
+- **Column diagnostics and the §6 phase offset** (`src/diagnostics2d.h`),
+  driver `sheet_2d.cpp`.
+
+Measured, and not yet clean:
+
+- **Bending-wave dispersion relation** (test 5). Frequencies come out within
+  tens of per cent of the razor-thin prediction but scatter non-monotonically
+  with `k h` (ratios 0.84, 1.17, 0.86, 0.97, 0.74 for modes 1 to 5), which is
+  not physical: finite thickness should reduce the frequency monotonically.
+  There were only 5 to 11 zero crossings per mode, and the run heated as it
+  went. Needs longer runs and controlled heating before it is a result.
+- **Landau damping** (test 6) is not attempted, because it depends on the
+  dispersion and the dispersion is being changed by the heating below.
+
+### The finding that gates the rest: granule heating
+
+The in-plane part of any 2D or 3D initial condition can only be a random-phase
+superposition, so `|psi|^2` carries interference granules of scale
+`lambda_dB = 2 pi hbar_eff / sigma_x` and those granules self-gravitate. The
+effective quasi-particle mass is large: at `hbar_eff = 0.6`, `sigma_x = 10 km/s`
+it is of order `rho lambda_dB h` ~ 5e6 Msun per unit length, comparable to a
+giant molecular cloud, and the relaxation time comes out shorter than a vertical
+period.
+
+Measured over two vertical periods, at 12 sigma of velocity headroom in both
+directions:
+
+| streams | rms drho/rho | d(sigma_x) per vertical period | max spill |
+|---|---|---|---|
+| 2 | 0.696 | 17.1 km/s | 0.17 |
+| 8 | 0.346 | 15.3 km/s | 0.08 |
+| 32 | 0.174 | 15.2 km/s | 0.11 |
+
+Two things to take from this, one solid and one open.
+
+**Solid:** the heating is severe. Starting from `sigma_x = 10 km/s` it roughly
+quadruples in two vertical periods. It is much milder at larger `sigma_x` (2.4
+km/s per period at `sigma_x = 20`), consistent with a steep dependence, which is
+what the quasi-particle-mass argument predicts, since `lambda_dB` and hence the
+granule mass grows as `1/sigma_x`.
+
+**Open, and it contradicts the natural guess:** the density contrast falls
+exactly as `1/sqrt(N_streams)`, as it must, so the potential fluctuations that
+drive the heating should weaken and the heating should fall as `1/N_streams`. It
+does not. Over a 16x range in stream count the rate barely moves. Either the
+heating is not driven by the shared potential fluctuation in the way that
+argument assumes, or these runs are still contaminated: the spill column shows
+8 to 17 per cent of the in-plane power above half-Nyquist by the end, because the
+heating itself eats the velocity headroom. Both need ruling out before the number
+means anything.
+
+**Consequence either way:** granule heating, not resolution, is the binding
+constraint on Stage 1, and it must be controlled before the firehose threshold
+or the Landau damping rate can be trusted, since both depend on the dispersion
+that is drifting. It is also the sharpest warning yet about Stage 2, where a
+single wavefunction is the only affordable option.
+
+### A correction to correction 5
+
+Stage 0 ended by predicting that corrugation noise would average down by a
+further `sqrt(N_x)` in 2D, because the per-column dipoles are independent. That
+was measurable, so it was measured, and it is wrong. The per-column dipoles are
+correlated over the in-plane de Broglie scale, so the mode-amplitude noise is
+**independent of the grid**: across a 16x range in `N_x` at fixed stream count it
+moves by less than a factor of 1.5.
+
+```
+Nx      streams   rms <z>(x)   rms mode amplitude
+128     1         0.0573       5.5e-3
+512     1         0.0541       3.7e-3
+2048    1         0.0539       4.1e-3
+```
+
+The right factor is `sqrt(L_x / lambda_corr)` with `lambda_corr` of order the
+in-plane de Broglie length, so a **wider box** buys signal to noise and a finer
+grid buys none. The conclusion Stage 0 was reaching for survives: the mode-noise
+floor is a few times 1e-3 kpc even with one stream, comfortably under a realistic
+0.1 kpc corrugation, so Option B stays viable at higher dimension.
 
 ---
 
@@ -282,20 +376,32 @@ worse, not better.**
 ## Layout
 
 ```
-src/units.h          kpc, km/s, Msun; G and time conversions
-src/grid.h           1D vertical grid, FFT wavenumbers
-src/fft.h            RAII wrapper over FFTW plan pairs
-src/poisson_z.h      exact isolated-BC vertical Poisson; analytic Spitzer sheet
-src/eigen1d.h        symmetric tridiagonal eigensolver (bisection + inverse iteration)
-src/equilibrium.h    self-consistent warm sheet from eigenstates
-src/evolve.h         Strang split-step, spectral and matched-FD kinetic operators
-src/slab_ic.h        Option A / Option B / batched wavefunction ensembles
-src/husimi.h         Husimi transform to f(z, v_z); winding profile
-src/diagnostics.h    vertical moments, energies, edge-mass guard
-sheet_1d.cpp         driver
-tests/               the validation ladder, tests 0-4
-plot_phase_spiral.py Husimi maps, normalised by the pre-kick equilibrium
-plot_moments.py      corrugation history, envelope, conservation
+Stage 0, 1D vertical slab
+  src/units.h          kpc, km/s, Msun; G and time conversions
+  src/grid.h           1D vertical grid, FFT wavenumbers
+  src/fft.h            RAII wrapper over FFTW plan pairs
+  src/poisson_z.h      exact isolated-BC vertical Poisson; analytic Spitzer sheet
+  src/eigen1d.h        symmetric tridiagonal eigensolver (bisection + inverse iteration)
+  src/equilibrium.h    self-consistent warm sheet from eigenstates
+  src/evolve.h         Strang split-step, spectral and matched-FD kinetic operators
+  src/slab_ic.h        Option A / Option B / batched wavefunction ensembles
+  src/husimi.h         Husimi transform to f(z, v_z); winding profile
+  src/diagnostics.h    vertical moments, energies, edge-mass guard
+  sheet_1d.cpp         driver
+
+Stage 1, 2D (x, z) box
+  src/grid2d.h         2D grid, periodic in x and isolated in z
+  src/poisson_xz.h     hybrid Poisson: FFT in x, O(Nz) exponential-kernel recursion
+  src/evolve2d.h       2D split-step; bending kicks and column displacement
+  src/slab_ic_2d.h     separable warm IC: vertical eigenstates x in-plane Maxwellian
+  src/diagnostics2d.h  column moments Sigma(x), <z>(x), <v_z>(x); mode amplitudes
+  sheet_2d.cpp         driver
+
+  tests/               validation ladder (tests 0-4 plus the hybrid Poisson)
+  tests/test_bending.cpp   Stage 1 measurements; `make measure`, not `make check`
+  plot_phase_spiral.py Husimi maps, normalised by the pre-kick equilibrium
+  plot_moments.py      corrugation history, envelope, conservation
+  plot_bending.py      corrugation profile, mode frequency, §6 phase offset
 ```
 
 ## Building and running
@@ -305,9 +411,11 @@ eigensolver is self-contained deliberately, so no LAPACK is needed; it is
 certified against the analytic harmonic ladder by `tests/test_harmonic.cpp`.
 
 ```sh
-make            # driver and tests
+make            # drivers and tests
 make check      # the validation ladder in order, ~4 min
+make measure    # Stage 1 measurements, tens of minutes
 ./sheet_1d --help
+./sheet_2d --help
 ```
 
 The phase spiral, and the self-gravitating case that does not produce one:
@@ -330,15 +438,33 @@ python3 plot_moments.py output/spiral_tracer output/spiral_selfgrav
   sound (they divide by the measured pre-kick equilibrium and so assume nothing),
   but a quantitative winding rate needs proper action-angle coordinates. That is
   Stage 1 work and it is the natural home for the §6 phase-offset diagnostic too.
-- No 2D yet, so no bending waves, no dispersion relation, no Landau damping: see
-  correction 8.
-- The perturber (§5) is not implemented; Stage 0 uses idealised kicks, which is
-  what §9 step 3 asks for.
+- The perturber (§5) is not implemented; both stages use idealised kicks, which
+  is what §9 steps 3 and 5 ask for.
+- No shear, so no pattern winding: that is Stage 2 (§9 step 7).
 
 ## Suggested next step
 
-§9's ordering holds up, with one change: step 1 is already done and was easier
-than expected (correction 2), while the IC work of step 2 is done by a different
-route than planned (correction 4). Go to the 2D `(x, z)` box next, with the
-hybrid Poisson solver rather than zero-padding, and settle the Option B question
-at 2D where the `sqrt(N_x)` averaging in correction 5 can actually be measured.
+Not Stage 2. Granule heating has to be brought under control first, because
+every remaining Stage 1 deliverable (the dispersion relation, the firehose
+threshold, Landau damping) depends on a dispersion that is currently drifting
+faster than the physics being measured.
+
+In order:
+
+1. **Settle whether the heating is physical or numerical.** Rerun the stream
+   scan with the velocity headroom held fixed *as the disk heats* (start with
+   30 sigma, not 12) so the spill column stays negligible throughout. If the
+   rate still refuses to fall with stream count, the `1/N_streams` argument is
+   wrong and the mechanism needs identifying.
+2. **Map the heating against `hbar_eff` and `sigma_x`.** The quasi-particle-mass
+   argument predicts a steep dependence on both. If it holds, there is a usable
+   window at smaller `hbar_eff`, and its cost in grid points is then known
+   rather than guessed.
+3. **Redo the dispersion relation** inside that window, with long enough runs
+   for 20-plus zero crossings per mode, and only then attempt Landau damping.
+4. Stage 2 becomes a decision point again once 1 to 3 give a heating rate, since
+   a single wavefunction sits at the worst point of whatever scaling emerges.
+
+The §9 ordering otherwise holds up. Step 1 was easier than expected
+(correction 2), step 2 was done by a different route (correction 4), and step 4
+is now built but blocked on the above rather than on missing machinery.
