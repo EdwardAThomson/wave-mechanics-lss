@@ -185,13 +185,56 @@ is not a pure bending mode. The `sigma_z` scan reinforces that: `omega` comes ou
 28.7, 76.6, 51.3 for `sigma_z` = 14, 20, 26, which is not monotonic and so is not
 a single branch.
 
-The likely cause is that a rigid vertical displacement of each column excites the
-bending mode together with internal vertical motions near `omega_0`, and the
-periodogram is reporting whichever dominates rather than the bending branch. Two
-frequencies close together would also explain the non-monotonic `sigma_z` row.
-Fixing it needs a proper eigenmode decomposition of the vertical response rather
-than a single scalar per mode, which is real work and is not done. **No
-dispersion-relation number here should be quoted as a measurement of `A`.**
+**No dispersion-relation number here should be quoted as a measurement of `A`.**
+
+### Chasing that down: the decomposition works, the measurement does not
+
+`tests/test_mode_decomp.cpp` was written to separate the bending mode from the
+internal vertical response. Two things came out, one useful and one negative.
+
+**The diagnosis was right, and `<z>` really is the wrong variable.** With a
+Lagrangian displacement `xi(z)` the density perturbation is
+`delta_rho = -(rho_0 xi)'`, and integrating by parts gives
+`<z> = Integral rho_0 xi dz / Sigma`, the mass-weighted mean displacement. But
+the bending *family* is every even `xi`, so `xi = 1, z^2, z^4, ...` all shift a
+column the same way and all contribute to `<z>`. They are not orthogonal under
+that integral and they are not degenerate in frequency, so `<z>` beats at several
+frequencies at once. Projecting `delta_rho` onto a Gram-Schmidt orthogonalised
+bending family fixes that, and the projection is validated at `t = 0`, where a
+rigid displacement must put all its power in the first channel:
+
+```
+t = 0 check: bending-family power split 0.9695 / 0.0216 / 0.0089
+             breathing/rigid = 4.9e-2   (a pure displacement must not breathe)
+```
+
+**But the bending frequency still cannot be extracted here.** Three random-phase
+seeds of otherwise identical physics give
+
+| seed | omega (rigid channel) | ratio `omega^2 / 2 pi G Sigma k` |
+|---|---|---|
+| 8080 | 42.98 | 0.65 |
+| 9091 | 28.23 | 0.28 |
+| 10102 | 1.99 | 0.001 |
+
+That is not a measurement, it is scatter. The `t = 0` rigid fraction is 0.96 to
+0.99 in all three, so the initial state and the projection are both clean: the
+signal is lost *during* the run, to damping or to the in-plane speckle floor, and
+the periodogram then reports noise.
+
+**Retraction.** An earlier single-seed run of this diagnostic gave
+`omega = 55.47`, a ratio of 1.09, which looked like a clean recovery of the
+razor-thin self-gravity term. It was one draw from the scatter above and should
+not be believed. The same goes for a three-mode `k` scan that returned ratios
+0.18, 2.86, 0.51; exciting three modes at once also put the peak displacement at
+81% of the scale height, which is not linear.
+
+What would actually fix it, in rough order of cost: average the periodogram over
+many seeds rather than trusting one, which is the standard treatment for a noisy
+spectrum and is cheap; raise the stream count, since the floor falls as
+`1/sqrt(N_streams)`; widen the box, since the floor falls as
+`sqrt(L_x / lambda_dB)` and, by the noise measurement below, refining the grid
+buys nothing.
 
 ### A correction to correction 5
 
@@ -535,12 +578,13 @@ python3 plot_moments.py output/spiral_tracer output/spiral_selfgrav
 
 Two threads, and the cheaper one comes first.
 
-1. **Separate the bending mode from the internal vertical response.** This is
-   what blocks the stable-branch measurement, and it needs no new physics, just
-   a better diagnostic: project the vertical response onto its parity/eigenmode
-   structure instead of collapsing each column to the scalar `<z>`. The bending
-   mode is the odd, rigid-displacement component; the contaminating oscillation
-   near `omega_0` is internal. Everything needed to do this is already built.
+1. **Beat down the noise floor on the rigid channel.** The projection is built
+   and validated; what is missing is signal to noise, and the three levers are
+   known and independent: seed-averaged periodograms (cheap, and the standard
+   treatment), more streams (`1/sqrt(N_streams)`), and a wider box
+   (`sqrt(L_x / lambda_dB)`). Refining the grid is the one thing that does not
+   help. Until the frequency reproduces across seeds there is no dispersion
+   relation to quote.
 2. **Then add rotation.** The `k << k_J` regime, where `omega^2 -> 2 pi G Sigma k`
    and the razor-thin comparison is clean, is unreachable without Toomre
    support, and so are Landau damping and a genuinely propagating wave for the

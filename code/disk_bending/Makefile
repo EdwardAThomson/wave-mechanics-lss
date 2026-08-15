@@ -16,7 +16,7 @@ TESTS   = test_poisson test_free test_harmonic test_jeans test_sheet \
 
 # Stage 1 measurements: minutes, not seconds, so kept out of `make check`.
 MEASURE = test_bending test_granule test_granule2 test_inplane_jeans \
-          test_firehose test_mode_noise test_bending_disp
+          test_firehose test_mode_noise test_bending_disp test_mode_decomp
 
 all: sheet_1d sheet_2d $(TESTS)
 
