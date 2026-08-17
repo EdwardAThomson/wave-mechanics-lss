@@ -26,6 +26,7 @@
 #include <cmath>
 #include <complex>
 #include <cstdio>
+#include <cstdlib>
 #include <vector>
 
 #include "../src/equilibrium.h"
@@ -92,7 +93,12 @@ double dominant_frequency(const std::vector<double>& t,
 
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
+    // Usage: test_rot_disp [mode] [nseeds]. Defaults: mode 1, 3 seeds. The
+    // seed spread at mode 1 came out 0.15%, so higher modes can afford a
+    // single seed each when filling in the dispersion relation.
+    const int mode = (argc > 1) ? std::atoi(argv[1]) : 1;
+    const int nseeds = (argc > 2) ? std::min(3, std::atoi(argv[2])) : 3;
     const double Sigma = 50.0 * units::MSUN_PC2;
     const double sigma_z = 20.0, sigma_x = 40.0, hbar = 0.6, kappa = 44.2;
     Grid2D g(1024, 320, 16.0, 5.0);
@@ -112,7 +118,7 @@ int main() {
 
     const double h = sheet.h_measured;
     const double w0 = sheet.omega0;
-    const double k1 = g.kx(1);
+    const double k1 = g.kx(mode);
     const double w_grav = std::sqrt(2.0 * units::PI * units::G * Sigma * k1);
 
     std::printf("=== stable bending branch, rotating box ===\n");
@@ -121,8 +127,8 @@ int main() {
                 g.Lz, kappa,
                 kappa * sigma_x / (3.36 * units::G * Sigma), h0,
                 100.0 * h0 / h);
-    std::printf("h = %.4f kpc, k1 = %.4f /kpc, k1 h = %.3f, omega_0 = %.2f\n",
-                h, k1, k1 * h, w0);
+    std::printf("h = %.4f kpc, mode %d: k = %.4f /kpc, k h = %.3f, "
+                "omega_0 = %.2f\n", h, mode, k1, k1 * h, w0);
 
     // Bending family and one breathing control, as in test_mode_decomp.
     std::vector<std::vector<double>> phi;
@@ -146,7 +152,7 @@ int main() {
                 "w^2/2piGSk", "w^2/(g-p)", "t0 frac", "noise/h0", "energy");
 
     double wr_all[3] = {0.0, 0.0, 0.0};
-    for (int sidx = 0; sidx < 3; ++sidx) {
+    for (int sidx = 0; sidx < nseeds; ++sidx) {
         RotConfig rc;
         rc.kappa = kappa;
         rc.sigma_x = sigma_x;
@@ -169,11 +175,11 @@ int main() {
         std::vector<double> rho, V, Ve;
         st.density(rho);
         std::vector<Complex> prof;
-        density_profile_mode(g, rho, 1, prof);
+        density_profile_mode(g, rho, mode, prof);
         const double noise = std::abs(dotc(prof, phi[0]));
         ev.displace_columns(st, shift);
         st.density(rho);
-        density_profile_mode(g, rho, 1, prof);
+        density_profile_mode(g, rho, mode, prof);
         const double sig0 = std::abs(dotc(prof, phi[0]));
         const double noise_frac = (sig0 > 0.0) ? noise / sig0 : 0.0;
 
@@ -197,7 +203,7 @@ int main() {
             if (step % sample_every == 0) {
                 st.density(rho);
                 ts.push_back(step * dt);
-                density_profile_mode(g, rho, 1, prof);
+                density_profile_mode(g, rho, mode, prof);
                 for (int m = 0; m < 3; ++m) a[m].push_back(dotc(prof, phi[m]));
             }
             if (step == nsteps) break;
@@ -228,10 +234,14 @@ int main() {
                     e_drift);
     }
 
-    const double wmean = (wr_all[0] + wr_all[1] + wr_all[2]) / 3.0;
+    double wmean = 0.0;
+    for (int i = 0; i < nseeds; ++i) wmean += wr_all[i];
+    wmean /= nseeds;
     double wsd = 0.0;
-    for (double w : wr_all) wsd += (w - wmean) * (w - wmean);
-    wsd = std::sqrt(wsd / 3.0);
+    for (int i = 0; i < nseeds; ++i) {
+        wsd += (wr_all[i] - wmean) * (wr_all[i] - wmean);
+    }
+    wsd = std::sqrt(wsd / nseeds);
     std::printf("\npredictions: sqrt(2piGSk) = %.2f, with pressure = %.2f "
                 "km/s/kpc; resolution %.2f\n", w_grav, w_press,
                 (w_press > 0.0 ? w_press : w_grav) / 8.0);
