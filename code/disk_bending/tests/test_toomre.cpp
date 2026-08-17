@@ -37,29 +37,44 @@
 
 namespace {
 
-// Amplitude of surface-density mode n: |Sigma_hat(k_n)| / Sigma_mean.
-double mode_amp(const Grid2D& g, const std::vector<double>& rho, int n) {
-    double cr = 0.0, ci = 0.0, tot = 0.0;
+// Largest surface-density mode amplitude 2 |Sigma_hat(k_n)| / Sigma_mean over
+// modes lo..hi; *argmode reports which. A band, not a single mode, because
+// the stellar most-unstable k is shifted from the fluid estimate by the
+// reduction factor and there is no reason to guess it in advance.
+double band_amp(const Grid2D& g, const std::vector<double>& rho, int lo,
+                int hi, int* argmode) {
+    std::vector<double> col(g.Nx, 0.0);
+    double tot = 0.0;
     for (int i = 0; i < g.Nx; ++i) {
-        double col = 0.0;
-        for (int j = 0; j < g.Nz; ++j) col += rho[g.idx(i, j)];
-        const double ph = -g.kx(n) * g.x(i);
-        cr += col * std::cos(ph);
-        ci += col * std::sin(ph);
-        tot += col;
+        for (int j = 0; j < g.Nz; ++j) col[i] += rho[g.idx(i, j)];
+        tot += col[i];
     }
-    return 2.0 * std::sqrt(cr * cr + ci * ci) / tot;
+    double best = 0.0;
+    int bestn = lo;
+    for (int n = lo; n <= hi; ++n) {
+        double cr = 0.0, ci = 0.0;
+        for (int i = 0; i < g.Nx; ++i) {
+            const double ph = -g.kx(n) * g.x(i);
+            cr += col[i] * std::cos(ph);
+            ci += col[i] * std::sin(ph);
+        }
+        const double a = 2.0 * std::sqrt(cr * cr + ci * ci) / tot;
+        if (a > best) { best = a; bestn = n; }
+    }
+    if (argmode) *argmode = bestn;
+    return best;
 }
 
 struct RunResult {
     double dsig_dt = 0.0;      // km/s per time unit
     double amp0 = 0.0, amp1 = 0.0;
-    double efold = 0.0;        // measured e-folding rate of the tracked mode
+    int mode1 = 0;             // where the final band maximum sits
+    double efold = 0.0;        // measured e-folding rate of the band maximum
 };
 
 RunResult evolve_and_measure(const Grid2D& g, Evolver2D& ev, PoissonXZ& poisson,
                              SlabState2D& st, double t_end, double dt,
-                             int track_mode) {
+                             int band_lo, int band_hi) {
     RunResult res;
     std::vector<double> rho, V;
     const int nsteps = static_cast<int>(t_end / dt);
@@ -71,7 +86,7 @@ RunResult evolve_and_measure(const Grid2D& g, Evolver2D& ev, PoissonXZ& poisson,
     double kex0, kez0;
     ev.kinetic_energy_split(st, kex0, kez0);
     const double sx0 = std::sqrt(2.0 * kex0 / mass);
-    res.amp0 = mode_amp(g, rho, track_mode);
+    res.amp0 = band_amp(g, rho, band_lo, band_hi, nullptr);
 
     // For the e-folding rate: log-amplitude at 1/4 and 3/4 of the run.
     const int q1 = nsteps / 4, q3 = 3 * nsteps / 4;
@@ -84,7 +99,7 @@ RunResult evolve_and_measure(const Grid2D& g, Evolver2D& ev, PoissonXZ& poisson,
         ev.kinetic_half(st, dt);
         if (s == q1 || s == q3) {
             st.density(rho);
-            const double a = mode_amp(g, rho, track_mode);
+            const double a = band_amp(g, rho, band_lo, band_hi, nullptr);
             if (s == q1) a_q1 = a; else a_q3 = a;
         }
     }
@@ -93,7 +108,7 @@ RunResult evolve_and_measure(const Grid2D& g, Evolver2D& ev, PoissonXZ& poisson,
     ev.kinetic_energy_split(st, kex, kez);
     const double sx1 = std::sqrt(2.0 * kex / mass);
     res.dsig_dt = (sx1 - sx0) / t_end;
-    res.amp1 = mode_amp(g, rho, track_mode);
+    res.amp1 = band_amp(g, rho, band_lo, band_hi, &res.mode1);
     if (a_q1 > 0.0 && a_q3 > a_q1) {
         res.efold = std::log(a_q3 / a_q1) / ((q3 - q1) * dt);
     }
@@ -126,23 +141,22 @@ int main() {
                 "unsheared threshold sqrt(G Sigma Lx) = %.1f km/s\n\n",
                 sigma_z, hbar, std::sqrt(units::G * Sigma * g.Lx));
 
-    // Most unstable wavenumber of the rotating Q < 1 sheet:
-    // k* = pi G Sigma / sigma_x^2 (fluid estimate), tracked as a box mode.
-    // For the non-rotating run the fastest-growing BOX mode is mode 1.
+    // The unstable case gets a wide mode band and a long run: the stellar
+    // reduction factor both shifts the most unstable k below the fluid
+    // estimate pi G Sigma / sigma_x^2 and cuts the growth rate to a few
+    // tenths of kappa, so a run sized from the fluid rate (a first attempt
+    // here did exactly that, at Q = 0.61 over t = 0.15) sees nothing.
     struct Case {
         const char* name;
         double kap, sigx;
         double t_end;
-        int track;
+        int band_lo, band_hi;
         bool expect_stable;
     };
-    const double kstar = units::PI * units::G * Sigma / (10.0 * 10.0);
-    const int mstar = std::max(1, static_cast<int>(
-                                      std::lround(kstar / g.k_fundamental())));
     const Case cases[3] = {
-        {"rotating, sigma_x = 40 (Q = 2.45)", kappa, 40.0, 0.50, 1, true},
-        {"rotating, sigma_x = 10 (Q = 0.61)", kappa, 10.0, 0.15, mstar, false},
-        {"no rotation, sigma_x = 40 (Q = 0)", 0.0, 40.0, 0.50, 1, false},
+        {"rotating, sigma_x = 40 (Q = 2.45)", kappa, 40.0, 0.50, 1, 30, true},
+        {"rotating, sigma_x = 8 (Q = 0.49)", kappa, 8.0, 0.45, 1, 40, false},
+        {"no rotation, sigma_x = 40 (Q = 0)", 0.0, 40.0, 0.50, 1, 3, false},
     };
 
     int failures = 0;
@@ -170,11 +184,12 @@ int main() {
         }
         PoissonXZ poisson(g);
         RunResult r = evolve_and_measure(g, ev, poisson, st, c.t_end, dt,
-                                         c.track);
+                                         c.band_lo, c.band_hi);
         std::printf("  d(sigma_x)/dt = %+.4f km/s per unit time over t = %.2f"
                     "\n", r.dsig_dt, c.t_end);
-        std::printf("  mode %d amplitude: %.2e -> %.2e   (measured e-fold "
-                    "rate %.1f /unit)\n", c.track, r.amp0, r.amp1, r.efold);
+        std::printf("  band max amplitude (modes %d..%d): %.2e -> %.2e at "
+                    "mode %d   (e-fold rate %.1f /unit)\n", c.band_lo,
+                    c.band_hi, r.amp0, r.amp1, r.mode1, r.efold);
         const bool grew = (r.amp1 > 10.0 * r.amp0) ||
                           (std::fabs(r.dsig_dt) > 2.0);
         std::printf("  verdict: %s (expected %s)\n\n",
