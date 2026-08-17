@@ -15,6 +15,8 @@
 
 #include <cmath>
 #include <complex>
+#include <cstdio>
+#include <cstdlib>
 #include <memory>
 #include <vector>
 
@@ -112,21 +114,40 @@ public:
         for (int t = 0; t < nthreads; ++t) ffts_.emplace_back(new FFT2D(g_));
 
         k2_.resize(g_.size());
+        kx2_.resize(g_.Nx);
+        kz2_.resize(g_.Nz);
+        for (int i = 0; i < g_.Nx; ++i) kx2_[i] = g_.kx(i) * g_.kx(i);
+        for (int j = 0; j < g_.Nz; ++j) {
+            const double kz = g_.kz(j);
+            if (kin_ == Kinetic::Spectral) {
+                kz2_[j] = kz * kz;
+            } else {
+                const double s = std::sin(0.5 * kz * g_.dz);
+                kz2_[j] = 4.0 * s * s / (g_.dz * g_.dz);
+            }
+        }
         for (int i = 0; i < g_.Nx; ++i) {
-            const double kx = g_.kx(i);
             for (int j = 0; j < g_.Nz; ++j) {
-                const double kz = g_.kz(j);
-                double kz2;
-                if (kin_ == Kinetic::Spectral) {
-                    kz2 = kz * kz;
-                } else {
-                    const double s = std::sin(0.5 * kz * g_.dz);
-                    kz2 = 4.0 * s * s / (g_.dz * g_.dz);
-                }
-                k2_[g_.idx(i, j)] = kx * kx + kz2;
+                k2_[g_.idx(i, j)] = kx2_[i] + kz2_[j];
             }
         }
     }
+
+    // Rotating frame (rotation.h): one static trap per stream,
+    // 0.5 kappa^2 wrap(x - x_g)^2, applied inside the potential step. Wrapping
+    // keeps the box exactly periodic; the cusp at each stream's antipode sits
+    // where that stream's amplitude is exponentially negligible.
+    void set_traps(const std::vector<double>& xg, double kappa) {
+        traps_.assign(xg.size(), std::vector<double>(g_.Nx));
+        for (size_t s = 0; s < xg.size(); ++s) {
+            for (int i = 0; i < g_.Nx; ++i) {
+                const double u = wrap_dx(g_.x(i) - xg[s], g_.Lx);
+                traps_[s][i] = 0.5 * kappa * kappa * u * u;
+            }
+        }
+    }
+    void clear_traps() { traps_.clear(); }
+    bool has_traps() const { return !traps_.empty(); }
 
     const Grid2D& grid() const { return g_; }
     double hbar() const { return hbar_; }
@@ -165,15 +186,49 @@ public:
                         double dt) const {
         const int S = st.n_streams(), N = g_.size();
         const double a = -dt / hbar_;
+        if (!traps_.empty() && static_cast<int>(traps_.size()) != S) {
+            std::fprintf(stderr, "potential_full: %zu traps for %d streams\n",
+                         traps_.size(), S);
+            std::abort();
+        }
 #ifdef _OPENMP
 #pragma omp parallel for schedule(static)
 #endif
         for (int s = 0; s < S; ++s) {
-            for (int i = 0; i < N; ++i) {
-                const double ph = a * V[i];
-                st.psi[s][i] *= Complex(std::cos(ph), std::sin(ph));
+            if (traps_.empty()) {
+                for (int i = 0; i < N; ++i) {
+                    const double ph = a * V[i];
+                    st.psi[s][i] *= Complex(std::cos(ph), std::sin(ph));
+                }
+            } else {
+                const double* tr = traps_[s].data();
+                for (int i = 0; i < g_.Nx; ++i) {
+                    const double t = tr[i];
+                    Complex* row = &st.psi[s][g_.idx(i, 0)];
+                    const double* v = &V[g_.idx(i, 0)];
+                    for (int j = 0; j < g_.Nz; ++j) {
+                        const double ph = a * (v[j] + t);
+                        row[j] *= Complex(std::cos(ph), std::sin(ph));
+                    }
+                }
             }
         }
+    }
+
+    // Potential energy stored in the per-stream traps.
+    double trap_energy(const SlabState2D& st) const {
+        if (traps_.empty()) return 0.0;
+        double e = 0.0;
+        for (int s = 0; s < st.n_streams(); ++s) {
+            const double* tr = traps_[s].data();
+            for (int i = 0; i < g_.Nx; ++i) {
+                double m = 0.0;
+                const Complex* row = &st.psi[s][g_.idx(i, 0)];
+                for (int j = 0; j < g_.Nz; ++j) m += std::norm(row[j]);
+                e += tr[i] * m;
+            }
+        }
+        return e * g_.dx * g_.dz;
     }
 
     // Spectral d/dz, one call per stream.
@@ -214,18 +269,35 @@ public:
     }
 
     double kinetic_energy(const SlabState2D& st) const {
+        double ex, ez;
+        kinetic_energy_split(st, ex, ez);
+        return ex + ez;
+    }
+
+    // Kinetic energy separated by axis. KE_x / mass = <v_x^2> / 2, the direct
+    // in-plane dispersion diagnostic; for a stationary rotating stack it also
+    // equals the trap energy (virial split of the Landau levels).
+    void kinetic_energy_split(const SlabState2D& st, double& ex,
+                              double& ez) const {
         const int N = g_.size();
-        double e = 0.0;
+        ex = ez = 0.0;
         for (int s = 0; s < st.n_streams(); ++s) {
             FFT2D& f = *ffts_[0];
             f.load(st.psi[s]);
             f.forward2();
             const Complex* d = f.data();
-            for (int i = 0; i < N; ++i) {
-                e += 0.5 * hbar_ * hbar_ * k2_[i] * std::norm(d[i]);
+            for (int i = 0; i < g_.Nx; ++i) {
+                for (int j = 0; j < g_.Nz; ++j) {
+                    const double p = std::norm(d[g_.idx(i, j)]);
+                    ex += kx2_[i] * p;
+                    ez += kz2_[j] * p;
+                }
             }
         }
-        return e * g_.dx * g_.dz / static_cast<double>(N);
+        const double c = 0.5 * hbar_ * hbar_ * g_.dx * g_.dz /
+                         static_cast<double>(N);
+        ex *= c;
+        ez *= c;
     }
 
     // Fraction of |psi_k|^2 above the given ceilings, separately per axis.
@@ -254,7 +326,8 @@ private:
     Grid2D g_;
     double hbar_;
     Kinetic kin_;
-    std::vector<double> k2_;
+    std::vector<double> k2_, kx2_, kz2_;
+    std::vector<std::vector<double>> traps_;
     mutable std::vector<std::unique_ptr<FFT2D>> ffts_;
 };
 

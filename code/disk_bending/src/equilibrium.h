@@ -107,6 +107,42 @@ struct WarmSheet {
 // Effective vertical frequency including the rigid external term.
 inline double sheet_omega0(const WarmSheet& s) { return s.omega0; }
 
+// Drop states with E - E_0 above E_cap and renormalise the occupations back
+// to Sigma. The 2D MatchedFD runs need this: the finite-difference kinetic
+// band saturates at KE_max = 2 hbar^2 / dz^2, and the bound-state cut alone
+// (V at the box edge) can sit above that, in which case the top thermal
+// states are band-edge eigenvectors with checkerboard components that
+// register as vertical spectral spill. Cap the library at a fraction of the
+// band instead. The discarded thermal tail lowers sigma_z slightly;
+// sigma_measured is recomputed so the deficit is visible, not hidden.
+inline void truncate_sheet_energy(WarmSheet& s, double E_cap) {
+    const int M0 = static_cast<int>(s.u.size());
+    int M = 0;
+    while (M < M0 && s.E[M] - s.E[0] < E_cap) ++M;
+    if (M < 1) M = 1;
+    if (M == M0) return;
+    s.u.resize(M);
+    s.E.resize(M);
+    s.w.resize(M);
+    double wsum = 0.0;
+    for (double w : s.w) wsum += w;
+    for (double& w : s.w) w *= s.cfg.Sigma / wsum;
+    s.n_significant = M;
+    s.energy_cut = (s.E[M - 1] - s.E[0]) / (s.cfg.sigma_z * s.cfg.sigma_z);
+    s.tail_fraction = s.w[M - 1] / s.w[0];
+
+    const Grid1D& g = s.grid;
+    double ke = 0.0;
+    for (int m = 0; m < M; ++m) {
+        double pe = 0.0;
+        for (int j = 0; j < g.N; ++j) {
+            pe += (s.Phi_self[j] + s.Phi_ext[j]) * s.u[m][j] * s.u[m][j];
+        }
+        ke += s.w[m] * (s.E[m] - pe * g.dz);
+    }
+    s.sigma_measured = std::sqrt(2.0 * ke / s.cfg.Sigma);
+}
+
 inline WarmSheet build_warm_sheet(const Grid1D& g, const SheetConfig& cfg) {
     WarmSheet s;
     s.grid = g;

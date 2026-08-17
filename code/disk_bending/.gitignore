@@ -15,6 +15,9 @@ test_inplane_jeans
 test_firehose
 test_bending_disp
 test_mode_decomp
+test_epicyclic
+test_toomre
+test_rot_disp
 
 # Regenerable run data
 output/**/*.dat
