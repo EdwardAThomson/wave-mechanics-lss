@@ -278,12 +278,12 @@ preceded it is `output/rotation_spike.md`. In brief:
   wrapped trap keeps the box exactly periodic, so the spike's edge buffer
   turned out to be unnecessary.
 - **The measurement Stage 1 could not make** (`tests/test_rot_disp.cpp`):
-  at `Lx = 16 kpc`, `Q = 2.45`, `k = 0.393 /kpc`, `k h = 0.116`, the rigid
-  bending channel gives `omega = 19.48 +- 0.03 km/s/kpc` across three seeds
-  (0.15% spread, against 1.99-42.98 scatter without rotation). The value
-  falls between razor-thin gravity-only (23.03) and gravity-minus-pressure
-  (17.53), consistent with the finite-thickness and epicyclic-confinement
-  corrections both acting at their expected size.
+  at `Lx = 16 kpc`, `Q = 2.45`, the rigid bending channel gives
+  `omega = 19.48 +- 0.03 km/s/kpc` at `k = 0.393` across three seeds (0.15%
+  spread, against 1.99-42.98 scatter without rotation) and `omega = 28.51`
+  at `k = 0.785`. Mode 2 excludes the full free-streaming pressure term by
+  a factor 4.8 in `omega^2`: epicyclic confinement suppresses it, and both
+  points sit at 72-77% of razor-thin gravity-only.
 - **Toomre stabilisation, measured** (`tests/test_toomre.cpp`): rotation
   cuts the fragmentation heating rate by a factor ~760 at identical physical
   parameters. And a lesson: razor-thin Q is not the stability boundary of a
@@ -625,11 +625,12 @@ noise blocker and the fragmentation blocker together, and the stable branch
 is measured (see "Rotation stage status" above). What remains, in order of
 cost:
 
-1. **Fill in the dispersion relation.** One k point is measured;
-   `test_rot_disp [mode] [nseeds]` makes further points mechanical, and at
-   mode 2 the candidate relations differ by a factor 2.5, so each point is
-   strongly discriminating. The interesting physics target is the strength
-   of the pressure term as a function of `k a_epi` (epicyclic confinement).
+1. **Fill in the dispersion relation.** Modes 1 and 2 are measured;
+   `test_rot_disp [mode] [nseeds]` makes further points mechanical. The
+   physics target is separating the finite-thickness dilution (grows with
+   `k h`) from the epicyclic suppression of the pressure term (a function of
+   `k a_epi`); the two measured points cannot yet distinguish the
+   decomposition, since `omega^2 / 2 pi G Sigma k` comes out nearly flat.
 2. **Landau damping and the §6 phase offset** in the rotating box, now that
    a genuinely propagating stable wave exists to damp.
 3. Stage 2 (shear, pattern winding, a Sgr-like perturber) after that.

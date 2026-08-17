@@ -245,8 +245,8 @@ int main(int argc, char** argv) {
     std::printf("\npredictions: sqrt(2piGSk) = %.2f, with pressure = %.2f "
                 "km/s/kpc; resolution %.2f\n", w_grav, w_press,
                 (w_press > 0.0 ? w_press : w_grav) / 8.0);
-    std::printf("measured: %.2f +- %.2f km/s/kpc over three seeds\n", wmean,
-                wsd);
+    std::printf("measured: %.2f +- %.2f km/s/kpc over %d seed(s)\n", wmean,
+                wsd, nseeds);
     std::printf("clustered (sd well under the seed spread of the old "
                 "noise-dominated runs) means the\nstable bending branch is "
                 "measured; scattered means it is still noise.\n");

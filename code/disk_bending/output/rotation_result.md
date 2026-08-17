@@ -27,11 +27,13 @@ Three findings:
    size limit), so Toomre support at Q = 2.45 simultaneously opened the
    k << k_J regime and dropped the corrugation noise floor to 1-2% of the
    signal.
-2. **The measured frequency falls between the razor-thin candidates, where
-   finite thickness and epicyclic confinement put it.** Gravity-only predicts
-   23.03, gravity-minus-pressure 17.53. The measurement implies the
-   free-streaming pressure correction operates at partial strength, as it
-   should when stars epicycle rather than stream (k a_epi = 0.34).
+2. **Two k points, and the free-streaming pressure term is decisively
+   suppressed.** At mode 2 (k = 0.785, one seed) omega = 28.51 against
+   gravity-only 32.58 and gravity-minus-full-pressure 12.97: the
+   full-pressure candidate is excluded by a factor 4.8 in omega^2. Across
+   both points omega^2 sits at 72-77% of razor-thin gravity-only, and the
+   implied pressure strength falls steeply with k a_epi, the direction
+   epicyclic averaging predicts.
 3. **Razor-thin Q is not the stability boundary of a thick sheet.** A
    rotating sheet with sigma_z = 20 km/s refuses to fragment even at
    razor-thin Q = 0.49, because the would-be unstable wavelengths sit at
@@ -107,7 +109,9 @@ margin below the Nyquist velocity, so the stack is stationary to the aliasing
 of an exp(-large) tail; matched-FD in x would instead distort velocities by
 double digits at sigma_x = 40).
 
-## Result: the dispersion point
+## Result: the dispersion relation, two points so far
+
+Mode 1, three random-phase seeds:
 
 | seed | omega (rigid channel) | t=0 bending purity | noise / signal | energy drift |
 |---|---|---|---|---|
@@ -116,30 +120,36 @@ double digits at sigma_x = 40).
 | 10102 | 19.46 | 0.9995 | 0.8% | 2.3e-6 |
 
 Frequency resolution of one run is 2.19 km/s/kpc; the three seeds agree to
-0.06. Compare the identical protocol without rotation (test_mode_decomp,
-Lx = 3 kpc, the largest box that did not fragment): 42.98, 28.23, 1.99.
+0.06, so mode 2 was run with a single seed (purity 0.9998, noise 3.9%,
+energy drift 2.9e-6). Compare the identical protocol without rotation
+(test_mode_decomp, Lx = 3 kpc, the largest box that did not fragment):
+42.98, 28.23, 1.99.
 
-Against the razor-thin candidates at k = 0.3927 /kpc, using the realised
-sigma_x = 38.05:
+Against the razor-thin candidates, using the realised sigma_x = 38.05:
 
-| relation | omega predicted | measured / predicted (omega^2) |
-|---|---|---|
-| gravity only, 2 pi G Sigma k | 23.03 | 0.72 |
-| with free-streaming pressure, - k^2 sigma_x^2 | 17.53 | 1.23 |
+| mode | k [/kpc] | k h | k a_epi | omega measured | gravity only | with pressure | omega^2 / 2 pi G Sigma k |
+|---|---|---|---|---|---|---|---|
+| 1 | 0.393 | 0.116 | 0.34 | 19.48 +- 0.03 | 23.03 | 17.53 | 0.718 |
+| 2 | 0.785 | 0.232 | 0.68 | 28.51 | 32.58 | 12.97 | 0.766 |
 
-The measured omega^2 = 379 sits between them, and the two corrections both
-have the right sign and size. Finite thickness at k h = 0.116 trims the
-gravity term by roughly 1/(1 + k h) = 0.90, bringing 530.6 down to ~475.
-The remaining deficit, 475 - 379 = 96 against a full free-streaming pressure
-term of 223, says the pressure correction operates at roughly 40% strength.
-That is qualitatively what epicyclic confinement does: the -k^2 sigma_x^2
-term is derived for stars free-streaming through the corrugation, and at
-k a_epi = 0.34 a star oscillates within 0.86 kpc rather than streaming
-through a 16 kpc wavelength. Both factors are approximations, so this is an
-interpretation of one measured number, not a two-parameter fit. Filling in
-more k points is the direct follow-up: test_rot_disp takes the mode number
-as an argument, and at mode 2 the two candidates differ by a factor 2.5
-(32.6 vs 12.9), which no noise floor can blur. PENDING: mode 2 measurement.
+Mode 2 is the discriminating one: the candidates differ by a factor 2.5
+there, and the measurement excludes the full free-streaming pressure term by
+a factor 4.8 in omega^2 while sitting 23% below gravity-only. Reading the
+two points together:
+
+- **The free-streaming pressure term is strongly suppressed at both k.**
+  This is what epicyclic confinement does: the -k^2 sigma_x^2 term is
+  derived for stars streaming through the corrugation, and here stars
+  oscillate within a_epi = 0.86 kpc instead.
+- **Decomposing the residual 23-28% deficit is not yet possible.** Taking
+  the thickness dilution as 1/(1 + k h) leaves an implied pressure strength
+  of 0.43 at k a_epi = 0.34 falling to 0.06 at 0.68. The direction matches
+  epicyclic averaging (more of the wavelength sampled per orbit, more
+  cancellation), but the numbers lean on the approximate thickness form, and
+  omega^2 / 2 pi G Sigma k being nearly flat (0.72 vs 0.77) across a
+  doubling of k says the naive thickness-plus-pressure decomposition is not
+  yet pinned down. Modes 3 and 4 would separate the two, since thickness
+  suppression grows with k h while the epicyclic factor saturates.
 
 ## Result: Toomre stabilisation, with a thickness lesson
 
@@ -206,12 +216,13 @@ spill. `truncate_sheet_energy` caps the library at 80% of the band.
 - **No shear.** A rigidly rotating box gives Toomre support, the stable
   branch and a propagating wave, but pattern winding needs the full
   Goldreich-Lynden-Bell shearing treatment. That remains the next stage.
-- **One k point so far.** A dispersion relation needs several; the machinery
-  takes the mode number as an argument and the follow-up is mechanical.
-- **The 40% pressure-suppression number is an interpretation**, stacked on
-  the approximate 1/(1 + k h) thickness factor. The clean statement is only
-  that the measured frequency lies between the two razor-thin limits with
-  0.15% seed reproducibility.
+- **Two k points so far**, the second single-seed. The clean statements are
+  the frequencies themselves, their 0.15% seed reproducibility at mode 1,
+  and the factor-4.8 exclusion of the full free-streaming pressure term at
+  mode 2. The pressure-strength numbers (0.43 and 0.06) are
+  interpretations stacked on the approximate 1/(1 + k h) thickness factor,
+  and the flatness of omega^2 / 2 pi G Sigma k across the two modes warns
+  against taking that decomposition quantitatively yet.
 - sigma_x is realised 5% below target by the level truncation at the
   velocity ceiling; predictions use the realised value, but the comparison
   inherits that calibration.
