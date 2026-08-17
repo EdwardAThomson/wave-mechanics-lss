@@ -55,6 +55,13 @@ wave-mechanics-lss/
 │   ├── fpa_1d/                   # 1D Free Particle Approximation (Ch 4)
 │   ├── fpa_3d/                   # 3D FPA toy model (Ch 4)
 │   ├── fpa_3d_cosmo/             # 3D FPA with cosmological ICs, ZA vs FPA (Ch 4)
+│   ├── disk_bending/             # SP applied to galactic disk corrugations
+│   │   ├── src/                  # Isolated-BC vertical Poisson, warm eigenstate
+│   │   │                         #   ICs, split-step, Husimi phase-space transform
+│   │   ├── sheet_1d.cpp          # 1D vertical slab: kick + phase spiral
+│   │   ├── tests/                # Validation ladder (Poisson, free, harmonic,
+│   │   │                         #   Jeans, warm sheet stationarity)
+│   │   └── README.md             # Design notes and review of the adaptation plan
 │   └── schrodinger_poisson/      # Full Schrödinger-Poisson solver (Ch 5)
 │       ├── sp_1d.cpp             # 1D solver (Goldberg + periodic BCs)
 │       ├── sp_3d.cpp             # 3D solver (Goldberg, tophat tests, expansion)

@@ -118,6 +118,54 @@ stretch goals requiring more compute than a laptop.
 
 ---
 
+## Phase 3e: New Application — Galactic Disk Corrugations 🔄 STAGE 0 COMPLETE
+**Goal:** Point the same Schrödinger-Poisson machinery at vertical bending waves and
+the Gaia vertical phase spiral instead of cosmological structure. Lives in
+`code/disk_bending/`; see its `README.md`.
+
+Schrödinger-Poisson is a Vlasov-Poisson solver, so anything collisionless is fair game.
+The draw is that Husimi-smoothing |ψ|² gives the full distribution function f(z, v_z) on
+a grid with **no particle shot noise**, which is exactly where N-body struggles for the
+fine-grained phase spiral.
+
+- [x] Isolated (vacuum) vertical Poisson solver — exact and O(N) in 1D, no Green's-function padding needed
+- [x] Warm initial conditions from eigenstates of the self-consistent vertical Hamiltonian
+      (stationary by construction, avoiding the turning-point singularity of stream sampling)
+- [x] Validation ladder: free particle, harmonic oscillator, Jeans growth (both branches), sheet stationarity
+- [x] Husimi transform to f(z, v_z); vertical phase spiral produced from an impulsive kick
+- [x] Settled the multi-stream vs single-ψ question quantitatively:
+      spurious dipole A ≈ 0.70·√(ħ_eff/ω_z)/√N_streams
+- [x] Stage 1 machinery: hybrid (x, z) Poisson (FFT in x, exact O(Nz) recursion in z),
+      2D evolver, separable warm ICs, column moments and the §6 phase-offset diagnostic
+- [x] Stage 1 physics, firehose branch: finite thickness fully stabilises it at kh ~ 1,
+      confirming Araki (1985) and the §7 finite-thickness correction
+- [ ] Stage 1 physics, stable bending branch and Landau damping — **needs rotation**,
+      so these move to Stage 2 (see below)
+- [ ] Stage 2: rotation first (Toomre support), then shear and a Sagittarius-like perturber
+
+**Notable findings:** a purely harmonic vertical potential produces no phase spiral at
+all (Kohn's theorem), and strong disk self-gravity keeps the dipole response coherent
+so it neither damps nor winds. How much vertical restoring force comes from the disk
+versus the halo is therefore a physics parameter to scan, not a detail.
+
+**The Stage 1 result: shear cannot be skipped.** The two razor-thin dispersion relations
+for a sheet of in-plane dispersion σ_x are the same expression with opposite sign:
+in-plane Jeans is unstable for k < k_J = 2πGΣ/σ_x², and bending is *stable* for exactly
+that same k < k_J. So in a non-rotating box, wherever bending waves would propagate
+stably the sheet is gravitationally fragmenting, and vice versa: there is no window.
+Confirmed numerically, with the heating switching off precisely where the box stops
+holding an unstable mode (a factor ~750 drop between σ_x = 10 and 20 km/s), and with a
+frozen-potential control giving exactly zero drift.
+
+What breaks the degeneracy in a real disk is rotation (the in-plane relation gains κ²,
+Toomre Q > 1; the Milky Way sits at Q ≈ 2.4), and Coriolis needs the in-plane
+perpendicular direction, so it cannot exist in an (x, z) box at all. The plan's advice to
+"skip shear entirely at this stage" saves real effort but removes the science it was
+meant to preserve. The firehose branch lives at k > k_J, where the sheet *is* stable, and
+is therefore the one piece of test 5 an unsheared box can deliver — which it did.
+
+---
+
 ## Phase 4: Blog / Outreach 🔄 UNDERWAY
 **Goal:** Document the journey and share insights.
 

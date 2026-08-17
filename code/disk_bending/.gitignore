@@ -1,0 +1,28 @@
+# Compiled binaries (no extension = binary executable)
+sheet_1d
+sheet_2d
+test_poisson
+test_free
+test_harmonic
+test_jeans
+test_sheet
+test_poisson_xz
+test_bending
+test_granule
+test_mode_noise
+test_granule2
+test_inplane_jeans
+test_firehose
+test_bending_disp
+test_mode_decomp
+
+# Regenerable run data
+output/**/*.dat
+output/**/*.log
+# Generated presentation page (1.4 MB of inlined figures); rebuild with
+# build_result_page.py from the committed markdown and figures.
+output/**/*.html
+
+# The root .gitignore excludes *.png everywhere; re-include the two headline
+# figures, which are the point of the exercise and are cheap to carry.
+!figures/*.png
