@@ -24,6 +24,7 @@ The validation ladder passes end to end (`make check`, about four minutes):
 | 4 | Warm isothermal sheet stationarity | z_rms drift 4e-6, dE/E 5e-11 over 8 vertical periods |
 | 5a | Hybrid (x, z) Poisson, four ways | round-off (4e-16) end to end; 2nd order vs closed form |
 | 5b | Firehose branch vs finite thickness | fully stabilised at `k h` ~ 1, as Araki (1985) |
+| 6 | Rotating frame: epicyclic oscillation and warm Landau stack | order 2.00 in dt; equilibrium energy 1.3e-6, spill 1e-9 |
 
 Test 3 runs both signs of the dispersion relation (gravity-dominated growth and
 quantum-pressure-dominated oscillation), which pins the sign of the gravity
@@ -261,6 +262,35 @@ floor is a few times 1e-3 kpc even with one stream, comfortably under a realisti
 0.1 kpc corrugation, so Option B stays viable at higher dimension.
 
 ---
+
+## Rotation stage status
+
+Rotation is implemented and the stable bending branch is measured. The full
+write-up is `output/rotation_result.md`; the feasibility analysis that
+preceded it is `output/rotation_spike.md`. In brief:
+
+- **Formulation** (`src/rotation.h`): Coriolis as a Landau-gauge vector
+  potential. With nothing depending on y, `p_y` is conserved and each stream
+  is one guiding centre `x_g = hbar k_y / kappa` carrying thermally occupied
+  epicyclic levels, the exact in-plane analogue of the vertical eigenstate
+  construction. The evolver gains one static per-stream trap
+  `0.5 kappa^2 wrap(x - x_g)^2` in the potential step and nothing else. The
+  wrapped trap keeps the box exactly periodic, so the spike's edge buffer
+  turned out to be unnecessary.
+- **The measurement Stage 1 could not make** (`tests/test_rot_disp.cpp`):
+  at `Lx = 16 kpc`, `Q = 2.45`, `k = 0.393 /kpc`, `k h = 0.116`, the rigid
+  bending channel gives `omega = 19.48 +- 0.03 km/s/kpc` across three seeds
+  (0.15% spread, against 1.99-42.98 scatter without rotation). The value
+  falls between razor-thin gravity-only (23.03) and gravity-minus-pressure
+  (17.53), consistent with the finite-thickness and epicyclic-confinement
+  corrections both acting at their expected size.
+- **Toomre stabilisation, measured** (`tests/test_toomre.cpp`): rotation
+  cuts the fragmentation heating rate by a factor ~760 at identical physical
+  parameters. And a lesson: razor-thin Q is not the stability boundary of a
+  thick sheet. At `sigma_z = 20` the would-be unstable band sits at
+  `k h ~ 1-3` and the sheet is stable at ANY `sigma_x`; thinning to
+  `sigma_z = 10` restores fragmentation at 11.8 e-folds per unit time,
+  exactly in the predicted band.
 
 ## Review of the plan
 
@@ -529,6 +559,13 @@ Stage 1, 2D (x, z) box
   src/diagnostics2d.h  column moments Sigma(x), <z>(x), <v_z>(x); mode amplitudes
   sheet_2d.cpp         driver
 
+Rotation stage (rigid rotating frame, no shear)
+  src/rotation.h       Landau-gauge Coriolis: guiding-centre streams with
+                       thermally occupied epicyclic levels; wrapped traps
+  tests/test_epicyclic.cpp  in `make check`: dynamics + equilibrium validation
+  tests/test_toomre.cpp     four-case stability table (`make measure`)
+  tests/test_rot_disp.cpp   the stable bending branch; args: [mode] [nseeds]
+
   tests/               validation ladder (tests 0-4 plus the hybrid Poisson)
   tests/test_bending.cpp   Stage 1 measurements; `make measure`, not `make check`
   plot_phase_spiral.py Husimi maps, normalised by the pre-kick equilibrium
@@ -544,8 +581,9 @@ certified against the analytic harmonic ladder by `tests/test_harmonic.cpp`.
 
 ```sh
 make            # drivers and tests
-make check      # the validation ladder in order, ~4 min
-make measure    # Stage 1 measurements, tens of minutes
+make check      # the validation ladder in order, ~5 min
+make measure    # Stage 1 + rotation measurement binaries; individual runs
+                # range from minutes (test_granule2) to ~1 h (test_rot_disp)
 ./sheet_1d --help
 ./sheet_2d --help
 ```
@@ -572,29 +610,28 @@ python3 plot_moments.py output/spiral_tracer output/spiral_selfgrav
   Stage 1 work and it is the natural home for the §6 phase-offset diagnostic too.
 - The perturber (§5) is not implemented; both stages use idealised kicks, which
   is what §9 steps 3 and 5 ask for.
-- No shear, so no pattern winding: that is Stage 2 (§9 step 7).
+- No shear, so no pattern winding: that is Stage 2 (§9 step 7). The rotation
+  stage is a rigidly rotating box, which supplies Toomre support and the
+  stable branch but not winding.
+- The in-plane level truncation at the velocity ceiling realises sigma_x
+  about 5% below target at the production grid; quoted predictions use the
+  realised value.
 
 ## Suggested next step
 
-Two threads, and the cheaper one comes first.
+The two threads suggested here previously (beat down the noise floor; add
+rotation) turned out to be one thread, and it is done: rotation removed the
+noise blocker and the fragmentation blocker together, and the stable branch
+is measured (see "Rotation stage status" above). What remains, in order of
+cost:
 
-1. **Beat down the noise floor on the rigid channel.** The projection is built
-   and validated; what is missing is signal to noise, and the three levers are
-   known and independent: seed-averaged periodograms (cheap, and the standard
-   treatment), more streams (`1/sqrt(N_streams)`), and a wider box
-   (`sqrt(L_x / lambda_dB)`). Refining the grid is the one thing that does not
-   help. Until the frequency reproduces across seeds there is no dispersion
-   relation to quote.
-2. **Then add rotation.** The `k << k_J` regime, where `omega^2 -> 2 pi G Sigma k`
-   and the razor-thin comparison is clean, is unreachable without Toomre
-   support, and so are Landau damping and a genuinely propagating wave for the
-   §6 phase offset. The cheapest useful form is a rotating box at fixed `Omega`
-   with no shear: it supplies `kappa`, which is all the stable branch needs.
-   Coriolis enters the Schrodinger operator as a vector potential, and in
-   Landau gauge with no `y` dependence it reduces to a local term
-   `(hbar k_y - kappa x)^2 / 2` per `k_y`, which the existing multi-stream
-   architecture can carry directly. The catch is that this term is not periodic
-   in `x`, so the box boundary needs thought.
+1. **Fill in the dispersion relation.** One k point is measured;
+   `test_rot_disp [mode] [nseeds]` makes further points mechanical, and at
+   mode 2 the candidate relations differ by a factor 2.5, so each point is
+   strongly discriminating. The interesting physics target is the strength
+   of the pressure term as a function of `k a_epi` (epicyclic confinement).
+2. **Landau damping and the §6 phase offset** in the rotating box, now that
+   a genuinely propagating stable wave exists to damp.
 3. Stage 2 (shear, pattern winding, a Sgr-like perturber) after that.
 
 Meanwhile the firehose result and the fragmentation finding stand on their own

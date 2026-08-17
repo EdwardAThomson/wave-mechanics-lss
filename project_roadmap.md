@@ -118,7 +118,7 @@ stretch goals requiring more compute than a laptop.
 
 ---
 
-## Phase 3e: New Application — Galactic Disk Corrugations 🔄 STAGE 0 COMPLETE
+## Phase 3e: New Application — Galactic Disk Corrugations 🔄 ROTATION STAGE COMPLETE
 **Goal:** Point the same Schrödinger-Poisson machinery at vertical bending waves and
 the Gaia vertical phase spiral instead of cosmological structure. Lives in
 `code/disk_bending/`; see its `README.md`.
@@ -139,9 +139,21 @@ fine-grained phase spiral.
       2D evolver, separable warm ICs, column moments and the §6 phase-offset diagnostic
 - [x] Stage 1 physics, firehose branch: finite thickness fully stabilises it at kh ~ 1,
       confirming Araki (1985) and the §7 finite-thickness correction
-- [ ] Stage 1 physics, stable bending branch and Landau damping — **needs rotation**,
-      so these move to Stage 2 (see below)
-- [ ] Stage 2: rotation first (Toomre support), then shear and a Sagittarius-like perturber
+- [x] Rotation (rigidly rotating box): Coriolis as a Landau-gauge vector potential,
+      one stream per guiding centre with thermally occupied epicyclic levels; validated
+      to order 2.00 in dt with the equilibrium stationary to 1e-6 in energy
+- [x] **The stable bending branch, measured**: ω = 19.48 ± 0.03 km/s/kpc at
+      k = 0.393/kpc, Q = 2.45, Lx = 16 kpc (0.15% seed spread, against pure noise
+      without rotation); falls between the razor-thin gravity-only and with-pressure
+      predictions, as finite thickness and epicyclic confinement dictate
+- [x] Toomre stabilisation measured (heating rate drops ~760×), plus a thickness
+      lesson: razor-thin Q is not the stability boundary; a σ_z = 20 sheet is stable
+      at ANY σ_x because kh ~ 1-3 dilutes in-plane self-gravity, and thinning to
+      σ_z = 10 restores fragmentation exactly in the predicted band.
+      See `code/disk_bending/output/rotation_result.md`.
+- [ ] Fill in the dispersion relation at more k points; Landau damping and the
+      §6 phase offset in the rotating box
+- [ ] Stage 2: shear (pattern winding) and a Sagittarius-like perturber
 
 **Notable findings:** a purely harmonic vertical potential produces no phase spiral at
 all (Kohn's theorem), and strong disk self-gravity keeps the dipole response coherent

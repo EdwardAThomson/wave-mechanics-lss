@@ -36,7 +36,9 @@ Three findings:
    rotating sheet with sigma_z = 20 km/s refuses to fragment even at
    razor-thin Q = 0.49, because the would-be unstable wavelengths sit at
    k h ~ 1-3 where thickness dilutes in-plane self-gravity by roughly
-   1/(1 + k h). PENDING: thin-sheet fragmentation control.
+   1/(1 + k h). Thinning the sheet to sigma_z = 10, which drives the
+   corrected relation negative, brings fragmentation straight back at 11.8
+   e-folds per time unit. All four stability verdicts land as predicted.
 
 ---
 
@@ -141,7 +143,23 @@ as an argument, and at mode 2 the two candidates differ by a factor 2.5
 
 ## Result: Toomre stabilisation, with a thickness lesson
 
-PENDING: final four-case table from test_toomre.
+Four cases (`test_toomre`), each discriminating something different. The
+fragmentation metrics are the in-plane heating rate d(sigma_x)/dt and the
+growth of the surface-density band maximum:
+
+| case | d(sigma_x)/dt | band max amplitude | verdict |
+|---|---|---|---|
+| rotating, sigma_x = 40, sigma_z = 20 (Q = 2.45) | +0.008 | 9.2e-3 → 7.9e-3 | stable |
+| rotating, sigma_x = 8, sigma_z = 20 (razor-thin Q = 0.49, kh ~ 1-3) | +0.070 | 1.5e-2 → 1.6e-2 | stable |
+| rotating, sigma_x = 8, sigma_z = 10 (thin, corrected omega^2 < 0) | +11.4 | 3.2e-2 → 8.8e-1 at mode 5, 11.8 e-folds/unit | fragments |
+| no rotation, sigma_x = 40, sigma_z = 20 (Q = 0) | +5.9 | 7.1e-3 → 4.1e-1 at mode 1, 8.2 e-folds/unit | fragments |
+
+Row 1 against row 4 is the headline: identical physical parameters, rotation
+on versus off, and the heating rate drops by a factor ~760 while the mode 1
+amplitude that grows 58x without rotation stays flat. Row 3 fragments
+exactly in the band the thickness-corrected relation destabilises (modes
+4-8; the fluid estimate peaks near k ~ 5, and mode 5 wins). Row 2 is the
+thickness result discussed next.
 
 The first attempts at this test are worth recording because they falsified
 two successive explanations. At razor-thin Q = 0.61 and 0.49 the rotating
