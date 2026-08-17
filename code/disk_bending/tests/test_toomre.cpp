@@ -155,7 +155,7 @@ int main() {
     };
     const Case cases[3] = {
         {"rotating, sigma_x = 40 (Q = 2.45)", kappa, 40.0, 0.50, 1, 30, true},
-        {"rotating, sigma_x = 8 (Q = 0.49)", kappa, 8.0, 0.45, 1, 40, false},
+        {"rotating, sigma_x = 8 (Q = 0.49)", kappa, 8.0, 0.45, 1, 45, false},
         {"no rotation, sigma_x = 40 (Q = 0)", 0.0, 40.0, 0.50, 1, 3, false},
     };
 
@@ -169,10 +169,14 @@ int main() {
             rc.kappa = c.kap;
             rc.sigma_x = c.sigx;
             rc.verbose = false;
-            // Spacing a_epi for the cold case keeps the stream count sane;
-            // the ripple that spacing costs is ~2 exp(-2 pi^2) of the mean,
-            // invisible, and the case is unstable anyway.
-            rc.n_streams = (c.sigx < 20.0) ? 71 : 0;
+            // Automatic spacing (a_epi / 4) for BOTH rotating cases. A first
+            // attempt economised the cold case to spacing = a_epi, which put
+            // only 2.6 guiding centres per unstable wavelength: enough for
+            // the mean density (the ripple is exp(-2 pi^2 (a/d)^2), still
+            // negligible) but too coarse for the collective response at k*,
+            // and the measured growth collapsed to ~1 e-fold per unit. The
+            // stream lattice must resolve the wavelength being destabilised,
+            // not just the envelope.
             RotatingSlab rot = make_warm_rotating(sheet, g, rc);
             ev.set_traps(rot.xg, rot.kappa);
             st = std::move(rot.st);
