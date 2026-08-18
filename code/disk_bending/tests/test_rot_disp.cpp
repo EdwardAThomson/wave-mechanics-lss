@@ -71,9 +71,18 @@ std::vector<double> drho_from_xi(const Grid2D& g,
 }
 
 double dominant_frequency(const std::vector<double>& t,
-                          const std::vector<Complex>& y, double w_max,
+                          const std::vector<Complex>& y_in, double w_max,
                           double* frac) {
-    const int n = static_cast<int>(y.size());
+    // Subtract the series mean first: a damped mode relaxes toward a nonzero
+    // offset, and without this the lowest bin wins (mode 4 measured "0.06"
+    // before the fix). For strongly damped modes the damped-cosine fit on
+    // the saved series (analyze_rot_disp.py) supersedes this estimate.
+    const int n = static_cast<int>(y_in.size());
+    Complex mean(0.0, 0.0);
+    for (const Complex& v : y_in) mean += v;
+    mean /= static_cast<double>(n);
+    std::vector<Complex> y(y_in);
+    for (Complex& v : y) v -= mean;
     const int nw = 1500;
     double best_p = -1.0, best_w = 0.0, tot = 0.0;
     for (int i = 1; i <= nw; ++i) {
