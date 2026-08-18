@@ -94,14 +94,18 @@ double dominant_frequency(const std::vector<double>& t,
 }  // namespace
 
 int main(int argc, char** argv) {
-    // Usage: test_rot_disp [mode] [nseeds]. Defaults: mode 1, 3 seeds. The
-    // seed spread at mode 1 came out 0.15%, so higher modes can afford a
-    // single seed each when filling in the dispersion relation.
+    // Usage: test_rot_disp [mode] [nseeds] [Nx]. Defaults: mode 1, 3 seeds,
+    // Nx = 1024. The seed spread at mode 1 came out 0.15%, so higher modes
+    // can afford a single seed each when filling in the dispersion relation.
+    // Nx = 2048 doubles the velocity ceiling, which shrinks the epicyclic
+    // level truncation from 2.5% of the Maxwellian to nothing: the
+    // convergence check on the sigma_x calibration.
     const int mode = (argc > 1) ? std::atoi(argv[1]) : 1;
     const int nseeds = (argc > 2) ? std::min(3, std::atoi(argv[2])) : 3;
+    const int Nx = (argc > 3) ? std::atoi(argv[3]) : 1024;
     const double Sigma = 50.0 * units::MSUN_PC2;
     const double sigma_z = 20.0, sigma_x = 40.0, hbar = 0.6, kappa = 44.2;
-    Grid2D g(1024, 320, 16.0, 5.0);
+    Grid2D g(Nx, 320, 16.0, 5.0);
     Grid1D g1(g.Nz, g.Lz);
     const double h0 = 0.05;
     const unsigned long long seeds[3] = {8080ULL, 9091ULL, 10102ULL};
@@ -222,6 +226,40 @@ int main(int argc, char** argv) {
         const double e_drift =
             std::fabs((kex + kez + ev.trap_energy(st) + W) / E0 - 1.0);
 
+        // Rigid-channel time series to disk, for damping analysis and
+        // reprocessing without a rerun.
+        {
+            char fname[128];
+            std::snprintf(fname, sizeof fname,
+                          "output/rotdisp_m%d_N%d_seed%llu.dat", mode, g.Nx,
+                          seeds[sidx]);
+            FILE* f = std::fopen(fname, "w");
+            if (f) {
+                std::fprintf(f, "# t  Re(a0) Im(a0)  Re(a1) Im(a1)  "
+                                "Re(a2) Im(a2)\n");
+                for (size_t i = 0; i < ts.size(); ++i) {
+                    std::fprintf(f, "%.8e %.8e %.8e %.8e %.8e %.8e %.8e\n",
+                                 ts[i], a[0][i].real(), a[0][i].imag(),
+                                 a[1][i].real(), a[1][i].imag(),
+                                 a[2][i].real(), a[2][i].imag());
+                }
+                std::fclose(f);
+            }
+        }
+        // Crude damping estimate: mean |a0| over the first and last fifths.
+        // (The periodogram is blind to a slow envelope; this is not.)
+        {
+            const size_t n = ts.size(), w = n / 5;
+            double A1 = 0.0, A2 = 0.0;
+            for (size_t i = 0; i < w; ++i) A1 += std::abs(a[0][i]);
+            for (size_t i = n - w; i < n; ++i) A2 += std::abs(a[0][i]);
+            A1 /= w;
+            A2 /= w;
+            const double tmid = ts[n - w / 2 - 1] - ts[w / 2];
+            std::printf("  envelope |a0|: first fifth %.3e, last fifth %.3e "
+                        "-> gamma = %+.3f /unit over dt = %.2f\n",
+                        A1, A2, std::log(A1 / A2) / tmid, tmid);
+        }
         const double p1 = std::norm(a[0][0]);
         const double s2 = p1 + std::norm(a[1][0]) + std::norm(a[2][0]);
         const double w_max = 2.0 * w0;
