@@ -41,3 +41,10 @@ struct Grid2D {
     // Fundamental in-plane wavenumber, the longest bending mode the box holds.
     inline double k_fundamental() const { return 2.0 * units::PI / Lx; }
 };
+
+// Minimal periodic distance in x: u mapped into [-L/2, L/2). Used by the
+// rotating-frame trap and its initial conditions (rotation.h) so that both
+// wrap identically.
+inline double wrap_dx(double u, double L) {
+    return u - L * std::round(u / L);
+}
