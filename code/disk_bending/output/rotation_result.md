@@ -27,13 +27,13 @@ Three findings:
    size limit), so Toomre support at Q = 2.45 simultaneously opened the
    k << k_J regime and dropped the corrugation noise floor to 1-2% of the
    signal.
-2. **Two k points, and the free-streaming pressure term is decisively
-   suppressed.** At mode 2 (k = 0.785, one seed) omega = 28.51 against
-   gravity-only 32.58 and gravity-minus-full-pressure 12.97: the
-   full-pressure candidate is excluded by a factor 4.8 in omega^2. Across
-   both points omega^2 sits at 72-77% of razor-thin gravity-only, and the
-   implied pressure strength falls steeply with k a_epi, the direction
-   epicyclic averaging predicts.
+2. **Five k points: the free-streaming pressure term is dead, and Landau
+   damping switches on.** The measured branch tracks the thickness-corrected
+   relation omega^2 = 2 pi G Sigma k / (1 + k h) at k >= 0.79 /kpc (the
+   full-pressure candidate is excluded by a factor 5 in omega^2 at mode 2),
+   while the fundamental sits below it, consistent with residual pressure
+   where epicyclic suppression is weakest. The damping rate rises from
+   gamma = 0.5 at the fundamental to a peak of 6.4 near k a_epi ~ 1.4.
 3. **Razor-thin Q is not the stability boundary of a thick sheet.** A
    rotating sheet with sigma_z = 20 km/s refuses to fragment even at
    razor-thin Q = 0.49, because the would-be unstable wavelengths sit at
@@ -109,47 +109,54 @@ margin below the Nyquist velocity, so the stack is stationary to the aliasing
 of an exp(-large) tail; matched-FD in x would instead distort velocities by
 double digits at sigma_x = 40).
 
-## Result: the dispersion relation, two points so far
+## Result: the dispersion relation and its damping
 
-Mode 1, three random-phase seeds:
+Mode 1 was measured first with three random-phase seeds (periodogram values
+19.52, 19.46, 19.46: a 0.15% spread, against 1.99-42.98 scatter in the
+identical non-rotating protocol), which justified single-seed runs for the
+rest. The authoritative numbers below are damped-cosine fits to the saved
+rigid-channel series (`analyze_rot_disp.py`), all at seed 8080, Nx = 1024;
+`figures/dispersion_relation.png` is the picture:
 
-| seed | omega (rigid channel) | t=0 bending purity | noise / signal | energy drift |
-|---|---|---|---|---|
-| 8080 | 19.52 | 0.9997 | 1.9% | 1.2e-6 |
-| 9091 | 19.46 | 0.9987 | 1.2% | 1.5e-6 |
-| 10102 | 19.46 | 0.9995 | 0.8% | 2.3e-6 |
-
-Frequency resolution of one run is 2.19 km/s/kpc; the three seeds agree to
-0.06, so mode 2 was run with a single seed (purity 0.9998, noise 3.9%,
-energy drift 2.9e-6). Compare the identical protocol without rotation
-(test_mode_decomp, Lx = 3 kpc, the largest box that did not fragment):
-42.98, 28.23, 1.99.
-
-Against the razor-thin candidates, using the realised sigma_x = 38.05:
-
-| mode | k [/kpc] | k h | k a_epi | omega measured | gravity only | with pressure | omega^2 / 2 pi G Sigma k |
+| mode | k [/kpc] | k h | k a_epi | omega | gamma | omega^2 / 2 pi G Sigma k | 1/(1+kh) |
 |---|---|---|---|---|---|---|---|
-| 1 | 0.393 | 0.116 | 0.34 | 19.48 +- 0.03 | 23.03 | 17.53 | 0.718 |
-| 2 | 0.785 | 0.232 | 0.68 | 28.51 | 32.58 | 12.97 | 0.766 |
+| 1 | 0.393 | 0.116 | 0.34 | 19.45 +- 0.01 | 0.48 +- 0.01 | 0.713 | 0.896 |
+| 2 | 0.785 | 0.232 | 0.68 | 29.08 +- 0.14 | 3.67 +- 0.13 | 0.797 | 0.812 |
+| 3 | 1.178 | 0.348 | 1.01 | 35.21 +- 0.37 | 5.64 +- 0.34 | 0.779 | 0.742 |
+| 4 | 1.571 | 0.464 | 1.35 | 38.95 +- 0.65 | 6.37 +- 0.59 | 0.715 | 0.683 |
+| 5 | 1.963 | 0.580 | 1.69 | 41.54 +- 0.48 | 4.37 +- 0.45 | 0.650 | 0.633 |
 
-Mode 2 is the discriminating one: the candidates differ by a factor 2.5
-there, and the measurement excludes the full free-streaming pressure term by
-a factor 4.8 in omega^2 while sitting 23% below gravity-only. Reading the
-two points together:
+Convergence check: mode 1 rerun at Nx = 2048, which doubles the velocity
+ceiling and eliminates the epicyclic level truncation (sigma_x realised
+moves from 38.05 to ~40): omega = 19.56 +- 0.01, a 0.5% shift. The
+truncation calibration was not biasing the measurement.
 
-- **The free-streaming pressure term is strongly suppressed at both k.**
-  This is what epicyclic confinement does: the -k^2 sigma_x^2 term is
-  derived for stars streaming through the corrugation, and here stars
-  oscillate within a_epi = 0.86 kpc instead.
-- **Decomposing the residual 23-28% deficit is not yet possible.** Taking
-  the thickness dilution as 1/(1 + k h) leaves an implied pressure strength
-  of 0.43 at k a_epi = 0.34 falling to 0.06 at 0.68. The direction matches
-  epicyclic averaging (more of the wavelength sampled per orbit, more
-  cancellation), but the numbers lean on the approximate thickness form, and
-  omega^2 / 2 pi G Sigma k being nearly flat (0.72 vs 0.77) across a
-  doubling of k says the naive thickness-plus-pressure decomposition is not
-  yet pinned down. Modes 3 and 4 would separate the two, since thickness
-  suppression grows with k h while the epicyclic factor saturates.
+A method note recorded because it bit once: the in-run periodogram is
+blind to damping and initially reported mode 2 as 28.51 (and a strongly
+damped mode as 0.06 before mean subtraction). The damped-cosine fits
+supersede the periodogram values wherever they differ.
+
+Reading the table:
+
+- **The free-streaming pressure term is excluded.** At mode 2 the
+  gravity-minus-pressure candidate predicts omega = 13.0; measured 29.08,
+  a factor 5.0 in omega^2. Modes 3-5 sit where that relation predicts no
+  wave at all, oscillating cleanly. Epicyclic confinement kills the term:
+  stars oscillate within a_epi = 0.86 kpc instead of streaming through the
+  corrugation.
+- **Modes 2-5 track the thickness-corrected curve** omega^2 =
+  2 pi G Sigma k / (1 + k h), sitting on it to within a few per cent
+  (slightly above at modes 2-3). The fundamental sits 20% below its
+  thickness value in omega^2, consistent with residual pressure at the
+  smallest k a_epi = 0.34, where epicyclic suppression is weakest. That
+  crossover, pressure residual at low k a_epi and none above ~0.7, is the
+  epicyclic-averaging picture in one figure, subject to the caveat that
+  1/(1 + k h) is itself an approximation.
+- **Landau damping switches on with k**: gamma rises from 0.48 at the
+  fundamental (quality factor ~20) through 3.7 and 5.6 to a peak of 6.4
+  near k a_epi ~ 1.4, then turns over by mode 5. A quantitative comparison
+  against kinetic theory for a thick rotating sheet is future work; the
+  measured curve is the falsifiable input for it.
 
 ## Result: Toomre stabilisation, with a thickness lesson
 
@@ -216,13 +223,15 @@ spill. `truncate_sheet_energy` caps the library at 80% of the band.
 - **No shear.** A rigidly rotating box gives Toomre support, the stable
   branch and a propagating wave, but pattern winding needs the full
   Goldreich-Lynden-Bell shearing treatment. That remains the next stage.
-- **Two k points so far**, the second single-seed. The clean statements are
-  the frequencies themselves, their 0.15% seed reproducibility at mode 1,
-  and the factor-4.8 exclusion of the full free-streaming pressure term at
-  mode 2. The pressure-strength numbers (0.43 and 0.06) are
-  interpretations stacked on the approximate 1/(1 + k h) thickness factor,
-  and the flatness of omega^2 / 2 pi G Sigma k across the two modes warns
-  against taking that decomposition quantitatively yet.
+- **Five k points, one seed each past mode 1.** The clean statements are
+  the fitted frequencies and damping rates, mode 1's 0.15% seed
+  reproducibility, and the factor-5 exclusion of the full free-streaming
+  pressure term. The thickness-vs-pressure decomposition leans on the
+  approximate 1/(1 + k h) form, so "tracks the thickness-corrected curve"
+  is a statement about that form, not about an exact profile calculation.
+- The damped-cosine fit frequency is the damped oscillation frequency; at
+  the damping peak (mode 4) the undamped frequency would be ~1.3% higher.
+  No conclusion changes at that level.
 - sigma_x is realised 5% below target by the level truncation at the
   velocity ceiling; predictions use the realised value, but the comparison
   inherits that calibration.

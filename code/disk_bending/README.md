@@ -278,12 +278,14 @@ preceded it is `output/rotation_spike.md`. In brief:
   wrapped trap keeps the box exactly periodic, so the spike's edge buffer
   turned out to be unnecessary.
 - **The measurement Stage 1 could not make** (`tests/test_rot_disp.cpp`):
-  at `Lx = 16 kpc`, `Q = 2.45`, the rigid bending channel gives
-  `omega = 19.48 +- 0.03 km/s/kpc` at `k = 0.393` across three seeds (0.15%
-  spread, against 1.99-42.98 scatter without rotation) and `omega = 28.51`
-  at `k = 0.785`. Mode 2 excludes the full free-streaming pressure term by
-  a factor 4.8 in `omega^2`: epicyclic confinement suppresses it, and both
-  points sit at 72-77% of razor-thin gravity-only.
+  at `Lx = 16 kpc`, `Q = 2.45`, the bending dispersion relation measured at
+  five wavenumbers, `omega` = 19.45 to 41.54 km/s/kpc over k = 0.39 to
+  1.96 /kpc (mode 1 seed spread 0.15%, against 1.99-42.98 scatter without
+  rotation). The full free-streaming pressure term is excluded (factor 5 in
+  `omega^2`); modes 2-5 track `omega^2 = 2 pi G Sigma k / (1 + k h)`; and
+  Landau damping switches on with k, `gamma` rising from 0.5 to a peak of
+  6.4 per unit time near `k a_epi ~ 1.4`. Figure:
+  `figures/dispersion_relation.png`; fits: `analyze_rot_disp.py`.
 - **Toomre stabilisation, measured** (`tests/test_toomre.cpp`): rotation
   cuts the fragmentation heating rate by a factor ~760 at identical physical
   parameters. And a lesson: razor-thin Q is not the stability boundary of a

@@ -142,11 +142,11 @@ fine-grained phase spiral.
 - [x] Rotation (rigidly rotating box): Coriolis as a Landau-gauge vector potential,
       one stream per guiding centre with thermally occupied epicyclic levels; validated
       to order 2.00 in dt with the equilibrium stationary to 1e-6 in energy
-- [x] **The stable bending branch, measured at two k**: ω = 19.48 ± 0.03 km/s/kpc at
-      k = 0.393/kpc and ω = 28.51 at k = 0.785 (Q = 2.45, Lx = 16 kpc; 0.15% seed
-      spread, against pure noise without rotation). Mode 2 excludes the full
-      free-streaming pressure term by 4.8× in ω²: epicyclic confinement suppresses
-      it, and both points sit at 72-77% of razor-thin gravity-only
+- [x] **The stable bending branch, measured at five k**: ω = 19.45 to 41.54 km/s/kpc
+      over k = 0.39-1.96/kpc (Q = 2.45, Lx = 16 kpc; mode 1 seed spread 0.15%, against
+      pure noise without rotation). The full free-streaming pressure term is excluded
+      (5× in ω²); modes 2-5 track the thickness-corrected ω² = 2πGΣk/(1+kh); and
+      Landau damping switches on with k, γ peaking at 6.4/unit near k·a_epi ~ 1.4
 - [x] Toomre stabilisation measured (heating rate drops ~760×), plus a thickness
       lesson: razor-thin Q is not the stability boundary; a σ_z = 20 sheet is stable
       at ANY σ_x because kh ~ 1-3 dilutes in-plane self-gravity, and thinning to

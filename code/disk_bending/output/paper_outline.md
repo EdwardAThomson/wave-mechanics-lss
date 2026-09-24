@@ -105,7 +105,7 @@ Title candidates (pick late):
 | 1 | phase spiral, tracer (Husimi map sequence) | exists, `figures/phase_spiral_tracer.png` |
 | 2 | phase spiral, self-gravitating + moments comparison | exists (2 files) |
 | 3 | resolution law: spill/heating vs hbar_eff N (from Stage 0/1 data) | to assemble from existing runs |
-| 4 | dispersion relation omega^2/2piGSk vs k with candidate curves | needs the modes 3-5 runs, then a plot script |
+| 4 | dispersion relation omega^2/2piGSk vs k with candidate curves | exists, `figures/dispersion_relation.png` (omega and gamma panels) |
 | 5 | Toomre four-case summary (band amplitude vs time) | needs re-run with series output or table-only |
 | 6 | validation ladder table | exists in READMEs |
 
@@ -113,9 +113,10 @@ Title candidates (pick late):
 
 | item | status |
 |---|---|
-| modes 3-5 dispersion points + damping envelopes | running now |
-| Nx = 2048 convergence check (sigma_x calibration) | queued |
-| plot script for the dispersion figure | todo |
+| modes 3-5 dispersion points + damping envelopes | done (fits in rotation_result.md) |
+| Nx = 2048 convergence check (sigma_x calibration) | done: omega moved 0.5%, caveat closed |
+| plot script for the dispersion figure | done: analyze_rot_disp.py --plot |
+| Landau damping gamma(k), five modes | measured; kinetic-theory comparison still open |
 | decision: N-body cross-check or honest absence statement | user's call |
 | literature check | done (August 2026 searches; gap confirmed as far as searchable) |
 | LaTeX skeleton | todo after numbers land |
