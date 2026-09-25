@@ -143,7 +143,23 @@ def main():
         rows.append({"mode": mode, "nx": nx, "k": k, "w": p[2],
                      "we": err[2], "g": abs(p[1]), "ge": err[1]})
     if "--plot" in sys.argv and rows:
-        make_figure(rows)
+        # One plotted point per (mode, Nx): mean over seeds, with the
+        # seed-to-seed spread as the error where several seeds exist (it
+        # exceeds the formal fit error and is the honest bar), else the
+        # formal error.
+        groups = {}
+        for r in rows:
+            groups.setdefault((r["mode"], r["nx"]), []).append(r)
+        agg = []
+        for (mode, nx), rs in sorted(groups.items()):
+            ws = np.array([r["w"] for r in rs])
+            gs = np.array([r["g"] for r in rs])
+            we = ws.std() if len(rs) > 1 else rs[0]["we"]
+            ge = gs.std() if len(rs) > 1 else rs[0]["ge"]
+            agg.append({"mode": mode, "nx": nx, "k": rs[0]["k"],
+                        "w": ws.mean(), "we": we, "g": gs.mean(),
+                        "ge": ge})
+        make_figure(agg)
     return 0
 
 
