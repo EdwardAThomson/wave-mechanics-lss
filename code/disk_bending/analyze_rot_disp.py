@@ -95,7 +95,9 @@ def make_figure(rows, path="figures/dispersion_relation.png"):
                 yerr=[r["we"] for r in n1024], fmt="o", color=INK, ms=6,
                 capsize=3, lw=1.2, zorder=5, label="measured (Nx = 1024)")
     if n2048:
-        ax.errorbar([r["k"] for r in n2048], [r["w"] for r in n2048],
+        # Nudge the convergence marker right so it is not hidden behind
+        # the Nx = 1024 point 0.1 km/s/kpc away.
+        ax.errorbar([r["k"] + 0.035 for r in n2048], [r["w"] for r in n2048],
                     yerr=[r["we"] for r in n2048], fmt="o", mfc="none",
                     color=INK, ms=7, capsize=3, lw=1.2, zorder=5,
                     label="convergence check (Nx = 2048)")
