@@ -64,10 +64,11 @@ Title candidates (pick late):
    anharmonicity (Kohn) and is suppressed by disk self-gravity (65% vs 0.4%
    corrugation retained); a no-go duality for unsheared boxes; Toomre
    stabilisation measured, widened by finite thickness beyond razor-thin Q.
-4. The stable bending branch measured at [2-5] wavenumbers: omega
-   reproducible to 0.15% across phase realisations, full free-streaming
-   pressure term excluded at 4.8x, both corrections (thickness, epicyclic
-   confinement) acting at their expected sign and size.
+4. The stable bending branch measured at five wavenumbers with Landau
+   damping at each: omega reproducible to 0.05-1.6% across phase
+   realisations, full free-streaming pressure term excluded (modes 3-5
+   oscillate where it predicts no wave), high-k points tracking the
+   thickness-corrected relation.
 5. Cost: minutes to an hour on a desktop; the equivalent shot-noise-free
    N-body measurement needs 1e9-1e10 particles in the patch.
 
@@ -105,7 +106,7 @@ Title candidates (pick late):
 | 1 | phase spiral, tracer (Husimi map sequence) | exists, `figures/phase_spiral_tracer.png` |
 | 2 | phase spiral, self-gravitating + moments comparison | exists (2 files) |
 | 3 | resolution law: spill/heating vs hbar_eff N (from Stage 0/1 data) | to assemble from existing runs |
-| 4 | dispersion relation omega^2/2piGSk vs k with candidate curves | needs the modes 3-5 runs, then a plot script |
+| 4 | dispersion relation omega(k) with candidate curves and gamma(k) | exists, `figures/dispersion_relation.png` |
 | 5 | Toomre four-case summary (band amplitude vs time) | needs re-run with series output or table-only |
 | 6 | validation ladder table | exists in READMEs |
 
@@ -113,9 +114,9 @@ Title candidates (pick late):
 
 | item | status |
 |---|---|
-| modes 3-5 dispersion points + damping envelopes | running now |
-| Nx = 2048 convergence check (sigma_x calibration) | queued |
-| plot script for the dispersion figure | todo |
+| modes 3-5 dispersion points + damping envelopes | done, three seeds each |
+| Nx = 2048 convergence check | done: omega shifts 0.6% |
+| plot script for the dispersion figure | done (`analyze_rot_disp.py --plot`) |
 | decision: N-body cross-check or honest absence statement | user's call |
 | literature check | done (August 2026 searches; gap confirmed as far as searchable) |
 | LaTeX skeleton | todo after numbers land |

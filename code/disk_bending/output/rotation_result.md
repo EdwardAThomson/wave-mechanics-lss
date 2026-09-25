@@ -16,9 +16,10 @@ solar-neighbourhood parameters, the stable bending branch, which Stage 1
 proved unreachable without rotation, is measured cleanly at the first
 attempt:
 
-**omega = 19.48 +- 0.03 km/s/kpc at k = 0.393 /kpc** (three random-phase
-seeds; 0.15% spread). The same measurement without rotation gave 42.98,
-28.23, 1.99 across three seeds: pure noise.
+**omega = 19.44 +- 0.01 km/s/kpc at k = 0.393 /kpc** (damped-cosine fit of
+the saved series; three random-phase seeds within 0.02, weakly damped at
+gamma = 0.47). The same measurement without rotation gave 42.98, 28.23,
+1.99 across three seeds: pure noise.
 
 Three findings:
 
@@ -27,13 +28,13 @@ Three findings:
    size limit), so Toomre support at Q = 2.45 simultaneously opened the
    k << k_J regime and dropped the corrugation noise floor to 1-2% of the
    signal.
-2. **Two k points, and the free-streaming pressure term is decisively
-   suppressed.** At mode 2 (k = 0.785, one seed) omega = 28.51 against
-   gravity-only 32.58 and gravity-minus-full-pressure 12.97: the
-   full-pressure candidate is excluded by a factor 4.8 in omega^2. Across
-   both points omega^2 sits at 72-77% of razor-thin gravity-only, and the
-   implied pressure strength falls steeply with k a_epi, the direction
-   epicyclic averaging predicts.
+2. **Five k points, and the free-streaming pressure term is decisively
+   excluded.** At modes 3-5 the razor-thin with-pressure relation predicts
+   no wave at all, yet all three oscillate, with three-seed spreads of
+   0.2-1.6%. The high-k points track the thickness-corrected relation
+   omega^2 = 2 pi G Sigma k / (1 + k h), mode 1 sits below it (residual
+   pressure at small k a_epi), and Landau damping is measured at every
+   mode, weak at mode 1 and strong at modes 2-4.
 3. **Razor-thin Q is not the stability boundary of a thick sheet.** A
    rotating sheet with sigma_z = 20 km/s refuses to fragment even at
    razor-thin Q = 0.49, because the would-be unstable wavelengths sit at
@@ -109,47 +110,68 @@ margin below the Nyquist velocity, so the stack is stationary to the aliasing
 of an exp(-large) tail; matched-FD in x would instead distort velocities by
 double digits at sigma_x = 40).
 
-## Result: the dispersion relation, two points so far
+## Result: the dispersion relation, five modes with seed statistics
 
-Mode 1, three random-phase seeds:
+Every mode is now measured from the saved rigid-channel series with the
+damped-cosine fit of `analyze_rot_disp.py` (the authoritative frequency for
+damped modes; the in-run periodogram is a peak estimate and scatters badly
+once gamma is comparable to the frequency resolution, reading 4 to 87
+across seeds at mode 4). Modes 1, 3, 4 and 5 have three random-phase seeds
+each; quoted errors are the seed-to-seed spread, which exceeds the formal
+fit error and is the honest number.
 
-| seed | omega (rigid channel) | t=0 bending purity | noise / signal | energy drift |
-|---|---|---|---|---|
-| 8080 | 19.52 | 0.9997 | 1.9% | 1.2e-6 |
-| 9091 | 19.46 | 0.9987 | 1.2% | 1.5e-6 |
-| 10102 | 19.46 | 0.9995 | 0.8% | 2.3e-6 |
-
-Frequency resolution of one run is 2.19 km/s/kpc; the three seeds agree to
-0.06, so mode 2 was run with a single seed (purity 0.9998, noise 3.9%,
-energy drift 2.9e-6). Compare the identical protocol without rotation
-(test_mode_decomp, Lx = 3 kpc, the largest box that did not fragment):
-42.98, 28.23, 1.99.
-
-Against the razor-thin candidates, using the realised sigma_x = 38.05:
-
-| mode | k [/kpc] | k h | k a_epi | omega measured | gravity only | with pressure | omega^2 / 2 pi G Sigma k |
+| mode | k [/kpc] | k h | k a_epi | omega (fit) | gamma | gravity only | omega^2 / 2 pi G Sigma k |
 |---|---|---|---|---|---|---|---|
-| 1 | 0.393 | 0.116 | 0.34 | 19.48 +- 0.03 | 23.03 | 17.53 | 0.718 |
-| 2 | 0.785 | 0.232 | 0.68 | 28.51 | 32.58 | 12.97 | 0.766 |
+| 1 | 0.393 | 0.116 | 0.34 | 19.44 +- 0.01 | 0.47 +- 0.01 | 23.03 | 0.712 |
+| 2 | 0.785 | 0.232 | 0.68 | 28.9 +- 0.3 | 3.6 +- 0.2 | 32.58 | 0.79 |
+| 3 | 1.178 | 0.348 | 1.02 | 35.9 +- 0.6 | 5.6 +- 0.1 | 39.90 | 0.81 |
+| 4 | 1.571 | 0.464 | 1.36 | 39.4 +- 0.4 | 5.8 +- 0.5 | 46.07 | 0.73 |
+| 5 | 1.963 | 0.580 | 1.70 | 41.6 +- 0.1 | 4.0 +- 0.4 | 51.51 | 0.65 |
 
-Mode 2 is the discriminating one: the candidates differ by a factor 2.5
-there, and the measurement excludes the full free-streaming pressure term by
-a factor 4.8 in omega^2 while sitting 23% below gravity-only. Reading the
-two points together:
+Mode 2 is single-seed but run independently on two platforms; identical
+periodograms (28.58), fitted omega 28.87 (Windows/MinGW) vs 29.08 (Linux).
+For strongly damped modes the fitted frequency is sensitive at the +-0.2
+level to round-off differences in the series, larger than curve_fit's
+formal error, so mode 2 is quoted with that spread. Mode 1 shows no such
+sensitivity (three seeds within 0.02).
 
-- **The free-streaming pressure term is strongly suppressed at both k.**
-  This is what epicyclic confinement does: the -k^2 sigma_x^2 term is
-  derived for stars streaming through the corrugation, and here stars
-  oscillate within a_epi = 0.86 kpc instead.
-- **Decomposing the residual 23-28% deficit is not yet possible.** Taking
-  the thickness dilution as 1/(1 + k h) leaves an implied pressure strength
-  of 0.43 at k a_epi = 0.34 falling to 0.06 at 0.68. The direction matches
-  epicyclic averaging (more of the wavelength sampled per orbit, more
-  cancellation), but the numbers lean on the approximate thickness form, and
-  omega^2 / 2 pi G Sigma k being nearly flat (0.72 vs 0.77) across a
-  doubling of k says the naive thickness-plus-pressure decomposition is not
-  yet pinned down. Modes 3 and 4 would separate the two, since thickness
-  suppression grows with k h while the epicyclic factor saturates.
+Mode 1 detail, three random-phase seeds (in-run diagnostics):
+
+| seed | omega (fit) | t=0 bending purity | noise / signal | energy drift |
+|---|---|---|---|---|
+| 8080 | 19.45 | 0.9997 | 1.9% | 1.2e-6 |
+| 9091 | 19.44 | 0.9987 | 1.2% | 1.5e-6 |
+| 10102 | 19.43 | 0.9995 | 0.8% | 2.3e-6 |
+
+All predictions use the realised sigma_x = 38.05. Compare the identical
+protocol without rotation (test_mode_decomp, Lx = 3 kpc, the largest box
+that did not fragment): 42.98, 28.23, 1.99 across three seeds. Purity at
+t = 0 is 0.996-0.9998 and energy drift under 3e-6 in every run here.
+
+Reading the five points together:
+
+- **The free-streaming pressure term is decisively excluded.** At modes
+  3-5 the razor-thin with-pressure relation predicts no wave at all
+  (omega^2 < 0), yet all three oscillate at 65-81% of gravity-only with
+  seed spreads of 0.2-1.6%. At mode 2 the exclusion is a factor 4.8 in
+  omega^2. This is what epicyclic confinement does: the -k^2 sigma_x^2
+  term is derived for stars streaming through the corrugation, and here
+  stars oscillate within a_epi = 0.86 kpc instead.
+- **The high-k points track the thickness-corrected curve.** Modes 3-5
+  sit within 3-9% in omega^2 of omega^2 = 2 pi G Sigma k / (1 + k h),
+  slightly above it, while mode 1 sits below it, consistent with residual
+  pressure at small k a_epi where stars sample less of a wavelength per
+  epicycle. The decomposition still leans on the approximate 1/(1 + k h)
+  form, so pressure-strength numbers remain interpretation rather than
+  measurement.
+- **Landau damping appears where it should.** Mode 1 is weakly damped
+  (quality factor omega/gamma ~ 41); damping rises steeply through modes
+  2-4 and turns over by mode 5. No quantitative comparison against a
+  kinetic prediction is attempted yet.
+
+**Convergence.** The mode 1 series at Nx = 2048 refits to
+omega = 19.56 +- 0.01 with gamma = 0.53, a 0.6% shift from Nx = 1024, so
+the frequency is grid-converged at the quoted precision.
 
 ## Result: Toomre stabilisation, with a thickness lesson
 
@@ -216,13 +238,15 @@ spill. `truncate_sheet_energy` caps the library at 80% of the band.
 - **No shear.** A rigidly rotating box gives Toomre support, the stable
   branch and a propagating wave, but pattern winding needs the full
   Goldreich-Lynden-Bell shearing treatment. That remains the next stage.
-- **Two k points so far**, the second single-seed. The clean statements are
-  the frequencies themselves, their 0.15% seed reproducibility at mode 1,
-  and the factor-4.8 exclusion of the full free-streaming pressure term at
-  mode 2. The pressure-strength numbers (0.43 and 0.06) are
-  interpretations stacked on the approximate 1/(1 + k h) thickness factor,
-  and the flatness of omega^2 / 2 pi G Sigma k across the two modes warns
-  against taking that decomposition quantitatively yet.
+- **Mode 2 remains single-seed per platform.** Its cross-platform fit
+  spread (+-0.2) is folded into the quoted error. Any pressure-strength
+  decomposition is an interpretation stacked on the approximate
+  1/(1 + k h) thickness factor; the measured statements are the
+  frequencies, the seed spreads, the damping rates, and the exclusion of
+  the full free-streaming pressure term.
+- **The measured gamma values await a kinetic prediction.** They are
+  reported as measurements only; no Landau-damping theory comparison has
+  been made.
 - sigma_x is realised 5% below target by the level truncation at the
   velocity ceiling; predictions use the realised value, but the comparison
   inherits that calibration.
@@ -237,4 +261,9 @@ make measure                # builds the measurement binaries
 ./test_toomre               # four stability cases, ~40 min
 ./test_rot_disp             # mode 1, three seeds, ~1 h
 ./test_rot_disp 2 1         # mode 2, one seed
+./test_rot_disp 3 3         # modes 3-5 likewise; higher modes run faster
+./test_rot_disp 1 1 2048    # the convergence point
+
+python3 analyze_rot_disp.py output          # damped-cosine fits, table
+python3 analyze_rot_disp.py output --plot   # + figures/dispersion_relation.png
 ```
